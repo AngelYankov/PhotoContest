@@ -1,11 +1,12 @@
-﻿using System;
+﻿using PhotoContest.Data.Audit;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class Organizer
+    public class Organizer : Entity
     {
         [Key]
         public Guid Id { get; set; }

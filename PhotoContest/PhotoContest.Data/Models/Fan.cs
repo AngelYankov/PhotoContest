@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoContest.Data.Audit;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace PhotoContest.Data
 {
-    public class Fan
+    public class Fan : Entity
     {
         [Key]
         public Guid Id { get; set; }
