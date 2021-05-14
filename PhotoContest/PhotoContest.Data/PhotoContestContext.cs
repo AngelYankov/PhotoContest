@@ -30,7 +30,7 @@ namespace PhotoContest.Data
 
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
-                
+               //seed roles 
             var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN" };
             var organizerRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
             var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
@@ -42,12 +42,8 @@ namespace PhotoContest.Data
             var passHasher = new PasswordHasher<User>();
 
             //seed admin user
-            var adminUser = new User();
-            adminUser.Id = Guid.NewGuid();
-            adminUser.Email = "admin@admin.com";
-            adminUser.NormalizedEmail = "ADMIN@ADMIN.COM";
+            var adminUser = new User("admin@admin.com", "ADMIN@ADMIN.COM");
             adminUser.PasswordHash = passHasher.HashPassword(adminUser, "admin123");
-            adminUser.SecurityStamp = Guid.NewGuid().ToString();
             modelBuilder.Entity<User>().HasData(adminUser);
 
             //link adminUser to role
@@ -68,7 +64,7 @@ namespace PhotoContest.Data
             organizerUser.CreatedOn = DateTime.UtcNow;
             organizerUser.PasswordHash = passHasher.HashPassword(organizerUser, "eric.berg123");
             organizerUser.SecurityStamp = Guid.NewGuid().ToString();
-            modelBuilder.Entity<User>().HasData(organizerUser);
+            modelBuilder.Entity<Organizer>().HasData(organizerUser);
 
             //link organizerUser to role
             var organizerUserRole = new IdentityUserRole<Guid>();
@@ -88,7 +84,7 @@ namespace PhotoContest.Data
             fanUser.CreatedOn = DateTime.UtcNow;
             fanUser.PasswordHash = passHasher.HashPassword(fanUser, "georgi.ivanov123");
             fanUser.SecurityStamp = Guid.NewGuid().ToString();
-            modelBuilder.Entity<User>().HasData(fanUser);
+            modelBuilder.Entity<Fan>().HasData(fanUser);
 
             //link fanUser to role
             var fanUserRole = new IdentityUserRole<Guid>();
@@ -123,6 +119,12 @@ namespace PhotoContest.Data
                     Name = "Architecture",
                     CreatedOn = DateTime.UtcNow,
                 },
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Motorbikes",
+                    CreatedOn = DateTime.UtcNow,
+                }
             };
             var statuses = new List<Status>()
             {
