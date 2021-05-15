@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PhotoContest.Data
 {
-    public class Fan : User, IEntity
+    public class Fan : IdentityUser<Guid>, IEntity
     {
         //[Key]
         //public Guid Id { get; set; }
@@ -23,15 +23,15 @@ namespace PhotoContest.Data
         //[Required, EmailAddress(ErrorMessage = "Invalid email address.")]
         //public string Email { get; set; }
 
-        [Required,MinLength(8, ErrorMessage = "{0} cannot be less than {1} characters.")]
-        public string Password { get; set; }
+        //[Required,MinLength(8, ErrorMessage = "{0} cannot be less than {1} characters.")]
+        //public string Password { get; set; }
         public Guid RankId { get; set; }
         public Rank Rank { get; set; }
         public int CurrentScore { get; set; }
-        public int OverallScore { get; set; }
+        public Dictionary<Guid,int> ContestScores { get; set; }
         public List<Photo> Photos { get; set; } = new List<Photo>();
-        public List<Contest> Contests { get; set; } = new List<Contest>();
-        public bool IsJury { get; set; }
+        public List<FanContest> FanContests { get; set; } = new List<FanContest>();
+        public List<Jury> Jurors { get; set; } = new List<Jury>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public DateTime DeletedOn { get; set; }

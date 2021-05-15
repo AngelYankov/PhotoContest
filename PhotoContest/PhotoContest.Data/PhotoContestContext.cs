@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace PhotoContest.Data
 {
-    public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
+    public class PhotoContestContext : IdentityDbContext<Fan, Role, Guid>
     {
         public PhotoContestContext()
         {
@@ -17,10 +17,10 @@ namespace PhotoContest.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contest> Contests { get; set; }
-        public DbSet<Fan> Fans { get; set; }
-        public DbSet<Organizer> Organizers { get; set; }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<FanContest> FanContests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,29 +31,17 @@ namespace PhotoContest.Data
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
                //seed roles 
-            var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN" };
             var organizerRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
             var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
-            var roles = new List<Role>() { adminRole, organizerRole, userRole };
+            var roles = new List<Role>() { organizerRole, userRole };
 
             modelBuilder.Entity<Role>().HasData(roles); 
 
             //password hasher
-            var passHasher = new PasswordHasher<User>();
-
-            //seed admin user
-            var adminUser = new User("admin@admin.com", "ADMIN@ADMIN.COM");
-            adminUser.PasswordHash = passHasher.HashPassword(adminUser, "admin123");
-            modelBuilder.Entity<User>().HasData(adminUser);
-
-            //link adminUser to role
-            var adminUserRole = new IdentityUserRole<Guid>();
-            adminUserRole.RoleId = adminRole.Id;
-            adminUserRole.UserId = adminUser.Id;
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(adminUserRole);
+            var passHasher = new PasswordHasher<Fan>();
 
             //seed organizerUser
-            var organizerUser = new Organizer();
+            var organizerUser = new Fan();
             organizerRole.Id = Guid.NewGuid();
             organizerUser.FirstName = "Eric";
             organizerUser.LastName = "Berg";
@@ -64,7 +52,7 @@ namespace PhotoContest.Data
             organizerUser.CreatedOn = DateTime.UtcNow;
             organizerUser.PasswordHash = passHasher.HashPassword(organizerUser, "eric.berg123");
             organizerUser.SecurityStamp = Guid.NewGuid().ToString();
-            modelBuilder.Entity<Organizer>().HasData(organizerUser);
+            modelBuilder.Entity<Fan>().HasData(organizerUser);
 
             //link organizerUser to role
             var organizerUserRole = new IdentityUserRole<Guid>();
