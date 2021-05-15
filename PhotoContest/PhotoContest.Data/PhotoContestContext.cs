@@ -7,20 +7,16 @@ using System.Collections.Generic;
 
 namespace PhotoContest.Data
 {
-    public class PhotoContestContext : IdentityDbContext<Fan, Role, Guid>
+    public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
     {
-        public PhotoContestContext()
-        {
-
-        }
         public PhotoContestContext(DbContextOptions<PhotoContestContext> options) : base(options) { }
-
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contest> Contests { get; set; }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Photo> Photos { get; set; }
-        public DbSet<FanContest> FanContests { get; set; }
+        public DbSet<UserContest> UserContests { get; set; }
+        public DbSet<Jury> Juries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,54 +27,54 @@ namespace PhotoContest.Data
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
                //seed roles 
-            var organizerRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
+            var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
             var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
-            var roles = new List<Role>() { organizerRole, userRole };
+            var roles = new List<Role>() { adminRole, userRole };
 
             modelBuilder.Entity<Role>().HasData(roles); 
 
             //password hasher
-            var passHasher = new PasswordHasher<Fan>();
+            var passHasher = new PasswordHasher<User>();
 
             //seed organizerUser
-            var organizerUser = new Fan();
-            organizerRole.Id = Guid.NewGuid();
-            organizerUser.FirstName = "Eric";
-            organizerUser.LastName = "Berg";
-            organizerUser.Email = "eric.berg@mail.com";
-            organizerUser.NormalizedEmail = "ERIC.BERG@MAIL.COM";
-            organizerUser.UserName = "eric.berg@mail.com";
-            organizerUser.NormalizedUserName = "ERIC.BERG@MAIL.COM";
-            organizerUser.CreatedOn = DateTime.UtcNow;
-            organizerUser.PasswordHash = passHasher.HashPassword(organizerUser, "eric.berg123");
-            organizerUser.SecurityStamp = Guid.NewGuid().ToString();
-            modelBuilder.Entity<Fan>().HasData(organizerUser);
+            var adminUser = new User();
+            adminRole.Id = Guid.NewGuid();
+            adminUser.FirstName = "Eric";
+            adminUser.LastName = "Berg";
+            adminUser.Email = "eric.berg@mail.com";
+            adminUser.NormalizedEmail = "ERIC.BERG@MAIL.COM";
+            adminUser.UserName = "eric.berg@mail.com";
+            adminUser.NormalizedUserName = "ERIC.BERG@MAIL.COM";
+            adminUser.CreatedOn = DateTime.UtcNow;
+            adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
+            adminUser.SecurityStamp = Guid.NewGuid().ToString();
+            modelBuilder.Entity<User>().HasData(adminUser);
 
             //link organizerUser to role
-            var organizerUserRole = new IdentityUserRole<Guid>();
-            organizerUserRole.RoleId = organizerRole.Id;
-            organizerUserRole.UserId = organizerUser.Id;
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(organizerUserRole);
+            var adminUserRole = new IdentityUserRole<Guid>();
+            adminUserRole.RoleId = adminRole.Id;
+            adminUserRole.UserId = adminUser.Id;
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(adminUserRole);
 
             //seed userRole
-            var fanUser = new Fan();
-            fanUser.Id = Guid.NewGuid();
-            fanUser.FirstName = "Georgi";
-            fanUser.LastName = "Ivanov";
-            fanUser.Email = "georgi.ivanov@mail.com";
-            fanUser.NormalizedEmail = "GEORGI.IVANOV@MAIL.COM";
-            fanUser.UserName = "georgi.ivanov@mail.com";
-            fanUser.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
-            fanUser.CreatedOn = DateTime.UtcNow;
-            fanUser.PasswordHash = passHasher.HashPassword(fanUser, "georgi.ivanov123");
-            fanUser.SecurityStamp = Guid.NewGuid().ToString();
-            modelBuilder.Entity<Fan>().HasData(fanUser);
+            var user = new User();
+            user.Id = Guid.NewGuid();
+            user.FirstName = "Georgi";
+            user.LastName = "Ivanov";
+            user.Email = "georgi.ivanov@mail.com";
+            user.NormalizedEmail = "GEORGI.IVANOV@MAIL.COM";
+            user.UserName = "georgi.ivanov@mail.com";
+            user.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
+            user.CreatedOn = DateTime.UtcNow;
+            user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
+            user.SecurityStamp = Guid.NewGuid().ToString();
+            modelBuilder.Entity<User>().HasData(user);
 
             //link fanUser to role
-            var fanUserRole = new IdentityUserRole<Guid>();
-            fanUserRole.RoleId = userRole.Id;
-            fanUserRole.UserId = fanUser.Id;
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(fanUserRole);
+            var normalUserRole = new IdentityUserRole<Guid>();
+            normalUserRole.RoleId = userRole.Id;
+            normalUserRole.UserId = user.Id;
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(normalUserRole);
 
             //seed categories
             var categories = new List<Category>()

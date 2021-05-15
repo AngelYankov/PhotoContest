@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PhotoContest.Data
 {
-    public class Fan : IdentityUser<Guid>, IEntity
+    public class User : IdentityUser<Guid>, IEntity
     {
         //[Key]
         //public Guid Id { get; set; }
@@ -30,8 +30,8 @@ namespace PhotoContest.Data
         public int CurrentScore { get; set; }
         public Dictionary<Guid,int> ContestScores { get; set; }
         public List<Photo> Photos { get; set; } = new List<Photo>();
-        public List<FanContest> FanContests { get; set; } = new List<FanContest>();
-        public List<Jury> Jurors { get; set; } = new List<Jury>();
+        public List<UserContest> UserContests { get; set; } = new List<UserContest>();
+        public List<Jury> Juries { get; set; } = new List<Jury>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public DateTime DeletedOn { get; set; }

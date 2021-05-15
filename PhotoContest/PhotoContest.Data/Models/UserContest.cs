@@ -4,11 +4,11 @@ using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class FanContest
+    public class UserContest
     {
         public Guid Id { get; set; }
-        public Guid FanId { get; set; }
-        public Fan Fan { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
     }

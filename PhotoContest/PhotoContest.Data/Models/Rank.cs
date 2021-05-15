@@ -9,6 +9,6 @@ namespace PhotoContest.Data
         [Key]
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Fan> Fans { get; set; } = new HashSet<Fan>();
+        public ICollection<User> Users { get; set; } = new HashSet<User>();
     }
 }

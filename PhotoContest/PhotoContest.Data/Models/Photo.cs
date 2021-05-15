@@ -11,8 +11,8 @@ namespace PhotoContest.Data.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string photoUrl { get; set; }
-        public Guid FanId { get; set; }
-        public Fan Fan { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
         public List<int> Points { get; set; } = new List<int>();
