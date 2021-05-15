@@ -23,5 +23,6 @@ namespace PhotoContest.Data.Models
         public DateTime Phase1 { get; set; }
         public DateTime Phase2 { get; set; }
         public DateTime Finished { get; set; }
+        public List<Photo> Photos { get; set; } = new List<Photo>();
     }
 }

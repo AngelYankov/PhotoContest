@@ -29,6 +29,8 @@ namespace PhotoContest.Data
         public Rank Rank { get; set; }
         public int CurrentScore { get; set; }
         public int OverallScore { get; set; }
+        public List<Photo> Photos { get; set; } = new List<Photo>();
+        public List<Contest> Contests { get; set; } = new List<Contest>();
         public bool IsJury { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
