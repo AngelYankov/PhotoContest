@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PhotoContest.Data.Configurations;
 using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,9 @@ namespace PhotoContest.Data
 {
     public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
     {
-        public PhotoContestContext(DbContextOptions<PhotoContestContext> options) : base(options) { }
+        public PhotoContestContext() { }
+        public PhotoContestContext(DbContextOptions<PhotoContestContext> options) 
+            : base(options) { }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contest> Contests { get; set; }
         public DbSet<Rank> Ranks { get; set; }
@@ -20,6 +23,13 @@ namespace PhotoContest.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new CategoryConfig());
+            modelBuilder.ApplyConfiguration(new ContestConfig());
+            modelBuilder.ApplyConfiguration(new JuryConfig());
+            modelBuilder.ApplyConfiguration(new PhotoConfig());
+            modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new UserContestConfig());
+
             this.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
