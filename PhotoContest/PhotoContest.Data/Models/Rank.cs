@@ -6,9 +6,8 @@ namespace PhotoContest.Data
 {
     public class Rank
     {
-        [Key]
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public ICollection<User> Users { get; set; } = new HashSet<User>();
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

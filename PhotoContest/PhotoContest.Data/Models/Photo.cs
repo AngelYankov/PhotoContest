@@ -1,6 +1,7 @@
 ﻿using PhotoContest.Data.Audit;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace PhotoContest.Data.Models
@@ -15,6 +16,7 @@ namespace PhotoContest.Data.Models
         public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
-        public List<int> Points { get; set; } = new List<int>();
+        [NotMapped]
+        public ICollection<int> Points { get; set; } = new List<int>();
     }
 }

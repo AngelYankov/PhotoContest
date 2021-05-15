@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,10 +25,12 @@ namespace PhotoContest.Web
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {   
-            services.AddDbContext<PhotoContestContext>(options => options
-                .UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
-            );
+        {
+            services.AddDbContext<PhotoContestContext>(options =>
+            {
+                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+                //options.UseSqlServer(@"Server=.\SQLEXPRESS;Database=PhotoContest;Integrated Security=True;MultipleActiveResultSets=True");
+            });
 
             services
                 .AddIdentity<User, Role>(options =>
@@ -38,7 +41,11 @@ namespace PhotoContest.Web
                     options.Password.RequiredLength = 8;
                     options.Password.RequireLowercase = false;
                 })
-                .AddEntityFrameworkStores<PhotoContestContext>();
+                .AddEntityFrameworkStores<PhotoContestContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddRazorPages();
+           // services.AddSingleton<IEmailSender, EmailSender>();
             services.AddControllersWithViews();
         }
 
@@ -64,6 +71,7 @@ namespace PhotoContest.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

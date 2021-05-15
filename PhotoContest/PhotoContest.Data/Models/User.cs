@@ -11,27 +11,19 @@ namespace PhotoContest.Data
 {
     public class User : IdentityUser<Guid>, IEntity
     {
-        //[Key]
-        //public Guid Id { get; set; }
-
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string FirstName { get; set; }
 
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string LastName { get; set; }
-
-        //[Required, EmailAddress(ErrorMessage = "Invalid email address.")]
-        //public string Email { get; set; }
-
-        //[Required,MinLength(8, ErrorMessage = "{0} cannot be less than {1} characters.")]
-        //public string Password { get; set; }
         public Guid RankId { get; set; }
         public Rank Rank { get; set; }
-        public int CurrentScore { get; set; }
-        public Dictionary<Guid,int> ContestScores { get; set; }
-        public List<Photo> Photos { get; set; } = new List<Photo>();
-        public List<UserContest> UserContests { get; set; } = new List<UserContest>();
-        public List<Jury> Juries { get; set; } = new List<Jury>();
+        //public int CurrentScore { get; set; }
+        [NotMapped]
+        public Dictionary<Guid, int> ContestScores { get; set; } = new Dictionary<Guid, int>();
+        public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+        public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
+        public ICollection<Jury> Juries { get; set; } = new List<Jury>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public DateTime DeletedOn { get; set; }

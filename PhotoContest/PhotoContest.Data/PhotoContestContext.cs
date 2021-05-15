@@ -8,14 +8,14 @@ using System.Collections.Generic;
 
 namespace PhotoContest.Data
 {
-    public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
+    public class PhotoContestContext : IdentityDbContext<User,Role,Guid>
     {
-        public PhotoContestContext() { }
+        //public PhotoContestContext() { }
         public PhotoContestContext(DbContextOptions<PhotoContestContext> options) 
             : base(options) { }
+        public DbSet<Rank> Ranks { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contest> Contests { get; set; }
-        public DbSet<Rank> Ranks { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserContest> UserContests { get; set; }
@@ -34,9 +34,95 @@ namespace PhotoContest.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        //protected override void OnConfiguring(DbContextOptionsBuilder options) =>
+          //  options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
+
+
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
-               //seed roles 
+            //seed categories
+            var categories = new List<Category>()
+            {
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Cars",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Animals",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Nature",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Architecture",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Motorbikes",
+                    CreatedOn = DateTime.UtcNow,
+                }
+            };
+            //seed statuses
+            var statuses = new List<Status>()
+            {
+                new Status()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Phase 1"
+                },
+                new Status()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Phase 2"
+                },
+                new Status()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Finished"
+                },
+            };
+            //seed ranks
+            var ranks = new List<Rank>()
+            {
+                new Rank()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Junkie"
+                },
+                new Rank()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Enthusiast"
+                },
+                new Rank()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Master"
+                },
+                new Rank()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Wise and Benevolent Photo Dictator"
+                }
+            };
+
+            modelBuilder.Entity<Category>().HasData(categories);
+            modelBuilder.Entity<Status>().HasData(statuses);
+            modelBuilder.Entity<Rank>().HasData(ranks);
+
+            //seed roles 
             var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
             var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
             var roles = new List<Role>() { adminRole, userRole };
@@ -48,7 +134,7 @@ namespace PhotoContest.Data
 
             //seed organizerUser
             var adminUser = new User();
-            adminRole.Id = Guid.NewGuid();
+            adminUser.Id = Guid.NewGuid();
             adminUser.FirstName = "Eric";
             adminUser.LastName = "Berg";
             adminUser.Email = "eric.berg@mail.com";
@@ -86,85 +172,7 @@ namespace PhotoContest.Data
             normalUserRole.UserId = user.Id;
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(normalUserRole);
 
-            //seed categories
-            var categories = new List<Category>()
-            {
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Cars",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Animals",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Nature",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Architecture",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Motorbikes",
-                    CreatedOn = DateTime.UtcNow,
-                }
-            };
-            var statuses = new List<Status>()
-            {
-                new Status()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Phase 1"
-                },
-                new Status()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Phase 2"
-                },
-                new Status()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Finished"
-                },
-            };
-            var ranks = new List<Rank>()
-            {
-                new Rank()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Junkie"
-                },
-                new Rank()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Enthusiast"
-                },
-                new Rank()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Master"
-                },
-                new Rank()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Wise and Benevolent Photo Dictator"
-                }
-            };
-
-            modelBuilder.Entity<Category>().HasData(categories);
-            modelBuilder.Entity<Status>().HasData(statuses);
-            modelBuilder.Entity<Rank>().HasData(ranks);
+            
         }
     }
 }
