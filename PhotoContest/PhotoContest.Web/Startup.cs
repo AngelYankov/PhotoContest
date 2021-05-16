@@ -7,10 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PhotoContest.Web
 {
@@ -29,8 +25,12 @@ namespace PhotoContest.Web
             services.AddDbContext<PhotoContestContext>(options =>
             {
                 options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
-                //options.UseSqlServer(@"Server=.\SQLEXPRESS;Database=PhotoContest;Integrated Security=True;MultipleActiveResultSets=True");
             });
+
+            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<Role>()
+                .AddEntityFrameworkStores<PhotoContestContext>();
+
 
             services
                 .AddIdentity<User, Role>(options =>

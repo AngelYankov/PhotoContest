@@ -10,7 +10,7 @@ namespace PhotoContest.Data
 {
     public class PhotoContestContext : IdentityDbContext<User,Role,Guid>
     {
-        //public PhotoContestContext() { }
+        public PhotoContestContext() { }
         public PhotoContestContext(DbContextOptions<PhotoContestContext> options) 
             : base(options) { }
         public DbSet<Rank> Ranks { get; set; }
@@ -34,8 +34,8 @@ namespace PhotoContest.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder options) =>
-          //  options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
+        protected override void OnConfiguring(DbContextOptionsBuilder options) =>
+                        options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
 
 
         protected virtual void Seed(ModelBuilder modelBuilder)
@@ -143,7 +143,9 @@ namespace PhotoContest.Data
             adminUser.NormalizedUserName = "ERIC.BERG@MAIL.COM";
             adminUser.CreatedOn = DateTime.UtcNow;
             adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
-            adminUser.SecurityStamp = Guid.NewGuid().ToString();
+            adminUser.RankId = ranks[3].Id;
+            adminUser.SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B";
+            adminUser.LockoutEnabled = true;
             modelBuilder.Entity<User>().HasData(adminUser);
 
             //link organizerUser to role
@@ -163,7 +165,9 @@ namespace PhotoContest.Data
             user.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
             user.CreatedOn = DateTime.UtcNow;
             user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
-            user.SecurityStamp = Guid.NewGuid().ToString();
+            user.RankId = ranks[0].Id;
+            user.SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B";
+            user.LockoutEnabled = true;
             modelBuilder.Entity<User>().HasData(user);
 
             //link fanUser to role
