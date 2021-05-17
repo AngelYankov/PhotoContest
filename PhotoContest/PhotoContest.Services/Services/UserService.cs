@@ -23,7 +23,7 @@ namespace PhotoContest.Services.Services
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
-        public async Task<UserDTO> Create(NewUserDTO newUserDTO)
+        public async Task<UserDTO> CreateAsync(NewUserDTO newUserDTO)
         {
             if (newUserDTO.FirstName == null) throw new ArgumentException();
             if (newUserDTO.LastName == null) throw new ArgumentException();
@@ -35,7 +35,7 @@ namespace PhotoContest.Services.Services
             return new UserDTO(user);
         }
 
-        public async Task<bool> Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var user = await FindUser(id);
             user.IsDeleted = true;
@@ -44,13 +44,13 @@ namespace PhotoContest.Services.Services
             return user.IsDeleted;
         }
 
-        public async Task<UserDTO> Get(Guid id)
+        public async Task<UserDTO> GetAsync(Guid id)
         {
             var user = await FindUser(id);
             return new UserDTO(user);
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAll()
+        public async Task<IEnumerable<UserDTO>> GetAllAsync()
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
@@ -59,7 +59,7 @@ namespace PhotoContest.Services.Services
                                        .ToListAsync();
         }
 
-        public async Task<UserDTO> Update(UpdateUserDTO updateUserDTO, Guid id)
+        public async Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, Guid id)
         {
             var user = await FindUser(id);
             user.FirstName = updateUserDTO.FirstName ?? user.FirstName;

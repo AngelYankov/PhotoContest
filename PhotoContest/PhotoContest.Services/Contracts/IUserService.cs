@@ -10,10 +10,10 @@ namespace PhotoContest.Services.Contracts
 {
     public interface IUserService
     {
-        Task<UserDTO> Create(NewUserDTO newUserDTO);
-        Task<IEnumerable<UserDTO>> GetAll();
-        Task<UserDTO> Get(Guid id);
-        Task<UserDTO> Update(UpdateUserDTO updateUserDTO, Guid id);
-        Task<bool> Delete(Guid id);
+        Task<UserDTO> CreateAsync(NewUserDTO newUserDTO);
+        Task<IEnumerable<UserDTO>> GetAllAsync();
+        Task<UserDTO> GetAsync(Guid id);
+        Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, Guid id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }
