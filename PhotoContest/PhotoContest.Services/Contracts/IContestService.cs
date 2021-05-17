@@ -14,5 +14,6 @@ namespace PhotoContest.Services.Services
         Task<IEnumerable<ContestDTO>> GetAllAsync();
         Task<ContestDTO> UpdateAsync(Guid id, UpdateContestDTO contest);
         Task<bool> DeleteAsync(Guid id);
+        Task<IEnumerable<ContestDTO>> GetByPhaseAsync(string phaseName, string sortBy, string order);
     }
 }
