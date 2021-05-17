@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PhotoContest.Services.Services
 {
@@ -21,57 +22,67 @@ namespace PhotoContest.Services.Services
             this.mapper = mapper;
         }
 
-        public ContestDTO Create(NewContestDTO dto)
+        public async Task<ContestDTO> CreateAsync(NewContestDTO dto)
         {
-            var newContest = new Contest();
-
             //newContest.Name = dto.Name;
-
-            var category = this.dbContext.Categories.FirstOrDefault(c => c.Id == dto.CategoryId)
-                ?? throw new ArgumentNullException();
             //newContest.CategoryId = dto.CategoryId;
-
-            var status = this.dbContext.Statuses.FirstOrDefault(s => s.Id == dto.StatusId)
-                ?? throw new ArgumentNullException();
             //newContest.StatusId = dto.StatusId;
+            if (dto.Name == null) throw new ArgumentException();
+            
+            var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId)
+                ?? throw new ArgumentNullException();
 
-            this.mapper.Map<ContestDTO>(dto);
+            var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == dto.StatusId)
+                ?? throw new ArgumentNullException();
+
+            if (dto.Phase1 == null || dto.Phase1 < DateTime.UtcNow) throw new ArgumentException();
+            if (dto.Phase2 == null || dto.Phase2 <= dto.Phase1 || dto.Phase2 > dto.Phase1.AddDays(31)) ;
+            if (dto.Finished == null || dto.Finished <= dto.Phase2.AddHours(1) || dto.Finished > dto.Phase2.AddHours(24));
+
+            var newContest = this.mapper.Map<Contest>(dto);
 
             newContest.CreatedOn = DateTime.UtcNow;
-            this.dbContext.Contests.Add(newContest);
-            this.dbContext.SaveChanges();
-            var createdContest = FindContest(newContest.Id);
+            await this.dbContext.Contests.AddAsync(newContest);
+            await this.dbContext.SaveChangesAsync();
 
-            return new ContestDTO(createdContest);
+            return new ContestDTO(newContest);
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var contest = await FindContestAsync(id);
+            contest.DeletedOn = DateTime.UtcNow;
+            contest.IsDeleted = true;
+            await this.dbContext.SaveChangesAsync();
+            return contest.IsDeleted;
         }
 
-        public IEnumerable<ContestDTO> GetAll()
+        public async Task<IEnumerable<ContestDTO>> GetAllAsync()
         {
-            return this.dbContext
-                      .Contests
-                      .Include(c => c.Category)
-                      .Include(a => a.Status)
-                      .Where(c => c.IsDeleted == false)
-                      .Select(c => new ContestDTO(c));
+            return await this.dbContext
+                             .Contests
+                             .Include(c => c.Category)
+                             .Include(a => a.Status)
+                             .Where(c => c.IsDeleted == false)
+                             .Select(c => new ContestDTO(c))
+                             .ToListAsync();
         }
 
-        public ContestDTO Update(Guid id, Contest contest)
+        public async Task<ContestDTO> UpdateAsync(Guid id, Contest dto)
         {
-            throw new NotImplementedException();
+            var contest = await FindContestAsync(id);
+            contest.Name = dto.Name ?? contest.Name;
+
+            
         }
 
-        private Contest FindContest(Guid id)
+        private async Task<Contest> FindContestAsync(Guid id)
         {
-            return this.dbContext
-                .Contests
-                .Where(c => c.IsDeleted == false)
-                .FirstOrDefault(c => c.Id == id)
-                ?? throw new ArgumentException();
+            return await this.dbContext
+                             .Contests
+                             .Where(c => c.IsDeleted == false)
+                             .FirstOrDefaultAsync(c => c.Id == id)
+                             ?? throw new ArgumentException();
         }
     }
 }
