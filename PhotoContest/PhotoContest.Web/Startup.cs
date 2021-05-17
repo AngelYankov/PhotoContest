@@ -31,6 +31,7 @@ namespace PhotoContest.Web
                 .AddRoles<Role>()
                 .AddEntityFrameworkStores<PhotoContestContext>();
 
+            services.AddAutoMapper(typeof(Startup));
 
             services
                 .AddIdentity<User, Role>(options =>

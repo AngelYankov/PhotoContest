@@ -1,9 +1,11 @@
-﻿using PhotoContest.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PhotoContest.Services.Services
 {
@@ -15,35 +17,35 @@ namespace PhotoContest.Services.Services
             this.dbContext = dbContext;
         }
 
-        public string Create(string categoryName)
+        public async Task<string> CreateAsync(string categoryName)
         {
             var category = new Category();
             category.Name = categoryName;
             category.CreatedOn = DateTime.UtcNow;
-            this.dbContext.SaveChanges();
+            await this.dbContext.SaveChangesAsync();
             return category.Name;
         }
 
-        public IList<string> GetAll()
+        public async Task<IList<string>> GetAllAsync()
         {
-            return this.dbContext.Categories.Where(c => c.IsDeleted == false).Select(c => c.Name).ToList();
+            return await this.dbContext.Categories.Where(c => c.IsDeleted == false).Select(c => c.Name).ToListAsync();
         }
 
-        public string Update(Guid id, string newName)
+        public async Task<string> UpdateAsync(Guid id, string newName)
         {
             var category = FindCategory(id);
             category.Name = newName;
             category.ModifiedOn = DateTime.UtcNow;
-            this.dbContext.SaveChanges();
+            await this.dbContext.SaveChangesAsync();
             return category.Name;
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var category = FindCategory(id);
             category.IsDeleted = true;
             category.DeletedOn = DateTime.UtcNow;
-            this.dbContext.SaveChanges();
+            await this.dbContext.SaveChangesAsync();
             return category.IsDeleted;
         }
 

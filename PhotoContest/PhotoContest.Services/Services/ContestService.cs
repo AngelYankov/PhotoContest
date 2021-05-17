@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Models;
@@ -13,24 +14,28 @@ namespace PhotoContest.Services.Services
     public class ContestService : IContestService
     {
         private readonly PhotoContestContext dbContext;
-        public ContestService(PhotoContestContext dbContext)
+        private readonly IMapper mapper;
+        public ContestService(PhotoContestContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public ContestDTO Create(NewContestDTO dto)
         {
             var newContest = new Contest();
 
-            newContest.Name = dto.Name;
+            //newContest.Name = dto.Name;
 
             var category = this.dbContext.Categories.FirstOrDefault(c => c.Id == dto.CategoryId)
                 ?? throw new ArgumentNullException();
-            newContest.CategoryId = dto.CategoryId;
+            //newContest.CategoryId = dto.CategoryId;
 
             var status = this.dbContext.Statuses.FirstOrDefault(s => s.Id == dto.StatusId)
                 ?? throw new ArgumentNullException();
-            newContest.StatusId = dto.StatusId;
+            //newContest.StatusId = dto.StatusId;
+
+            this.mapper.Map<ContestDTO>(dto);
 
             newContest.CreatedOn = DateTime.UtcNow;
             this.dbContext.Contests.Add(newContest);
