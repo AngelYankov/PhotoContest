@@ -14,6 +14,7 @@ namespace PhotoContest.Services.MapConfigurations
         {
             CreateMap<Contest, ContestDTO>();
             CreateMap<NewContestDTO, ContestDTO>();
+            CreateMap<NewPhotoDTO, Photo>();
         }
     }
 }

@@ -12,9 +12,10 @@ namespace PhotoContest.Services.Models
             this.Id = photo.Id;
             this.Title = photo.Title;
             this.Description = photo.Description;
-            this.PhotoUrl = photo.photoUrl;
+            this.PhotoUrl = photo.PhotoUrl;
             this.User = photo.User.FirstName + photo.User.LastName;
             this.Contest = photo.Contest.Name;
+            this.Category = photo.Contest.Category.Name;
             int totalPoints = 0;
             for (int i = 0; i < photo.Points.Count; i++)
             {
@@ -28,6 +29,7 @@ namespace PhotoContest.Services.Models
         public string PhotoUrl { get; set; }
         public string User { get; set; }
         public string Contest { get; set; }
+        public string Category { get; set; }
         public int Points { get; set; }
     }
 }

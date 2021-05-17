@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
+using PhotoContest.Services.Models.Create;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +16,30 @@ namespace PhotoContest.Services.Services
     public class PhotoService : IPhotoService
     {
         private readonly PhotoContestContext dbContext;
+        private readonly IMapper mapper;
 
-        public PhotoService(PhotoContestContext dbContext)
+        public PhotoService(PhotoContestContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
-        public Task<PhotoDTO> CreateAsync(PhotoDTO photoDTO)
+        public async Task<PhotoDTO> CreateAsync(NewPhotoDTO newphotoDTO)
         {
-            throw new NotImplementedException();
+            /*var photo = new Photo();
+            photo.Title = newphotoDTO.Title;
+            photo.Description = newphotoDTO.Description;
+            photo.PhotoUrl = newphotoDTO.PhotoUrl;
+            photo.ContestId = newphotoDTO.ContestId;*/
+            var photoMapped = mapper.Map<Photo>(newphotoDTO);
+            await this.dbContext.Photos.AddAsync(photoMapped);
+            photoMapped.CreatedOn = DateTime.UtcNow;
+            await this.dbContext.SaveChangesAsync();
+            return new PhotoDTO(photoMapped);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var photo = FindPhoto(id);
+            var photo = await FindPhoto(id);
             photo.IsDeleted = true;
             photo.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
@@ -46,9 +59,8 @@ namespace PhotoContest.Services.Services
 
         public async Task<PhotoDTO> GetAsync(Guid id)
         {
-            var photo = FindPhoto(id);
-            //return await new PhotoDTO(photo);
-            throw new ArgumentException();
+            var photo = await FindPhoto(id);
+            return new PhotoDTO(photo);
         }
 
         public Task<PhotoDTO> UpdateAsync(PhotoDTO photoDTO)
@@ -56,13 +68,14 @@ namespace PhotoContest.Services.Services
             throw new NotImplementedException();
         }
 
-        private Photo FindPhoto(Guid id)
+        private async Task<Photo> FindPhoto(Guid id)
         {
-            return this.dbContext.Photos
+            return await this.dbContext.Photos
                                  .Include(p => p.User)
                                  .Include(p => p.Contest)
+                                 .ThenInclude(c=>c.Category)
                                  .Where(p => p.IsDeleted == false)
-                                 .FirstOrDefault(p => p.Id == id)
+                                 .FirstOrDefaultAsync(p => p.Id == id)
                                  ?? throw new ArgumentException();
         }
     }

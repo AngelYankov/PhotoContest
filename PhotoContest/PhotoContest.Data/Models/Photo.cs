@@ -11,7 +11,7 @@ namespace PhotoContest.Data.Models
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string photoUrl { get; set; }
+        public string PhotoUrl { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
         public Guid ContestId { get; set; }
