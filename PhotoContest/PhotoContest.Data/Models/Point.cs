@@ -9,6 +9,9 @@ namespace PhotoContest.Data.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public int value { get; set; }
+        public Guid PhotoId { get; set; }
+        public Photo Photo { get; set; }
+        public int Value { get; set; }
+        //TODO create method with value(int)
     }
 }

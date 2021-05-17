@@ -71,6 +71,7 @@ namespace PhotoContest.Services.Services
             return new UserDTO(user);
         }
 
+
         private async Task<User> FindUser(Guid id)
         {
             return await this.dbContext.Users

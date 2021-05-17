@@ -175,12 +175,7 @@ namespace PhotoContest.Services.Services
                     }
                 }
             }
-            if (filteredContests.Count == 0 && sortBy == null) throw new ArgumentException();
-            if (filteredContests.Count != 0)
-            {
-                Sorting(filteredContests, sortBy, order);
-            }
-            if (filteredContests.Count == 0 && sortBy != null)
+            if (filteredContests.Count != 0 && sortBy != null)
             {
                 Sorting(filteredContests, sortBy, order);
             }
@@ -193,8 +188,6 @@ namespace PhotoContest.Services.Services
                 switch (order)
                 {
                     case null:
-                        filteredContests = filteredContests.OrderBy(c => c.Name).ToList();
-                        break;
                     case "asc":
                         filteredContests = filteredContests.OrderBy(c => c.Name).ToList();
                         break;
@@ -208,8 +201,6 @@ namespace PhotoContest.Services.Services
                 switch (order)
                 {
                     case null:
-                        filteredContests = filteredContests.OrderBy(c => c.Category).ToList();
-                        break;
                     case "asc":
                         filteredContests = filteredContests.OrderBy(c => c.Category).ToList();
                         break;
