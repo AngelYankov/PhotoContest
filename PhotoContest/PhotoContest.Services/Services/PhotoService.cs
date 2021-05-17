@@ -35,12 +35,12 @@ namespace PhotoContest.Services.Services
             if (newphotoDTO.Title == null) throw new ArgumentException(); 
             if (newphotoDTO.Description == null) throw new ArgumentException(); 
             if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(); 
-            if (newphotoDTO.UserId == null) throw new ArgumentException(); 
-            if (newphotoDTO.ContestId == null) throw new ArgumentException(); 
+            if (newphotoDTO.UserId == Guid.Empty) throw new ArgumentException(); 
+            if (newphotoDTO.ContestId == Guid.Empty) throw new ArgumentException(); 
 
             var photoMapped = mapper.Map<Photo>(newphotoDTO);
-            await this.dbContext.Photos.AddAsync(photoMapped);
             photoMapped.CreatedOn = DateTime.UtcNow;
+            await this.dbContext.Photos.AddAsync(photoMapped);
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photoMapped);
         }

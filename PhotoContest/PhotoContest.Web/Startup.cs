@@ -63,6 +63,7 @@ namespace PhotoContest.Web
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IContestService, ContestService>();
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));
