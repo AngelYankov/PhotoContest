@@ -5,6 +5,7 @@ using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
+using PhotoContest.Services.Models.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +31,19 @@ namespace PhotoContest.Services.Services
             photo.Description = newphotoDTO.Description;
             photo.PhotoUrl = newphotoDTO.PhotoUrl;
             photo.ContestId = newphotoDTO.ContestId;*/
+
+            if (newphotoDTO.Title == null) throw new ArgumentException(); 
+            if (newphotoDTO.Description == null) throw new ArgumentException(); 
+            if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(); 
+            if (newphotoDTO.UserId == null) throw new ArgumentException(); 
+            if (newphotoDTO.ContestId == null) throw new ArgumentException(); 
+
             var photoMapped = mapper.Map<Photo>(newphotoDTO);
             await this.dbContext.Photos.AddAsync(photoMapped);
             photoMapped.CreatedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photoMapped);
         }
-
         public async Task<bool> DeleteAsync(Guid id)
         {
             var photo = await FindPhoto(id);
@@ -54,7 +61,6 @@ namespace PhotoContest.Services.Services
                                        .Where(p => p.IsDeleted == false)
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
-                                       
         }
 
         public async Task<PhotoDTO> GetAsync(Guid id)
@@ -63,9 +69,15 @@ namespace PhotoContest.Services.Services
             return new PhotoDTO(photo);
         }
 
-        public Task<PhotoDTO> UpdateAsync(PhotoDTO photoDTO)
+        public async Task<PhotoDTO> UpdateAsync(UpdatePhotoDTO updatePhotoDTO, Guid id)
         {
-            throw new NotImplementedException();
+            var photo = await FindPhoto(id);
+            photo.Title = updatePhotoDTO.Title ?? photo.Title;
+            photo.Description = updatePhotoDTO.Description ?? photo.Description;
+            photo.PhotoUrl = updatePhotoDTO.PhotoUrl ?? photo.PhotoUrl;
+            photo.ModifiedOn = DateTime.UtcNow;
+            await this.dbContext.SaveChangesAsync();
+            return new PhotoDTO(photo);
         }
 
         private async Task<Photo> FindPhoto(Guid id)

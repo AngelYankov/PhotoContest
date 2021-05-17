@@ -19,7 +19,7 @@ namespace PhotoContest.Services.Models
             int totalPoints = 0;
             for (int i = 0; i < photo.Points.Count; i++)
             {
-                totalPoints += photo.Points[i];
+                totalPoints += photo.Points[i].value;
             }
             this.Points = totalPoints;
         }
