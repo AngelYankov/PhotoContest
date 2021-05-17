@@ -22,6 +22,7 @@ namespace PhotoContest.Services.Services
             var category = new Category();
             category.Name = categoryName;
             category.CreatedOn = DateTime.UtcNow;
+            await this.dbContext.Categories.AddAsync(category);
             await this.dbContext.SaveChangesAsync();
             return category.Name;
         }
@@ -33,7 +34,7 @@ namespace PhotoContest.Services.Services
 
         public async Task<string> UpdateAsync(Guid id, string newName)
         {
-            var category = FindCategory(id);
+            var category = await FindCategoryAsync(id);
             category.Name = newName;
             category.ModifiedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
@@ -42,16 +43,16 @@ namespace PhotoContest.Services.Services
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var category = FindCategory(id);
+            var category = await FindCategoryAsync(id);
             category.IsDeleted = true;
             category.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
             return category.IsDeleted;
         }
 
-        private Category FindCategory(Guid id)
+        private async Task<Category> FindCategoryAsync(Guid id)
         {
-            var category = dbContext.Categories.FirstOrDefault(c => c.Id == id)
+            var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id)
                                     ?? throw new ArgumentException();
             if (category.IsDeleted)
             {
