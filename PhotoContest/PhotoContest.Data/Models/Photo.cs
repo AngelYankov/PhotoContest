@@ -17,6 +17,6 @@ namespace PhotoContest.Data.Models
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
         [NotMapped]
-        public ICollection<int> Points { get; set; } = new List<int>();
+        public List<int> Points { get; set; } = new List<int>();
     }
 }
