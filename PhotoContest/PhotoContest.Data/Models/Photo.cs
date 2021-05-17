@@ -9,6 +9,7 @@ namespace PhotoContest.Data.Models
 {
     public class Photo : Entity
     {
+        [Key]
         public Guid Id { get; set; }
 
         [Required, StringLength(15, MinimumLength = 3, ErrorMessage ="Value for {0} should be between {1} and {2} characters.")]
