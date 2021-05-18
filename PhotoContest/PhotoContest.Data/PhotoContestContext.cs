@@ -20,6 +20,7 @@ namespace PhotoContest.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserContest> UserContests { get; set; }
         public DbSet<Jury> Juries { get; set; }
+        public DbSet<Point> Points { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
