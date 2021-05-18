@@ -22,6 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="..\PhotoContest.Services\PhotoContest.Services.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Api-Controllers\" />
+  </ItemGroup>
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
