@@ -24,6 +24,11 @@ namespace PhotoContest.Services.Services
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
+        /// <summary>
+        /// Create a photo.
+        /// </summary>
+        /// <param name="newphotoDTO">Details of photo to be created.</param>
+        /// <returns>Returns created photo or an appropriate error message.</returns>
         public async Task<PhotoDTO> CreateAsync(NewPhotoDTO newphotoDTO)
         {
             /*var photo = new Photo();
@@ -44,6 +49,11 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photoMapped);
         }
+        /// <summary>
+        /// Delete a photo.
+        /// </summary>
+        /// <param name="id">Id to search for.</param>
+        /// <returns>Returns true if created succesfully or an appropriate error message.</returns>
         public async Task<bool> DeleteAsync(Guid id)
         {
             var photo = await FindPhoto(id);
@@ -52,7 +62,10 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return photo.IsDeleted;
         }
-
+        /// <summary>
+        /// Get all photos.
+        /// </summary>
+        /// <returns>Returns all photos.</returns>
         public async Task<IEnumerable<PhotoDTO>> GetAllAsync()
         {
             return await this.dbContext.Photos
@@ -62,13 +75,22 @@ namespace PhotoContest.Services.Services
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
-
+        /// <summary>
+        /// Get a photo by Id.
+        /// </summary>
+        /// <param name="id">Id to search for.</param>
+        /// <returns>Returns photo with that id or an appropriate error message.</returns>
         public async Task<PhotoDTO> GetAsync(Guid id)
         {
             var photo = await FindPhoto(id);
             return new PhotoDTO(photo);
         }
-
+        /// <summary>
+        /// Update a photo.
+        /// </summary>
+        /// <param name="updatePhotoDTO">Details to be updated.</param>
+        /// <param name="id">Id of the photo to be updated.</param>
+        /// <returns>Returns updated photo or an appropriate error message.</returns>
         public async Task<PhotoDTO> UpdateAsync(UpdatePhotoDTO updatePhotoDTO, Guid id)
         {
             var photo = await FindPhoto(id);
@@ -79,7 +101,11 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
         }
-
+        /// <summary>
+        /// Find a photo.
+        /// </summary>
+        /// <param name="id">Id to search for.</param>
+        /// <returns>Returns photo with that id or an appropriate error message.</returns>
         private async Task<Photo> FindPhoto(Guid id)
         {
             return await this.dbContext.Photos
