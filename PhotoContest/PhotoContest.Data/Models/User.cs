@@ -19,11 +19,12 @@ namespace PhotoContest.Data
         public Guid RankId { get; set; }
         public Rank Rank { get; set; }
         //public int CurrentScore { get; set; }
-        [NotMapped]
-        public Dictionary<Guid, int> ContestScores { get; set; } = new Dictionary<Guid, int>();
+        //[NotMapped]
+        //public Dictionary<Guid, int> ContestScores { get; set; } = new Dictionary<Guid, int>();
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
-        public ICollection<Jury> Juries { get; set; } = new List<Jury>();
+        public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
+        public ICollection<PhotoAssesment> PhotoAssesments { get; set; } = new List<PhotoAssesment>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public DateTime DeletedOn { get; set; }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class UserContest
+    public class JuryMember
     {
         [Key]
         public Guid Id { get; set; }
@@ -13,6 +13,5 @@ namespace PhotoContest.Data.Models
         public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
-        public int Points { get; set; }
     }
 }

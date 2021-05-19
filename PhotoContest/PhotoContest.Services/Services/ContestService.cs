@@ -102,7 +102,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new ContestDTO(contest);
         }
-        public async Task<IEnumerable<ContestDTO>> GetByUser(string username, string filter)
+        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string username, string filter)
         {
             var allContests = await this.dbContext
                                         .Contests

@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 namespace PhotoContest.Data
 {
-    public class PhotoContestContext : IdentityDbContext<User,Role,Guid>
+    public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
     {
         public PhotoContestContext() { }
-        public PhotoContestContext(DbContextOptions<PhotoContestContext> options) 
+        public PhotoContestContext(DbContextOptions<PhotoContestContext> options)
             : base(options) { }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -19,14 +19,14 @@ namespace PhotoContest.Data
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserContest> UserContests { get; set; }
-        public DbSet<Jury> Juries { get; set; }
+        public DbSet<JuryMember> Juries { get; set; }
         public DbSet<Point> Points { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CategoryConfig());
             modelBuilder.ApplyConfiguration(new ContestConfig());
-            modelBuilder.ApplyConfiguration(new JuryConfig());
+            modelBuilder.ApplyConfiguration(new JuryMemberConfig());
             modelBuilder.ApplyConfiguration(new PhotoConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new UserContestConfig());
@@ -35,8 +35,11 @@ namespace PhotoContest.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) =>
-                        options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            if (options.IsConfigured)
+                options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
+        }
 
 
         protected virtual void Seed(ModelBuilder modelBuilder)
@@ -128,7 +131,7 @@ namespace PhotoContest.Data
             var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
             var roles = new List<Role>() { adminRole, userRole };
 
-            modelBuilder.Entity<Role>().HasData(roles); 
+            modelBuilder.Entity<Role>().HasData(roles);
 
             //password hasher
             var passHasher = new PasswordHasher<User>();
@@ -177,7 +180,7 @@ namespace PhotoContest.Data
             normalUserRole.UserId = user.Id;
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(normalUserRole);
 
-            
+
         }
     }
 }

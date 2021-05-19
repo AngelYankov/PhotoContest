@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class Jury
+    public class PhotoAssesment
     {
-        [Key]
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
-        public Guid ContestId { get; set; }
-        public Contest Contest { get; set; }
+        public Guid PhotoId { get; set; }
+        public Photo Photo { get; set; }
+        public string Comment { get; set; }
+        public int Points { get; set; }
     }
 }

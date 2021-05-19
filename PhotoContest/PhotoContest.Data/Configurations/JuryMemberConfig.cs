@@ -7,9 +7,9 @@ using PhotoContest.Data.Models;
 
 namespace PhotoContest.Data.Configurations
 {
-    public class JuryConfig : IEntityTypeConfiguration<Jury>
+    public class JuryMemberConfig : IEntityTypeConfiguration<JuryMember>
     {
-        public void Configure(EntityTypeBuilder<Jury> builder)
+        public void Configure(EntityTypeBuilder<JuryMember> builder)
         {
             builder.HasKey(j => new { j.UserId, j.ContestId });
 

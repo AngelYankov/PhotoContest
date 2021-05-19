@@ -24,6 +24,7 @@ namespace PhotoContest.Data.Models
         public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
-        public List<Point> Points { get; set; } = new List<Point>();
+        //public ICollection<Point> Points { get; set; } = new List<Point>();
+        public ICollection<PhotoAssesment> PhotoAssesments { get; set; } = new List<PhotoAssesment>();
     }
 }

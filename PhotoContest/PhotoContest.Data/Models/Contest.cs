@@ -25,7 +25,7 @@ namespace PhotoContest.Data.Models
         public DateTime Finished { get; set; }
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
-        public ICollection<Jury> Juries { get; set; } = new List<Jury>();
+        public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
 
     }
 }
