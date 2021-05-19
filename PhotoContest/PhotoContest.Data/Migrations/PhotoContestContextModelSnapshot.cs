@@ -105,13 +105,13 @@ namespace PhotoContest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("f09c92f3-ea84-45a8-8d68-1ea66638e749"),
-                            RoleId = new Guid("d2310b98-f58b-441c-bbfd-fda91ab1729e")
+                            UserId = new Guid("6239f968-d3d1-4755-b2f5-a11cf5cd2193"),
+                            RoleId = new Guid("5ed9c346-a67d-4a75-96a8-34995db99397")
                         },
                         new
                         {
-                            UserId = new Guid("9e1100a1-9a16-4057-a999-c0173d0f7af1"),
-                            RoleId = new Guid("12d95216-68e9-4c11-9ced-72c157b6ba02")
+                            UserId = new Guid("0ce45ae2-85be-420c-95e1-6ef909c6b809"),
+                            RoleId = new Guid("5ee90dbb-9c78-424e-ad83-fb08e682865a")
                         });
                 });
 
@@ -165,8 +165,8 @@ namespace PhotoContest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e98f206a-6d05-4150-b00a-1addcbdbaf74"),
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(394),
+                            Id = new Guid("d5fab1b9-fd72-49f2-bfb7-1fa24e921c93"),
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(2955),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -174,8 +174,8 @@ namespace PhotoContest.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3ce134e8-5b72-49ed-a8cf-717410a17455"),
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(924),
+                            Id = new Guid("92192ba6-7689-4e65-840b-29c5a6e26314"),
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3543),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -183,8 +183,8 @@ namespace PhotoContest.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4ad0bcaa-6ae6-46cf-84e6-7a816e524c1e"),
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(936),
+                            Id = new Guid("b92e52e3-a64c-4d6e-a4c6-ae23bad77b9c"),
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3557),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -192,8 +192,8 @@ namespace PhotoContest.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b909a670-1254-46a2-8ead-3b4143919e84"),
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(948),
+                            Id = new Guid("9e6ef104-7f40-4c3d-8d41-6a717df8c5e0"),
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3559),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -201,8 +201,8 @@ namespace PhotoContest.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b23a6474-1b8e-4dee-bb67-6d0d312135d6"),
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(1041),
+                            Id = new Guid("a59965aa-24f4-40cf-99bc-36986ca55337"),
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3561),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -383,15 +383,15 @@ namespace PhotoContest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d2310b98-f58b-441c-bbfd-fda91ab1729e"),
-                            ConcurrencyStamp = "1653f5b8-8bc1-4951-8e73-572a82802b19",
+                            Id = new Guid("5ed9c346-a67d-4a75-96a8-34995db99397"),
+                            ConcurrencyStamp = "d8896112-550a-4d2d-bc80-7190805e6cec",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         },
                         new
                         {
-                            Id = new Guid("12d95216-68e9-4c11-9ced-72c157b6ba02"),
-                            ConcurrencyStamp = "7fc58c68-51b3-4ea9-9da3-80bfd28dd704",
+                            Id = new Guid("5ee90dbb-9c78-424e-ad83-fb08e682865a"),
+                            ConcurrencyStamp = "b74639bb-16e9-4c36-8670-66918aefab28",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -425,7 +425,7 @@ namespace PhotoContest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a01b89d0-a4cd-41fa-b3e8-72fbecc08377"),
+                            Id = new Guid("0356ea22-3e93-45f9-8106-09928fd44335"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -434,7 +434,7 @@ namespace PhotoContest.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("fc0836d7-fd80-4380-bc45-1d812c345f80"),
+                            Id = new Guid("c1bc1736-74dd-4b49-afbb-e2c9387f71e7"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -443,7 +443,7 @@ namespace PhotoContest.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9754a1a1-d68f-42b4-a965-37b6e9c8c8e7"),
+                            Id = new Guid("98c3680e-5b36-449a-afa8-f4177588895a"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -489,22 +489,22 @@ namespace PhotoContest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e744544c-8508-44ca-83fb-a5ba9e0af1ee"),
+                            Id = new Guid("0188b667-7eef-46cf-8d0a-b26fc4acadb4"),
                             Name = "Junkie"
                         },
                         new
                         {
-                            Id = new Guid("b9caf6dc-8688-4484-9584-fe7d727a1730"),
+                            Id = new Guid("5f2b5a7a-4698-40c3-9a14-d0552bf91587"),
                             Name = "Enthusiast"
                         },
                         new
                         {
-                            Id = new Guid("0063c479-4fbb-4ec0-8c2b-2836a63fff06"),
+                            Id = new Guid("b62cf723-cfc1-4b1e-8b6a-04922119d573"),
                             Name = "Master"
                         },
                         new
                         {
-                            Id = new Guid("e6b8c862-bc25-4aef-8af9-105b6b5705de"),
+                            Id = new Guid("8e2bd5c6-8a76-4712-92f9-22754af30939"),
                             Name = "Wise and Benevolent Photo Dictator"
                         });
                 });
@@ -609,10 +609,10 @@ namespace PhotoContest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f09c92f3-ea84-45a8-8d68-1ea66638e749"),
+                            Id = new Guid("6239f968-d3d1-4755-b2f5-a11cf5cd2193"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0fc2c1a6-b8ce-4cd7-a267-c3fc2a99dac9",
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 579, DateTimeKind.Utc).AddTicks(5429),
+                            ConcurrencyStamp = "2b1355b8-f2b2-439f-b42e-ceac9a5345e2",
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 119, DateTimeKind.Utc).AddTicks(6432),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "eric.berg@mail.com",
                             EmailConfirmed = false,
@@ -623,19 +623,19 @@ namespace PhotoContest.Data.Migrations
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NormalizedEmail = "ERIC.BERG@MAIL.COM",
                             NormalizedUserName = "ERIC.BERG@MAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMVnO8b1ja3KaHFC0NfIAYlTc9JdmpAoZSXcqx6EHWj1pA/if7LcQIQ3m3oFH0c1ZQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ6z3PvZXDey8bxqq3xVLKP8qKpg9rYeLboGMbqEu+OrMiaciI6ex7FaUVkAlIZstw==",
                             PhoneNumberConfirmed = false,
-                            RankId = new Guid("e6b8c862-bc25-4aef-8af9-105b6b5705de"),
+                            RankId = new Guid("8e2bd5c6-8a76-4712-92f9-22754af30939"),
                             SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B",
                             TwoFactorEnabled = false,
                             UserName = "eric.berg@mail.com"
                         },
                         new
                         {
-                            Id = new Guid("9e1100a1-9a16-4057-a999-c0173d0f7af1"),
+                            Id = new Guid("0ce45ae2-85be-420c-95e1-6ef909c6b809"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "939cd522-0d16-4906-81af-4189acaeb434",
-                            CreatedOn = new DateTime(2021, 5, 19, 7, 51, 51, 588, DateTimeKind.Utc).AddTicks(5596),
+                            ConcurrencyStamp = "bf5995bd-f29f-40b5-9a3b-68452dbe9f1a",
+                            CreatedOn = new DateTime(2021, 5, 19, 11, 0, 20, 128, DateTimeKind.Utc).AddTicks(3286),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "georgi.ivanov@mail.com",
                             EmailConfirmed = false,
@@ -646,9 +646,9 @@ namespace PhotoContest.Data.Migrations
                             ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NormalizedEmail = "GEORGI.IVANOV@MAIL.COM",
                             NormalizedUserName = "GEORGI.IVANOV@MAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEICr+vl7auz2zLF65a1QDD+czeXwGGtz7rptcCsFLxUuRP4sz2g0d49Nb1v5VMi2Wg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENwjMN9CIlBxRdROvqtuJcDCCEvmm2uDkEJpxDGYHxmS7aFcRliMpRst8LW3Oifmww==",
                             PhoneNumberConfirmed = false,
-                            RankId = new Guid("e744544c-8508-44ca-83fb-a5ba9e0af1ee"),
+                            RankId = new Guid("0188b667-7eef-46cf-8d0a-b26fc4acadb4"),
                             SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B",
                             TwoFactorEnabled = false,
                             UserName = "georgi.ivanov@mail.com"

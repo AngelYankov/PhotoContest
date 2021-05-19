@@ -55,7 +55,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
                                        .Where(u => u.IsDeleted == false)
-                                       .Select(u=>new UserDTO(u))
+                                       .Select(u => new UserDTO(u))
                                        .ToListAsync();
         }
 
@@ -71,6 +71,14 @@ namespace PhotoContest.Services.Services
             return new UserDTO(user);
         }
 
+        public async Task<User> GetUserAsync(string username)
+        {
+            return await this.dbContext
+                .Users
+                .Where(c => c.IsDeleted == false)
+                .FirstOrDefaultAsync(c => c.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+                ?? throw new ArgumentException();
+        }
 
         private async Task<User> FindUser(Guid id)
         {

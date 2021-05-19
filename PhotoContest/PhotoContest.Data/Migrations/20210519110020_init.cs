@@ -353,8 +353,8 @@ namespace PhotoContest.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("d2310b98-f58b-441c-bbfd-fda91ab1729e"), "1653f5b8-8bc1-4951-8e73-572a82802b19", "Organizer", "ORGANIZER" },
-                    { new Guid("12d95216-68e9-4c11-9ced-72c157b6ba02"), "7fc58c68-51b3-4ea9-9da3-80bfd28dd704", "User", "USER" }
+                    { new Guid("5ed9c346-a67d-4a75-96a8-34995db99397"), "d8896112-550a-4d2d-bc80-7190805e6cec", "Organizer", "ORGANIZER" },
+                    { new Guid("5ee90dbb-9c78-424e-ad83-fb08e682865a"), "b74639bb-16e9-4c36-8670-66918aefab28", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -362,11 +362,11 @@ namespace PhotoContest.Data.Migrations
                 columns: new[] { "Id", "CreatedOn", "DeletedOn", "IsDeleted", "ModifiedOn", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("e98f206a-6d05-4150-b00a-1addcbdbaf74"), new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(394), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cars" },
-                    { new Guid("3ce134e8-5b72-49ed-a8cf-717410a17455"), new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(924), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Animals" },
-                    { new Guid("4ad0bcaa-6ae6-46cf-84e6-7a816e524c1e"), new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(936), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Nature" },
-                    { new Guid("b909a670-1254-46a2-8ead-3b4143919e84"), new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(948), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Architecture" },
-                    { new Guid("b23a6474-1b8e-4dee-bb67-6d0d312135d6"), new DateTime(2021, 5, 19, 7, 51, 51, 577, DateTimeKind.Utc).AddTicks(1041), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Motorbikes" }
+                    { new Guid("d5fab1b9-fd72-49f2-bfb7-1fa24e921c93"), new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(2955), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cars" },
+                    { new Guid("92192ba6-7689-4e65-840b-29c5a6e26314"), new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3543), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Animals" },
+                    { new Guid("b92e52e3-a64c-4d6e-a4c6-ae23bad77b9c"), new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3557), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Nature" },
+                    { new Guid("9e6ef104-7f40-4c3d-8d41-6a717df8c5e0"), new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3559), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Architecture" },
+                    { new Guid("a59965aa-24f4-40cf-99bc-36986ca55337"), new DateTime(2021, 5, 19, 11, 0, 20, 117, DateTimeKind.Utc).AddTicks(3561), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Motorbikes" }
                 });
 
             migrationBuilder.InsertData(
@@ -374,10 +374,10 @@ namespace PhotoContest.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("e744544c-8508-44ca-83fb-a5ba9e0af1ee"), "Junkie" },
-                    { new Guid("b9caf6dc-8688-4484-9584-fe7d727a1730"), "Enthusiast" },
-                    { new Guid("0063c479-4fbb-4ec0-8c2b-2836a63fff06"), "Master" },
-                    { new Guid("e6b8c862-bc25-4aef-8af9-105b6b5705de"), "Wise and Benevolent Photo Dictator" }
+                    { new Guid("0188b667-7eef-46cf-8d0a-b26fc4acadb4"), "Junkie" },
+                    { new Guid("5f2b5a7a-4698-40c3-9a14-d0552bf91587"), "Enthusiast" },
+                    { new Guid("b62cf723-cfc1-4b1e-8b6a-04922119d573"), "Master" },
+                    { new Guid("8e2bd5c6-8a76-4712-92f9-22754af30939"), "Wise and Benevolent Photo Dictator" }
                 });
 
             migrationBuilder.InsertData(
@@ -385,30 +385,30 @@ namespace PhotoContest.Data.Migrations
                 columns: new[] { "Id", "CreatedOn", "DeletedOn", "IsDeleted", "ModifiedOn", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("a01b89d0-a4cd-41fa-b3e8-72fbecc08377"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phase 1" },
-                    { new Guid("fc0836d7-fd80-4380-bc45-1d812c345f80"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phase 2" },
-                    { new Guid("9754a1a1-d68f-42b4-a965-37b6e9c8c8e7"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Finished" }
+                    { new Guid("0356ea22-3e93-45f9-8106-09928fd44335"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phase 1" },
+                    { new Guid("c1bc1736-74dd-4b49-afbb-e2c9387f71e7"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phase 2" },
+                    { new Guid("98c3680e-5b36-449a-afa8-f4177588895a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Finished" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "DeletedOn", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "LastName", "LockoutEnabled", "LockoutEnd", "ModifiedOn", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RankId", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("9e1100a1-9a16-4057-a999-c0173d0f7af1"), 0, "939cd522-0d16-4906-81af-4189acaeb434", new DateTime(2021, 5, 19, 7, 51, 51, 588, DateTimeKind.Utc).AddTicks(5596), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "georgi.ivanov@mail.com", false, "Georgi", false, "Ivanov", true, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "GEORGI.IVANOV@MAIL.COM", "GEORGI.IVANOV@MAIL.COM", "AQAAAAEAACcQAAAAEICr+vl7auz2zLF65a1QDD+czeXwGGtz7rptcCsFLxUuRP4sz2g0d49Nb1v5VMi2Wg==", null, false, new Guid("e744544c-8508-44ca-83fb-a5ba9e0af1ee"), "DC6E275DD1E24957A7781D42BB68292B", false, "georgi.ivanov@mail.com" });
+                values: new object[] { new Guid("0ce45ae2-85be-420c-95e1-6ef909c6b809"), 0, "bf5995bd-f29f-40b5-9a3b-68452dbe9f1a", new DateTime(2021, 5, 19, 11, 0, 20, 128, DateTimeKind.Utc).AddTicks(3286), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "georgi.ivanov@mail.com", false, "Georgi", false, "Ivanov", true, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "GEORGI.IVANOV@MAIL.COM", "GEORGI.IVANOV@MAIL.COM", "AQAAAAEAACcQAAAAENwjMN9CIlBxRdROvqtuJcDCCEvmm2uDkEJpxDGYHxmS7aFcRliMpRst8LW3Oifmww==", null, false, new Guid("0188b667-7eef-46cf-8d0a-b26fc4acadb4"), "DC6E275DD1E24957A7781D42BB68292B", false, "georgi.ivanov@mail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "DeletedOn", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "LastName", "LockoutEnabled", "LockoutEnd", "ModifiedOn", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RankId", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("f09c92f3-ea84-45a8-8d68-1ea66638e749"), 0, "0fc2c1a6-b8ce-4cd7-a267-c3fc2a99dac9", new DateTime(2021, 5, 19, 7, 51, 51, 579, DateTimeKind.Utc).AddTicks(5429), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "eric.berg@mail.com", false, "Eric", false, "Berg", true, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "ERIC.BERG@MAIL.COM", "ERIC.BERG@MAIL.COM", "AQAAAAEAACcQAAAAEMVnO8b1ja3KaHFC0NfIAYlTc9JdmpAoZSXcqx6EHWj1pA/if7LcQIQ3m3oFH0c1ZQ==", null, false, new Guid("e6b8c862-bc25-4aef-8af9-105b6b5705de"), "DC6E275DD1E24957A7781D42BB68293B", false, "eric.berg@mail.com" });
+                values: new object[] { new Guid("6239f968-d3d1-4755-b2f5-a11cf5cd2193"), 0, "2b1355b8-f2b2-439f-b42e-ceac9a5345e2", new DateTime(2021, 5, 19, 11, 0, 20, 119, DateTimeKind.Utc).AddTicks(6432), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "eric.berg@mail.com", false, "Eric", false, "Berg", true, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "ERIC.BERG@MAIL.COM", "ERIC.BERG@MAIL.COM", "AQAAAAEAACcQAAAAEJ6z3PvZXDey8bxqq3xVLKP8qKpg9rYeLboGMbqEu+OrMiaciI6ex7FaUVkAlIZstw==", null, false, new Guid("8e2bd5c6-8a76-4712-92f9-22754af30939"), "DC6E275DD1E24957A7781D42BB68293B", false, "eric.berg@mail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId" },
-                values: new object[] { new Guid("9e1100a1-9a16-4057-a999-c0173d0f7af1"), new Guid("12d95216-68e9-4c11-9ced-72c157b6ba02") });
+                values: new object[] { new Guid("0ce45ae2-85be-420c-95e1-6ef909c6b809"), new Guid("5ee90dbb-9c78-424e-ad83-fb08e682865a") });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId" },
-                values: new object[] { new Guid("f09c92f3-ea84-45a8-8d68-1ea66638e749"), new Guid("d2310b98-f58b-441c-bbfd-fda91ab1729e") });
+                values: new object[] { new Guid("6239f968-d3d1-4755-b2f5-a11cf5cd2193"), new Guid("5ed9c346-a67d-4a75-96a8-34995db99397") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

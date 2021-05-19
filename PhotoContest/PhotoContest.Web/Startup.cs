@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using PhotoContest.Data;
@@ -65,6 +66,7 @@ namespace PhotoContest.Web
             services.AddScoped<IContestService, ContestService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserService, UserService>();
+            services.TryAddScoped<SignInManager<User>>();
 
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));

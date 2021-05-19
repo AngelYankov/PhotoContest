@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Services;
 
 namespace PhotoContest.Web.Api_Controllers
@@ -18,12 +19,14 @@ namespace PhotoContest.Web.Api_Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoryService;
-        private readonly SignInManager<User> signInManager;
+        //private readonly IUserService userService;
+        //private readonly SignInManager<User> signInManager;
 
-        public CategoriesController(ICategoryService categoryService, SignInManager<User> signInManager)
+        public CategoriesController(ICategoryService categoryService/*, SignInManager<User> signInManager*/)
         {
             this.categoryService = categoryService;
-            this.signInManager = signInManager;
+            //this.userService = userService;
+            //this.signInManager = signInManager;
         }
 
         /// <summary>
@@ -43,8 +46,8 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">ID of the category to update.</param>
         /// <param name="name">Name of the category to be updated.</param>
         /// <returns>Returns the updated category or an appropriate error message.</returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromHeader] string username, string password, Guid id, string name)
+        /*[HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync( Guid id, string name)
         {
             try
             {
@@ -63,7 +66,7 @@ namespace PhotoContest.Web.Api_Controllers
             {
                 return NotFound(e.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// Create a category.

@@ -1,4 +1,5 @@
-﻿using PhotoContest.Services.Models;
+﻿using PhotoContest.Data;
+using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using System;
@@ -15,5 +16,6 @@ namespace PhotoContest.Services.Contracts
         Task<UserDTO> GetAsync(Guid id);
         Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, Guid id);
         Task<bool> DeleteAsync(Guid id);
+        Task<User> GetUserAsync(string username);
     }
 }
