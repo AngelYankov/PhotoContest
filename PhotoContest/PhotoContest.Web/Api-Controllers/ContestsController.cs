@@ -28,11 +28,22 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Get all contests.
         /// </summary>
-        /// <returns>Returns all parcels</returns>
+        /// <returns>Returns all contests.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contest>>> GetContests()
         {
             var contests = await this.contestService.GetAllAsync();
+            return Ok(contests);
+        }
+        
+        /// <summary>
+        /// Get all open contests.
+        /// </summary>
+        /// <returns>Returns all open contests.</returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Contest>>> GetOpenContests()
+        {
+            var contests = await this.contestService.GetAllOpenAsync();
             return Ok(contests);
         }
 
