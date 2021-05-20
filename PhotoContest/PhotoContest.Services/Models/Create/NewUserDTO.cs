@@ -12,8 +12,11 @@ namespace PhotoContest.Services.Models.Create
 
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string LastName { get; set; }
-
         [Required]
-        public Guid RankId { get; set; }
+        public string Username { get; set; }
+        [Required,EmailAddress]
+        public string Email { get; set; }
+        [Required,DataType(DataType.Password)]
+        public string Password { get; set; }
     }
 }

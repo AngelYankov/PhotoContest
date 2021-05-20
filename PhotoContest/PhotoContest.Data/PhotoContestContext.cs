@@ -5,6 +5,7 @@ using PhotoContest.Data.Configurations;
 using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PhotoContest.Data
 {
@@ -120,6 +121,11 @@ namespace PhotoContest.Data
                 {
                     Id = Guid.NewGuid(),
                     Name = "Wise and Benevolent Photo Dictator"
+                },
+                new Rank()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Organizer"
                 }
             };
 
@@ -147,6 +153,7 @@ namespace PhotoContest.Data
             adminUser.UserName = "eric.berg@mail.com";
             adminUser.NormalizedUserName = "ERIC.BERG@MAIL.COM";
             adminUser.CreatedOn = DateTime.UtcNow;
+            //adminUser.RankId = this.Ranks.Last().Id;
             adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
             adminUser.SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B";
             adminUser.LockoutEnabled = true;
@@ -168,6 +175,7 @@ namespace PhotoContest.Data
             user.UserName = "georgi.ivanov@mail.com";
             user.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
             user.CreatedOn = DateTime.UtcNow;
+            //adminUser.RankId = this.Ranks.First().Id;
             user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
             user.SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B";
             user.LockoutEnabled = true;

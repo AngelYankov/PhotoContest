@@ -40,7 +40,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// Get all open contests.
         /// </summary>
         /// <returns>Returns all open contests.</returns>
-        [HttpGet]
+        [HttpGet("open")]
         public async Task<ActionResult<IEnumerable<Contest>>> GetOpenContests()
         {
             var contests = await this.contestService.GetAllOpenAsync();
@@ -112,7 +112,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="sortBy">name/category/newest/oldest</param>
         /// <param name="order">asc/desc</param>
         /// <returns>Returns filtered and/or sorted parcels or an appropriate error message.</returns>
-        [HttpGet("filter by phase")]
+        [HttpGet("filterPhase")]
         public async Task<ActionResult<IEnumerable<ContestDTO>>> GetByPhase([FromQuery] string phaseName, string sortBy, string order)
         {
             try
@@ -132,7 +132,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="username">Username for which we are filtering the contests.</param>
         /// <param name="filter">open/closed</param>
         /// <returns></returns>
-        [HttpGet("filter by user")]
+        [HttpGet("filterUser")]
         public async Task<ActionResult<IEnumerable<ContestDTO>>> GetByUser([FromQuery] string username, string filter)
         {
             try

@@ -93,7 +93,7 @@ namespace PhotoContest.Web.Api_Controllers
             try
             {
                 var photo = await this.photoService.CreateAsync(newPhotoDTO);
-                return Ok(photo);
+                return Created("post",photo);
             }
             catch (Exception E)
             {

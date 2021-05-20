@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using PhotoContest.Data;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
+using PhotoContest.Services.Services.SecuritySettings;
 
 namespace PhotoContest.Web.Api_Controllers
 {
@@ -27,6 +29,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <returns>Returns all users.</returns>
         // GET: api/Users
+        [Authorize(Roles ="Organizer")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllAsync()
         {
@@ -92,7 +95,7 @@ namespace PhotoContest.Web.Api_Controllers
             try
             {
                 var user = await this.userService.CreateAsync(newUserDTO);
-                return Ok(user);
+                return Created("post",user);
             }
             catch (Exception E)
             {
@@ -117,6 +120,28 @@ namespace PhotoContest.Web.Api_Controllers
             {
                 return BadRequest(E.Message);
             }
+        }
+        /// <summary>
+        /// Create token.
+        /// </summary>
+        /// <param name="model">Validation details.</param>
+        /// <returns>Returns created token.</returns>
+        [HttpPost("token")]
+        public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
+        {
+            var result = await this.userService.GetTokenAsync(model);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Add role to user.
+        /// </summary>
+        /// <param name="model">Details of user and role to be added.</param>
+        /// <returns>Returns appropriate message if created.</returns>
+        [HttpPost("addrole")]
+        public async Task<IActionResult> AddRoleAsync(AddRoleModel model)
+        {
+            var result = await this.userService.AddRoleAsync(model);
+            return Ok(result);
         }
     }
 }
