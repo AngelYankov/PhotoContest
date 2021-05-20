@@ -20,7 +20,7 @@ namespace PhotoContest.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserContest> UserContests { get; set; }
         public DbSet<JuryMember> Juries { get; set; }
-        public DbSet<Point> Points { get; set; }
+        public DbSet<PhotoRating> PhotoRatings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,7 @@ namespace PhotoContest.Data
             modelBuilder.ApplyConfiguration(new ContestConfig());
             modelBuilder.ApplyConfiguration(new JuryMemberConfig());
             modelBuilder.ApplyConfiguration(new PhotoConfig());
+            modelBuilder.ApplyConfiguration(new PhotoRatingConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new UserContestConfig());
 
@@ -147,7 +148,6 @@ namespace PhotoContest.Data
             adminUser.NormalizedUserName = "ERIC.BERG@MAIL.COM";
             adminUser.CreatedOn = DateTime.UtcNow;
             adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
-            adminUser.RankId = ranks[3].Id;
             adminUser.SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B";
             adminUser.LockoutEnabled = true;
             modelBuilder.Entity<User>().HasData(adminUser);
@@ -169,7 +169,6 @@ namespace PhotoContest.Data
             user.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
             user.CreatedOn = DateTime.UtcNow;
             user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
-            user.RankId = ranks[0].Id;
             user.SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B";
             user.LockoutEnabled = true;
             modelBuilder.Entity<User>().HasData(user);

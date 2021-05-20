@@ -13,18 +13,14 @@ namespace PhotoContest.Data
     {
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string FirstName { get; set; }
-
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string LastName { get; set; }
-        public Guid RankId { get; set; }
+        public Guid? RankId { get; set; }
         public Rank Rank { get; set; }
-        //public int CurrentScore { get; set; }
-        //[NotMapped]
-        //public Dictionary<Guid, int> ContestScores { get; set; } = new Dictionary<Guid, int>();
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
         public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
-        //public ICollection<PhotoAssesment> PhotoAssesments { get; set; } = new List<PhotoAssesment>();
+        public ICollection<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public DateTime DeletedOn { get; set; }

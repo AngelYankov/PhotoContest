@@ -10,14 +10,14 @@ namespace PhotoContest.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
             builder.Property(u => u.Email).IsRequired();
             builder.HasIndex(u => u.Email).IsUnique();
             builder.Property(u => u.PasswordHash).IsRequired();
 
-            builder.HasOne(u => u.Rank)
+            /*builder.HasOne(u => u.Rank)
                 .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RankId);
+                .HasForeignKey(u => u.RankId)
+                .OnDelete(DeleteBehavior.NoAction);*/
         }
     }
 }

@@ -1,18 +1,17 @@
-﻿using PhotoContest.Data.Audit;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class Point : Entity
+    public class PhotoRating
     {
-        [Key]
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public Guid PhotoId { get; set; }
         public Photo Photo { get; set; }
-        public int Value { get; set; }
-        //TODO create method with value(int)
+        public string Comment { get; set; }
+        public int Points { get; set; }
     }
 }

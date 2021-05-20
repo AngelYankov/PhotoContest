@@ -11,14 +11,15 @@ namespace PhotoContest.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Contest> builder)
         {
-            //builder.HasKey(c => c.Id);
             builder.HasOne(contest => contest.Category)
                 .WithMany(category => category.Contests)
-                .HasForeignKey(contest => contest.CategoryId);
+                .HasForeignKey(contest => contest.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
             
             builder.HasOne(contest => contest.Status)
                 .WithMany(status => status.Contests)
-                .HasForeignKey(contest => contest.StatusId);
+                .HasForeignKey(contest => contest.StatusId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
