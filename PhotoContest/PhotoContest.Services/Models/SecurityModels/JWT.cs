@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PhotoContest.Web.SecuritySettings
+namespace PhotoContest.Services.Models.SecurityModels
 {
     public class JWT
     {

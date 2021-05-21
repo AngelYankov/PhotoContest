@@ -13,8 +13,10 @@ using Microsoft.OpenApi.Models;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
+using PhotoContest.Services.Contracts.SecurityContracts;
+using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Services;
-using PhotoContest.Web.SecuritySettings;
+using PhotoContest.Services.Services.SecurityService;
 using System;
 using System.IO;
 using System.Reflection;
@@ -94,6 +96,7 @@ namespace PhotoContest.Web
             services.AddScoped<IContestService, ContestService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.TryAddScoped<SignInManager<User>>();
 
             services.AddRazorPages();

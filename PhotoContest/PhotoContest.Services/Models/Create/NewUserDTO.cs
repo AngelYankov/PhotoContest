@@ -12,11 +12,10 @@ namespace PhotoContest.Services.Models.Create
 
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string LastName { get; set; }
-        [Required]
-        public string Username { get; set; }
+        
         [Required,EmailAddress]
         public string Email { get; set; }
-        [Required,DataType(DataType.Password)]
+        [Required,MinLength(8)]
         public string Password { get; set; }
     }
 }

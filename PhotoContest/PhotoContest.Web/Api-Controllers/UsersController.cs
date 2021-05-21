@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models.Create;
+using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Models.Update;
-using PhotoContest.Services.Services.SecuritySettings;
 
 namespace PhotoContest.Web.Api_Controllers
 {
@@ -118,17 +118,7 @@ namespace PhotoContest.Web.Api_Controllers
                 return BadRequest(E.Message);
             }
         }
-        /// <summary>
-        /// Create token.
-        /// </summary>
-        /// <param name="model">Validation details.</param>
-        /// <returns>Returns created token.</returns>
-        [HttpPost("token")]
-        public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
-        {
-            var result = await this.userService.GetTokenAsync(model);
-            return Ok(result);
-        }
+        
         /// <summary>
         /// Add role to user.
         /// </summary>

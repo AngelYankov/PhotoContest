@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PhotoContest.Services.Services.SecuritySettings
+namespace PhotoContest.Services.Models.SecurityModels
 {
     public class AuthenticationModel
     {
