@@ -14,19 +14,16 @@ using PhotoContest.Services.Services;
 
 namespace PhotoContest.Web.Api_Controllers
 {
+    [Authorize(Roles = "Organizer")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoryService;
-        //private readonly IUserService userService;
-        //private readonly SignInManager<User> signInManager;
 
-        public CategoriesController(ICategoryService categoryService/*, SignInManager<User> signInManager*/)
+        public CategoriesController(ICategoryService categoryService)
         {
             this.categoryService = categoryService;
-            //this.userService = userService;
-            //this.signInManager = signInManager;
         }
 
         /// <summary>
@@ -46,27 +43,19 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">ID of the category to update.</param>
         /// <param name="name">Name of the category to be updated.</param>
         /// <returns>Returns the updated category or an appropriate error message.</returns>
-        /*[HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync( Guid id, string name)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, string name)
         {
             try
             {
-                var result = await this.signInManager.PasswordSignInAsync(username, password, false, false);
-                if (result.Succeeded)
-                {
-                    var category = await this.categoryService.UpdateAsync(id, name);
-                    return Ok(category);
-                }
-                else
-                {
-                    return Unauthorized();
-                }
+                var category = await this.categoryService.UpdateAsync(id, name);
+                return Ok(category);
             }
             catch (Exception e)
             {
                 return NotFound(e.Message);
             }
-        }*/
+        }
 
         /// <summary>
         /// Create a category.
