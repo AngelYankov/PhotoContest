@@ -58,7 +58,7 @@ namespace PhotoContest.Services.Services
                 else { throw new ArgumentException("Incorrect password."); }
             }
             else { throw new ArgumentException("Email already exists."); }
-            await this.dbContext.Users.AddAsync(user);
+           // await this.dbContext.Users.AddAsync(user);
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
         }
@@ -136,8 +136,8 @@ namespace PhotoContest.Services.Services
         {
             var user = await this.userManager.FindByEmailAsync(model.Email)
             ?? throw new ArgumentException("Email not found.");
-            var roleExists = this.dbContext.Roles.Any(r => r.Name.Equals(model.Role, StringComparison.OrdinalIgnoreCase));
-            if (roleExists)
+            var roleExists = this.dbContext.Roles.AsEnumerable().Where(r => r.Name.ToString().Equals(model.Role, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (roleExists.Count != 0)
             {
                 await this.userManager.AddToRoleAsync(user, model.Role);
                 return $"Added {model.Role} to user {model.Email}.";
