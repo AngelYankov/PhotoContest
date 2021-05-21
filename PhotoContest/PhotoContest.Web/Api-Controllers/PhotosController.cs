@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <returns>Returns all photos.</returns>
         // GET: api/Photos
+        [Authorize(Roles = "Organizer")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Photo>>> GetAllAsync()
         {
@@ -44,6 +46,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns photo with that id or an appropriate error message.</returns>
         // GET: api/Photos/5
+        [Authorize(Roles = "Organizer")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Photo>> GetAsync(Guid id)
         {
@@ -66,6 +69,7 @@ namespace PhotoContest.Web.Api_Controllers
         // PUT: api/Photos/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = "Organizer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(Guid id, UpdatePhotoDTO updateModel)
         {
@@ -87,6 +91,7 @@ namespace PhotoContest.Web.Api_Controllers
         // POST: api/Photos
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<ActionResult<Photo>> CreateAsync(NewPhotoDTO newPhotoDTO)
         {
@@ -106,6 +111,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns true if deleted succesfully or an appropriate error message.</returns>
         // DELETE: api/Photos/5
+        [Authorize(Roles = "Organizer")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Photo>> DeleteAsync(Guid id)
         {

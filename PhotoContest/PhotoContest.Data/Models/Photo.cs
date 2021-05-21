@@ -17,11 +17,8 @@ namespace PhotoContest.Data.Models
 
         [Required, StringLength(30, MinimumLength = 5, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string Description { get; set; }
-
         [Required]
         public string PhotoUrl { get; set; }
-        public Guid UserId { get; set; }
-        public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
         public IList<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -58,7 +59,7 @@ namespace PhotoContest.Services.Services
                 else { throw new ArgumentException("Incorrect password."); }
             }
             else { throw new ArgumentException("Email already exists."); }
-           // await this.dbContext.Users.AddAsync(user);
+            // await this.dbContext.Users.AddAsync(user);
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
         }
@@ -97,6 +98,34 @@ namespace PhotoContest.Services.Services
                                        .Select(u => new UserDTO(u))
                                        .ToListAsync();
         }
+        /// <summary>
+        /// Get all participants which are not organizers.
+        /// </summary>
+        /// <returns>Returns all participants.</returns>
+        public async Task<IEnumerable<UserDTO>> GetAllParticipantsAsync()
+        {
+            var role = this.dbContext.Roles.AsEnumerable().FirstOrDefault(r => r.Name.Equals("user", StringComparison.OrdinalIgnoreCase));
+            var userRoles = await this.dbContext.UserRoles.Where(ur => ur.RoleId == role.Id).ToListAsync();
+            var users = new List<User>();
+            foreach (var userRole in userRoles)
+            {
+                var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id == userRole.UserId);
+                users.Add(user);
+            }
+            /*foreach (var user in users)
+            {
+                var contestsUser = user.UserContests.Where(uc => uc.Contest == user.cont);
+                foreach (var userContest in contestsUser)
+                {
+                    //var result = this.dbContext.UserContests.FirstOrDefault(c => c.Id == userContest.Id);
+                    user.OverallPoints += userContest.Points;
+                }
+            }*/
+            users.OrderByDescending(u => u.OverallPoints);
+            var usersDTOs = new List<UserDTO>(users.Select(u=>new UserDTO(u)));
+            return usersDTOs;
+        }
+
         /// <summary>
         /// Update a user.
         /// </summary>

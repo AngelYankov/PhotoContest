@@ -69,7 +69,7 @@ namespace PhotoContest.Services.Services
         public async Task<IEnumerable<PhotoDTO>> GetAllAsync()
         {
             return await this.dbContext.Photos
-                                       .Include(p => p.User)
+                                       //.Include(p => p.User)
                                        .Include(p => p.Contest)
                                        .Where(p => p.IsDeleted == false)
                                        .Select(p => new PhotoDTO(p))
@@ -109,7 +109,7 @@ namespace PhotoContest.Services.Services
         private async Task<Photo> FindPhoto(Guid id)
         {
             return await this.dbContext.Photos
-                                 .Include(p => p.User)
+                                 //.Include(p => p.User)
                                  .Include(p => p.Contest)
                                  .ThenInclude(c=>c.Category)
                                  .Where(p => p.IsDeleted == false)

@@ -17,7 +17,7 @@ namespace PhotoContest.Data
         public string LastName { get; set; }
         public Guid? RankId { get; set; }
         public Rank Rank { get; set; }
-        public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+        public int OverallPoints { get; set; }
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
         public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
         public ICollection<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
