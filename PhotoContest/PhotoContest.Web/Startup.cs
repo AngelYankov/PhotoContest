@@ -47,7 +47,7 @@ namespace PhotoContest.Web
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
-                var securitySchema = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                var securitySchema = new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",

@@ -86,9 +86,6 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="newUserDTO">Details of user to be created.</param>
         /// <returns>Returns created user or an appropriate error message.</returns>
-        // POST: api/Users
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<User>> CreateAsync(NewUserDTO newUserDTO)
         {
