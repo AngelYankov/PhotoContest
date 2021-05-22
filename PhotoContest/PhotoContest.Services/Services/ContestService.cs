@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -9,6 +10,7 @@ using PhotoContest.Services.Models.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +19,12 @@ namespace PhotoContest.Services.Services
     public class ContestService : IContestService
     {
         private readonly PhotoContestContext dbContext;
-        public ContestService(PhotoContestContext dbContext)
+        private readonly IHttpContextAccessor contextAccessor;
+
+        public ContestService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor)
         {
             this.dbContext = dbContext;
+            this.contextAccessor = contextAccessor;
         }
 
         /// <summary>
@@ -104,22 +109,21 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username of the user to enroll.</param>
         /// <param name="contestName">Name of the contest to enroll in.</param>
         /// <returns>Return true if successful or an appropriate error message.</returns>
-        public async Task<bool> Enroll(string username, string contestName)
+        public async Task<bool> Enroll(string contestName)
         {
             var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.Equals(contestName, StringComparison.OrdinalIgnoreCase))
                 ?? throw new ArgumentException(Exceptions.InvalidContestName);
 
-            var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
-                ?? throw new ArgumentException(Exceptions.InvalidUser);
+            var userId = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
 
-            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id))
+            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == Guid.Parse(userId)))
             {
                 throw new ArgumentException(Exceptions.EnrolledUser);
             }
 
             var userContest = new UserContest();
             userContest.ContestId = contest.Id;
-            userContest.UserId = user.Id;
+            userContest.UserId = Guid.Parse(userId);
             await this.dbContext.UserContests.AddAsync(userContest);
             return true;
         }
@@ -177,8 +181,9 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username for which we are filtering the contests.</param>
         /// <param name="filter">Value of the filter.</param>
         /// <returns>Returns the contests that correspond to the filter.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string username, string filter)
+        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
         {
+            var userId = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var allContests = await this.dbContext
                                         .Contests
                                         .Include(c => c.Category)
@@ -186,7 +191,7 @@ namespace PhotoContest.Services.Services
                                         .Include(c => c.UserContests)
                                             .ThenInclude(uc => uc.User)
                                         .SelectMany(c => c.UserContests)
-                                        .Where(u => u.User.UserName == username)
+                                        .Where(u => u.User.Id == Guid.Parse(userId))
                                         .Select(u => new ContestDTO(u.Contest))
                                         .ToListAsync();
             var filteredContests = new List<ContestDTO>();

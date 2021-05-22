@@ -53,16 +53,15 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Enroll user into a contest.
         /// </summary>
-        /// <param name="username">Username of the user to enroll.</param>
         /// <param name="contestName">Name of the contest to enroll in.</param>
         /// <returns>Returns true if successful or an appropriate error message.</returns>
         [Authorize(Roles = "User")]
         [HttpPost("enroll")]
-        public async Task<IActionResult> Enroll(string username, string contestName)
+        public async Task<IActionResult> Enroll(string contestName)
         {
             try
             {
-                var isEnrolled = await this.contestService.Enroll(username, contestName);
+                var isEnrolled = await this.contestService.Enroll(contestName);
                 return Ok(isEnrolled);
             }
             catch (Exception e)
@@ -157,16 +156,15 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Filter and/or sort contests by user.
         /// </summary>
-        /// <param name="username">Username for which we are filtering the contests.</param>
         /// <param name="filter">open/closed</param>
         /// <returns></returns>
         [Authorize(Roles = "User")]
         [HttpGet("filterUser")]
-        public async Task<IActionResult> GetByUser([FromQuery] string username, string filter)
+        public async Task<IActionResult> GetByUser(string filter)
         {
             try
             {
-                var contestsDTO = await this.contestService.GetByUserAsync(username, filter);
+                var contestsDTO = await this.contestService.GetByUserAsync(filter);
                 return Ok(contestsDTO);
             }
             catch (Exception e)

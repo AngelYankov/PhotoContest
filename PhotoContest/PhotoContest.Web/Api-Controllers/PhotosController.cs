@@ -111,6 +111,8 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">Id of photo.</param>
         /// <param name="points">Points for photo to receive.</param>
         /// <returns>Returns message if photo is rated successfully.</returns>
+        [Authorize(Roles = "Organizer")]
+        [HttpPost("rate")]
         public async Task<IActionResult> RatePhoto(Guid id, int points)
         {
             try
