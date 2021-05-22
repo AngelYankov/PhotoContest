@@ -19,6 +19,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidDateTimePhase1 = "DateTime for Phase 1 is worng.";
         public const string InvalidDateTimePhase2 = "DateTime for Phase 2 is worng.";
         public const string InvalidDateTimeFinished = "DateTime for Finished phase is worng.";
+        public const string InvalidPointsValue = "Invalid points value.";
         public const string DeletedCategory = "Category is deleted.";
         public const string RequiredContestName = "Contest name is required.";
         public const string RequiredPhotoName = "Photo name is required.";

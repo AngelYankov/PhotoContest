@@ -117,7 +117,7 @@ namespace PhotoContest.Services.Services
             var photo = await FindPhoto(id);
             if (points < 1 || points > 10)
             {
-                throw new ArgumentException("Invalid points value.");
+                throw new ArgumentException(Exceptions.InvalidPointsValue);
             }
             var photoRating = new PhotoRating();
             photoRating.PhotoId = photo.Id;
