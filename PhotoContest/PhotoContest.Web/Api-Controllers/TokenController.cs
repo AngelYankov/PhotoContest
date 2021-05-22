@@ -31,9 +31,9 @@ namespace PhotoContest.Web.Api_Controllers
                 var result = await this.tokenService.GetTokenAsync(model);
                 return Ok(result);
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                return Unauthorized(E.Message);
+                return Unauthorized(e.Message);
             }
         }
     }

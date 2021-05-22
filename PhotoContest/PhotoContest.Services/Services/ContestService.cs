@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.ExceptionMessages;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
@@ -16,11 +17,9 @@ namespace PhotoContest.Services.Services
     public class ContestService : IContestService
     {
         private readonly PhotoContestContext dbContext;
-        private readonly IMapper mapper;
-        public ContestService(PhotoContestContext dbContext, IMapper mapper)
+        public ContestService(PhotoContestContext dbContext)
         {
             this.dbContext = dbContext;
-            this.mapper = mapper;
         }
 
         /// <summary>
@@ -30,22 +29,23 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns the created contest or an appropriate error message.</returns>
         public async Task<ContestDTO> CreateAsync(NewContestDTO dto)
         {
-            //newContest.Name = dto.Name;
-            //newContest.CategoryId = dto.CategoryId;
-            //newContest.StatusId = dto.StatusId;
-            if (dto.Name == null) throw new ArgumentException();
+            var newContest = new Contest();
+
+            newContest.Name = dto.Name ?? throw new ArgumentException(Exceptions.RequiredContestName);
 
             var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId)
-                ?? throw new ArgumentNullException();
+                ?? throw new ArgumentException(Exceptions.InvalidCategory);
+            newContest.CategoryId = dto.CategoryId;
 
             var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == dto.StatusId)
-                ?? throw new ArgumentNullException();
+                ?? throw new ArgumentException(Exceptions.InvalidStatus);
+            newContest.StatusId = dto.StatusId;
+
+            newContest.Open = dto.Open;
 
             ValidatePhase1(dto.Phase1);
             ValidatePhase2(dto.Phase2, dto.Phase1);
             ValidatePhase3(dto.Finished, dto.Phase2);
-
-            var newContest = this.mapper.Map<Contest>(dto);
 
             newContest.CreatedOn = DateTime.UtcNow;
             await this.dbContext.Contests.AddAsync(newContest);
@@ -93,9 +93,35 @@ namespace PhotoContest.Services.Services
                              .Contests
                              .Include(c => c.Category)
                              .Include(a => a.Status)
-                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1" || c.Status.Name == "Phase2"))
+                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1"))
                              .Select(c => new ContestDTO(c))
                              .ToListAsync();
+        }
+
+        /// <summary>
+        /// Enroll user to contest
+        /// </summary>
+        /// <param name="username">Username of the user to enroll.</param>
+        /// <param name="contestName">Name of the contest to enroll in.</param>
+        /// <returns>Return true if successful or an appropriate error message.</returns>
+        public async Task<bool> Enroll(string username, string contestName)
+        {
+            var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.Equals(contestName, StringComparison.OrdinalIgnoreCase))
+                ?? throw new ArgumentException(Exceptions.InvalidContestName);
+
+            var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+                ?? throw new ArgumentException(Exceptions.InvalidUser);
+
+            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id))
+            {
+                throw new ArgumentException(Exceptions.EnrolledUser);
+            }
+
+            var userContest = new UserContest();
+            userContest.ContestId = contest.Id;
+            userContest.UserId = user.Id;
+            await this.dbContext.UserContests.AddAsync(userContest);
+            return true;
         }
 
         /// <summary>
@@ -111,13 +137,13 @@ namespace PhotoContest.Services.Services
             if (dto.CategoryId != Guid.Empty)
             {
                 var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId)
-                ?? throw new ArgumentNullException();
+                ?? throw new ArgumentException(Exceptions.InvalidCategory);
                 contest.CategoryId = dto.CategoryId;
             }
             if (dto.StatusId != Guid.Empty)
             {
                 var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == dto.StatusId)
-                                ?? throw new ArgumentNullException();
+                                ?? throw new ArgumentException(Exceptions.InvalidStatus);
                 contest.StatusId = dto.StatusId;
             }
             if (dto.Phase1 != DateTime.MinValue)
@@ -134,6 +160,10 @@ namespace PhotoContest.Services.Services
             {
                 ValidatePhase3(dto.Finished, dto.Phase2);
                 contest.Finished = dto.Finished;
+            }
+            if (dto.Open != false)
+            {
+                contest.Open = true;
             }
 
             contest.ModifiedOn = DateTime.UtcNow;
@@ -174,7 +204,7 @@ namespace PhotoContest.Services.Services
             }
             else
             {
-                throw new ArgumentException();
+                throw new ArgumentException(Exceptions.InvalidFilter);
             }
         }
 
@@ -206,7 +236,7 @@ namespace PhotoContest.Services.Services
                     }
                 }
             }
-            if (phaseName.Equals("phase2", StringComparison.OrdinalIgnoreCase))
+            else if (phaseName.Equals("phase2", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var contest in allContests)
                 {
@@ -217,7 +247,7 @@ namespace PhotoContest.Services.Services
                     }
                 }
             }
-            if (phaseName.Equals("finished", StringComparison.OrdinalIgnoreCase))
+            else if (phaseName.Equals("finished", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var contest in allContests)
                 {
@@ -227,6 +257,10 @@ namespace PhotoContest.Services.Services
                         filteredContests.Add(contestDTO);
                     }
                 }
+            }
+            else
+            {
+                throw new ArgumentException(Exceptions.InvalidPhase);
             }
             if (filteredContests.Count != 0 && sortBy != null)
             {
@@ -256,7 +290,7 @@ namespace PhotoContest.Services.Services
                         break;
                 }
             }
-            if (sortBy == "category")
+            else if (sortBy == "category")
             {
                 switch (order)
                 {
@@ -269,13 +303,17 @@ namespace PhotoContest.Services.Services
                         break;
                 }
             }
-            if (sortBy == "newest")
+            else if (sortBy == "newest")
             {
                 filteredContests = filteredContests.OrderBy(c => c.Phase1).ToList();
             }
-            if (sortBy == "oldest")
+            else if (sortBy == "oldest")
             {
                 filteredContests = filteredContests.OrderByDescending(c => c.Finished).ToList();
+            }
+            else
+            {
+                throw new ArgumentException(Exceptions.InvalidSorting);
             }
         }
 
@@ -285,7 +323,8 @@ namespace PhotoContest.Services.Services
         /// <param name="date">Starting date of Phase1</param>
         private void ValidatePhase1(DateTime date)
         {
-            if (date == DateTime.MinValue || date < DateTime.UtcNow) throw new ArgumentException();
+            if (date == DateTime.MinValue || date < DateTime.UtcNow)
+                throw new ArgumentException(Exceptions.InvalidDateTimePhase1);
         }
 
         /// <summary>
@@ -295,7 +334,8 @@ namespace PhotoContest.Services.Services
         /// <param name="date2">DateTime value of Phase1</param>
         private void ValidatePhase2(DateTime date1, DateTime date2)
         {
-            if (date1 == DateTime.MinValue || date1 <= date2 || date1 > date2.AddDays(31)) throw new ArgumentException();
+            if (date1 == DateTime.MinValue || date1 <= date2 || date1 > date2.AddDays(31))
+                throw new ArgumentException(Exceptions.InvalidDateTimePhase2);
         }
 
         /// <summary>
@@ -305,7 +345,8 @@ namespace PhotoContest.Services.Services
         /// <param name="date2">DateTime value of Phase2</param>
         private void ValidatePhase3(DateTime date1, DateTime date2)
         {
-            if (date1 == DateTime.MinValue || date1 <= date2.AddHours(1) || date1 > date2.AddHours(24)) throw new ArgumentException();
+            if (date1 == DateTime.MinValue || date1 <= date2.AddHours(1) || date1 > date2.AddHours(24))
+                throw new ArgumentException(Exceptions.InvalidDateTimeFinished);
         }
 
 
@@ -320,7 +361,7 @@ namespace PhotoContest.Services.Services
                              .Contests
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.Id == id)
-                             ?? throw new ArgumentException();
+                             ?? throw new ArgumentException(Exceptions.InvalidContestID);
         }
     }
 }

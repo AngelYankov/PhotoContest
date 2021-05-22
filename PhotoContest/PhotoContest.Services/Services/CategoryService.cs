@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.ExceptionMessages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,10 +79,10 @@ namespace PhotoContest.Services.Services
         private async Task<Category> FindCategoryAsync(Guid id)
         {
             var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id)
-                                    ?? throw new ArgumentException();
+                                    ?? throw new ArgumentException(Exceptions.InvalidCategory);
             if (category.IsDeleted)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(Exceptions.DeletedCategory);
             }
             return category;
         }

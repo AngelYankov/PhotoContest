@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
+using PhotoContest.Services.ExceptionMessages;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.SecurityModels;
@@ -41,9 +42,9 @@ namespace PhotoContest.Services.Services
         public async Task<UserDTO> CreateAsync(NewUserDTO newUserDTO)
         {
             var user = new User();
-            user.FirstName = newUserDTO.FirstName ?? throw new ArgumentException();
-            user.LastName = newUserDTO.LastName ?? throw new ArgumentException();
-            user.Email = newUserDTO.Email ?? throw new ArgumentException();
+            user.FirstName = newUserDTO.FirstName ?? throw new ArgumentException(Exceptions.RequiredFirstName);
+            user.LastName = newUserDTO.LastName ?? throw new ArgumentException(Exceptions.RequiredLastName);
+            user.Email = newUserDTO.Email ?? throw new ArgumentException(Exceptions.RequiredEmail);
             user.UserName = newUserDTO.Email;
             //user.PasswordHash = newUserDTO.Password ?? throw new ArgumentException();
             var rank = await this.dbContext.Ranks.FirstAsync();
@@ -56,9 +57,9 @@ namespace PhotoContest.Services.Services
                 {
                     await this.userManager.AddToRoleAsync(user, "User");
                 }
-                else { throw new ArgumentException("Incorrect password."); }
+                else { throw new ArgumentException(Exceptions.IncorrectPassword); }
             }
-            else { throw new ArgumentException("Email already exists."); }
+            else { throw new ArgumentException(Exceptions.ExistingEmail); }
             // await this.dbContext.Users.AddAsync(user);
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
@@ -137,7 +138,7 @@ namespace PhotoContest.Services.Services
             var user = await FindUser(id);
             user.FirstName = updateUserDTO.FirstName ?? user.FirstName;
             user.LastName = updateUserDTO.LastName ?? user.LastName;
-            if (updateUserDTO.RankId == Guid.Empty) throw new ArgumentException();
+            if (updateUserDTO.RankId == Guid.Empty) throw new ArgumentException(Exceptions.RequiredRankID);
             user.RankId = updateUserDTO.RankId;
             user.ModifiedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
@@ -154,7 +155,7 @@ namespace PhotoContest.Services.Services
                              .Users
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
-                             ?? throw new ArgumentException();
+                             ?? throw new ArgumentException(Exceptions.InvalidUser);
         }
         /// <summary>
         /// Add role to user.
@@ -164,14 +165,14 @@ namespace PhotoContest.Services.Services
         public async Task<string> AddRoleAsync(AddRoleModel model)
         {
             var user = await this.userManager.FindByEmailAsync(model.Email)
-            ?? throw new ArgumentException("Email not found.");
+            ?? throw new ArgumentException(Exceptions.NotFoundEmail);
             var roleExists = this.dbContext.Roles.AsEnumerable().Where(r => r.Name.ToString().Equals(model.Role, StringComparison.OrdinalIgnoreCase)).ToList();
             if (roleExists.Count != 0)
             {
                 await this.userManager.AddToRoleAsync(user, model.Role);
                 return $"Added {model.Role} to user {model.Email}.";
             }
-            throw new ArgumentException("Role not found.");
+            throw new ArgumentException(Exceptions.NotFoundRole);
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace PhotoContest.Services.Services
                                        .Include(u => u.Rank)
                                        .Where(u => u.IsDeleted == false)
                                        .FirstOrDefaultAsync(u => u.Id == id)
-                                       ?? throw new ArgumentException();
+                                       ?? throw new ArgumentException(Exceptions.InvalidUserID);
         }
     }
 }

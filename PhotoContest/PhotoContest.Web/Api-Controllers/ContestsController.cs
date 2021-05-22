@@ -32,22 +32,43 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns all contests.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contest>>> GetContests()
+        public async Task<IActionResult> GetContests()
         {
             var contests = await this.contestService.GetAllAsync();
             return Ok(contests);
         }
-        
+
         /// <summary>
         /// Get all open contests.
         /// </summary>
         /// <returns>Returns all open contests.</returns>
         [Authorize]
         [HttpGet("оpen")]
-        public async Task<ActionResult<IEnumerable<Contest>>> GetOpenContests()
+        public async Task<IActionResult> GetOpenContests()
         {
             var contests = await this.contestService.GetAllOpenAsync();
             return Ok(contests);
+        }
+
+        /// <summary>
+        /// Enroll user into a contest.
+        /// </summary>
+        /// <param name="username">Username of the user to enroll.</param>
+        /// <param name="contestName">Name of the contest to enroll in.</param>
+        /// <returns>Returns true if successful or an appropriate error message.</returns>
+        [Authorize(Roles = "User")]
+        [HttpPost("enroll")]
+        public async Task<IActionResult> Enroll(string username, string contestName)
+        {
+            try
+            {
+                var isEnrolled = await this.contestService.Enroll(username, contestName);
+                return Ok(isEnrolled);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>
@@ -78,7 +99,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns the created contest or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpPost]
-        public async Task<ActionResult<Contest>> CreateContest([FromBody] NewContestDTO dto)
+        public async Task<IActionResult> CreateContest([FromBody] NewContestDTO dto)
         {
             try
             {
@@ -98,7 +119,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns NoContent or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Contest>> DeleteContest(Guid id)
+        public async Task<IActionResult> DeleteContest(Guid id)
         {
             try
             {
@@ -120,7 +141,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns filtered and/or sorted contests or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpGet("filterPhase")]
-        public async Task<ActionResult<IEnumerable<ContestDTO>>> GetByPhase([FromQuery] string phaseName, string sortBy, string order)
+        public async Task<IActionResult> GetByPhase([FromQuery] string phaseName, string sortBy, string order)
         {
             try
             {
@@ -141,7 +162,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns></returns>
         [Authorize(Roles = "User")]
         [HttpGet("filterUser")]
-        public async Task<ActionResult<IEnumerable<ContestDTO>>> GetByUser([FromQuery] string username, string filter)
+        public async Task<IActionResult> GetByUser([FromQuery] string username, string filter)
         {
             try
             {
