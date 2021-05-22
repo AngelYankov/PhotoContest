@@ -24,7 +24,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="model">Validation details.</param>
         /// <returns>Returns created token.</returns>
         [HttpPost("token")]
-        public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
+        public async Task<IActionResult> GetTokenAsync([FromBody]TokenRequestModel model)
         {
             try
             {

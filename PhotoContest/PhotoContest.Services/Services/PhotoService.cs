@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -9,6 +10,7 @@ using PhotoContest.Services.Models.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,11 +20,13 @@ namespace PhotoContest.Services.Services
     {
         private readonly PhotoContestContext dbContext;
         private readonly IMapper mapper;
+        private readonly IHttpContextAccessor _context;
 
-        public PhotoService(PhotoContestContext dbContext, IMapper mapper)
+        public PhotoService(PhotoContestContext dbContext, IMapper mapper, IHttpContextAccessor _context)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
+            this._context = _context;
         }
         /// <summary>
         /// Create a photo.
@@ -101,6 +105,22 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
         }
+        public async Task<string> RatePhoto(Guid id, int points)
+        {
+            var photo = await FindPhoto(id);
+            var photoRating = new PhotoRating();
+            photoRating.PhotoId = photo.Id;
+            //var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id.ToString() == ClaimTypes.NameIdentifier);
+
+            var userId = _context.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            photoRating.UserId = Guid.Parse(userId);
+
+            photoRating.Points = points;
+            await this.dbContext.PhotoRatings.AddAsync(photoRating);
+            await this.dbContext.SaveChangesAsync();
+            return "Photo rated";
+        }
+
         /// <summary>
         /// Find a photo.
         /// </summary>

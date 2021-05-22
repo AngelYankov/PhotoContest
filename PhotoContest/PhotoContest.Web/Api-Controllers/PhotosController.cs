@@ -31,7 +31,7 @@ namespace PhotoContest.Web.Api_Controllers
         // GET: api/Photos
         [Authorize(Roles = "Organizer")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Photo>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             var allPhotos = await this.photoService.GetAllAsync();
             if (allPhotos.Count() == 0)
@@ -48,7 +48,7 @@ namespace PhotoContest.Web.Api_Controllers
         // GET: api/Photos/5
         [Authorize(Roles = "Organizer")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Photo>> GetAsync(Guid id)
+        public async Task<IActionResult> GetAsync(Guid id)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace PhotoContest.Web.Api_Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [Authorize(Roles = "Organizer")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, UpdatePhotoDTO updateModel)
+        public async Task<IActionResult> UpdateAsync([FromBody]UpdatePhotoDTO updateModel, Guid id)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace PhotoContest.Web.Api_Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [Authorize(Roles = "User")]
         [HttpPost]
-        public async Task<ActionResult<Photo>> CreateAsync(NewPhotoDTO newPhotoDTO)
+        public async Task<IActionResult> CreateAsync([FromBody] NewPhotoDTO newPhotoDTO)
         {
             try
             {
@@ -113,7 +113,7 @@ namespace PhotoContest.Web.Api_Controllers
         // DELETE: api/Photos/5
         [Authorize(Roles = "Organizer")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Photo>> DeleteAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             try
             {

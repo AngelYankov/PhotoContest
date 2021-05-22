@@ -32,7 +32,7 @@ namespace PhotoContest.Web.Api_Controllers
         // GET: api/Users
         //[Authorize(Roles ="Organizer")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             var allUsers = await this.userService.GetAllAsync();
             if (allUsers.Count() == 0)
@@ -42,7 +42,7 @@ namespace PhotoContest.Web.Api_Controllers
             return Ok(allUsers);
         }
         [HttpGet("participants")]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllParticipantsAsync()
+        public async Task<IActionResult> GetAllParticipantsAsync()
         {
             var result = await this.userService.GetAllParticipantsAsync();
             return Ok(result);
@@ -55,7 +55,7 @@ namespace PhotoContest.Web.Api_Controllers
         // GET: api/Users/5
         //[Authorize(Roles = "Organizer")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetAsync(Guid id)
+        public async Task<IActionResult> GetAsync(Guid id)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace PhotoContest.Web.Api_Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         //[Authorize(Roles = "Organizer")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, UpdateUserDTO updateUserDTO)
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserDTO updateUserDTO, Guid id)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns created user or an appropriate error message.</returns>
         //[Authorize(Roles = "Organizer")]
         [HttpPost]
-        public async Task<ActionResult<User>> CreateAsync(NewUserDTO newUserDTO)
+        public async Task<IActionResult> CreateAsync([FromBody]NewUserDTO newUserDTO)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace PhotoContest.Web.Api_Controllers
         // DELETE: api/Users/5
         //[Authorize(Roles = "Organizer")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns appropriate message if created.</returns>
         //[Authorize(Roles = "Organizer")]
         [HttpPost("addrole")]
-        public async Task<IActionResult> AddRoleAsync(AddRoleModel model)
+        public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
         {
             var result = await this.userService.AddRoleAsync(model);
             return Ok(result);

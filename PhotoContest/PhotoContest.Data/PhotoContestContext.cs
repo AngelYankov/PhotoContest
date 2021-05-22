@@ -175,7 +175,7 @@ namespace PhotoContest.Data
             user.UserName = "georgi.ivanov@mail.com";
             user.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
             user.CreatedOn = DateTime.UtcNow;
-            //adminUser.RankId = this.Ranks.First().Id;
+            adminUser.RankId = this.Ranks.FirstOrDefault().Id;
             user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
             user.SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B";
             user.LockoutEnabled = true;
