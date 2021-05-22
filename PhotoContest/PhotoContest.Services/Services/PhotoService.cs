@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
+using PhotoContest.Services.ExceptionMessages;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
@@ -37,11 +38,11 @@ namespace PhotoContest.Services.Services
             photo.PhotoUrl = newphotoDTO.PhotoUrl;
             photo.ContestId = newphotoDTO.ContestId;*/
 
-            if (newphotoDTO.Title == null) throw new ArgumentException(); 
-            if (newphotoDTO.Description == null) throw new ArgumentException(); 
-            if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(); 
-            if (newphotoDTO.UserId == Guid.Empty) throw new ArgumentException(); 
-            if (newphotoDTO.ContestId == Guid.Empty) throw new ArgumentException(); 
+            if (newphotoDTO.Title == null) throw new ArgumentException(Exceptions.RequiredPhotoName); 
+            if (newphotoDTO.Description == null) throw new ArgumentException(Exceptions.RequiredPhotoDescription); 
+            if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(Exceptions.RequiredPhotoURL); 
+            if (newphotoDTO.UserId == Guid.Empty) throw new ArgumentException(Exceptions.RequiredUserID); 
+            if (newphotoDTO.ContestId == Guid.Empty) throw new ArgumentException(Exceptions.RequiredContestID); 
 
             var photoMapped = mapper.Map<Photo>(newphotoDTO);
             photoMapped.CreatedOn = DateTime.UtcNow;
@@ -114,7 +115,7 @@ namespace PhotoContest.Services.Services
                                  .ThenInclude(c=>c.Category)
                                  .Where(p => p.IsDeleted == false)
                                  .FirstOrDefaultAsync(p => p.Id == id)
-                                 ?? throw new ArgumentException();
+                                 ?? throw new ArgumentException(Exceptions.InvalidPhotoID);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <returns>returns all categories.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             var categories = await this.categoryService.GetAllAsync();
             return Ok(categories);
@@ -63,7 +63,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="name">Name of the category to be created.</param>
         /// <returns>Returns the created category or an appropriate error message.</returns>
         [HttpPost]
-        public async Task<ActionResult<Category>> CreateAsync(string name)
+        public async Task<IActionResult> CreateAsync(string name)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">ID of the category to delete.</param>
         /// <returns>Returns NoContent or an appropriate error message.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             try
             {

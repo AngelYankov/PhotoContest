@@ -55,9 +55,9 @@ namespace PhotoContest.Web.Api_Controllers
                 var photo = await this.photoService.GetAsync(id);
                 return Ok(photo);
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                return BadRequest(E.Message);
+                return BadRequest(e.Message);
             }
         }
         /// <summary>
@@ -78,9 +78,9 @@ namespace PhotoContest.Web.Api_Controllers
                 var photo = await this.photoService.UpdateAsync(updateModel, id);
                 return Ok(photo);
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                return BadRequest(E.Message);
+                return BadRequest(e.Message);
             }
         }
         /// <summary>
@@ -100,9 +100,9 @@ namespace PhotoContest.Web.Api_Controllers
                 var photo = await this.photoService.CreateAsync(newPhotoDTO);
                 return Created("post",photo);
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                return BadRequest(E.Message);
+                return BadRequest(e.Message);
             }
         }
         /// <summary>
@@ -120,9 +120,9 @@ namespace PhotoContest.Web.Api_Controllers
                 await this.photoService.DeleteAsync(id);
                 return NoContent();
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                return BadRequest(E.Message);
+                return BadRequest(e.Message);
             }
         }
     }

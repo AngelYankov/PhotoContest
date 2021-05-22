@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PhotoContest.Data;
 using PhotoContest.Services.Contracts.SecurityContracts;
+using PhotoContest.Services.ExceptionMessages;
 using PhotoContest.Services.Models.SecurityModels;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace PhotoContest.Services.Services.SecurityService
             if (user == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                throw new ArgumentException("No account registered with that email.");
+                throw new ArgumentException(Exceptions.NotFoundEmail);
                 //authenticationModel.Message = $"No Accounts Registered with {model.Email}.";
                 //return authenticationModel;
             }
@@ -51,7 +52,7 @@ namespace PhotoContest.Services.Services.SecurityService
                 return authenticationModel;
             }
             authenticationModel.IsAuthenticated = false;
-            throw new ArgumentException("Incorrect credentials for user.");
+            throw new ArgumentException(Exceptions.IncorrectCredentials);
             //authenticationModel.Message = $"Incorrect Credentials for user {user.Email}.";
             //return authenticationModel;
         }
