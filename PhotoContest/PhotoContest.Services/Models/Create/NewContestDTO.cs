@@ -20,5 +20,7 @@ namespace PhotoContest.Services.Models.Create
         public DateTime Phase2 { get; set; }
         [Required]
         public DateTime Finished { get; set; }
+        [Required]
+        public bool Open { get; set; }
     }
 }

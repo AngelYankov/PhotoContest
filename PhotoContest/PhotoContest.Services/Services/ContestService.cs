@@ -16,11 +16,9 @@ namespace PhotoContest.Services.Services
     public class ContestService : IContestService
     {
         private readonly PhotoContestContext dbContext;
-        private readonly IMapper mapper;
-        public ContestService(PhotoContestContext dbContext, IMapper mapper)
+        public ContestService(PhotoContestContext dbContext)
         {
             this.dbContext = dbContext;
-            this.mapper = mapper;
         }
 
         /// <summary>
@@ -30,22 +28,23 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns the created contest or an appropriate error message.</returns>
         public async Task<ContestDTO> CreateAsync(NewContestDTO dto)
         {
-            //newContest.Name = dto.Name;
-            //newContest.CategoryId = dto.CategoryId;
-            //newContest.StatusId = dto.StatusId;
-            if (dto.Name == null) throw new ArgumentException();
+            var newContest = new Contest();
+
+            newContest.Name = dto.Name ?? throw new ArgumentException(); 
 
             var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId)
                 ?? throw new ArgumentNullException();
+            newContest.CategoryId = dto.CategoryId;
 
             var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == dto.StatusId)
                 ?? throw new ArgumentNullException();
+            newContest.StatusId = dto.StatusId;
+
+            newContest.Open = dto.Open;
 
             ValidatePhase1(dto.Phase1);
             ValidatePhase2(dto.Phase2, dto.Phase1);
             ValidatePhase3(dto.Finished, dto.Phase2);
-
-            var newContest = this.mapper.Map<Contest>(dto);
 
             newContest.CreatedOn = DateTime.UtcNow;
             await this.dbContext.Contests.AddAsync(newContest);
@@ -93,9 +92,34 @@ namespace PhotoContest.Services.Services
                              .Contests
                              .Include(c => c.Category)
                              .Include(a => a.Status)
-                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1" || c.Status.Name == "Phase2"))
+                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1"))
                              .Select(c => new ContestDTO(c))
                              .ToListAsync();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contestName"></param>
+        /// <returns></returns>
+        public async Task<bool> Enroll(string username, string contestName)
+        {
+            var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.Equals(contestName, StringComparison.OrdinalIgnoreCase))
+                ?? throw new ArgumentException("There is no contest with such name.");
+
+            var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+                ?? throw new ArgumentException("There is no user with such username.");
+
+            if(await this.dbContext.UserContests.AnyAsync(uc=>uc.UserId == user.Id))
+            {
+                throw new ArgumentException("User already enrolled in this contest.");
+            }
+
+            var userContest = new UserContest();
+            userContest.ContestId = contest.Id;
+            userContest.UserId = user.Id;
+            await this.dbContext.UserContests.AddAsync(userContest);
+            return true;
         }
 
         /// <summary>
@@ -134,6 +158,10 @@ namespace PhotoContest.Services.Services
             {
                 ValidatePhase3(dto.Finished, dto.Phase2);
                 contest.Finished = dto.Finished;
+            }
+            if(dto.Open != false)
+            {
+                contest.Open = true;
             }
 
             contest.ModifiedOn = DateTime.UtcNow;
