@@ -9,6 +9,7 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -38,19 +39,22 @@ namespace PhotoContest.Services.Services
 
             newContest.Name = dto.Name ?? throw new ArgumentException(Exceptions.RequiredContestName);
 
-            var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId)
+            var category = this.dbContext.Categories.AsEnumerable().FirstOrDefault(c => c.Name.Equals(dto.CategoryName, StringComparison.OrdinalIgnoreCase))
                 ?? throw new ArgumentException(Exceptions.InvalidCategory);
-            newContest.CategoryId = dto.CategoryId;
+            newContest.CategoryId = category.Id;
 
-            var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == dto.StatusId)
-                ?? throw new ArgumentException(Exceptions.InvalidStatus);
-            newContest.StatusId = dto.StatusId;
+            var status = this.dbContext.Statuses.AsEnumerable().FirstOrDefault(s=>s.Name == "Phase 1");
+               
+            newContest.StatusId = status.Id;
 
             newContest.Open = dto.Open;
 
-            ValidatePhase1(dto.Phase1);
-            ValidatePhase2(dto.Phase2, dto.Phase1);
-            ValidatePhase3(dto.Finished, dto.Phase2);
+            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture));
+            newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture);
+            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture));
+            newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture);
+            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture));
+            newContest.Finished = DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture);
 
             newContest.CreatedOn = DateTime.UtcNow;
             await this.dbContext.Contests.AddAsync(newContest);
@@ -162,7 +166,7 @@ namespace PhotoContest.Services.Services
             }
             if (dto.Finished != DateTime.MinValue)
             {
-                ValidatePhase3(dto.Finished, dto.Phase2);
+                ValidateFinished(dto.Finished, dto.Phase2);
                 contest.Finished = dto.Finished;
             }
             if (dto.Open != false)
@@ -348,7 +352,7 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="date1">Starting DateTime of Finished</param>
         /// <param name="date2">DateTime value of Phase2</param>
-        private void ValidatePhase3(DateTime date1, DateTime date2)
+        private void ValidateFinished(DateTime date1, DateTime date2)
         {
             if (date1 == DateTime.MinValue || date1 <= date2.AddHours(1) || date1 > date2.AddHours(24))
                 throw new ArgumentException(Exceptions.InvalidDateTimeFinished);

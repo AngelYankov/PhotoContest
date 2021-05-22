@@ -16,9 +16,9 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidFilter = "Filter is not valid.";
         public const string InvalidPhase = "Phase is not valid.";
         public const string InvalidSorting = "Sorting is not valid.";
-        public const string InvalidDateTimePhase1 = "DateTime for Phase 1 is worng.";
-        public const string InvalidDateTimePhase2 = "DateTime for Phase 2 is worng.";
-        public const string InvalidDateTimeFinished = "DateTime for Finished phase is worng.";
+        public const string InvalidDateTimePhase1 = "Date for 'Phase 1' should be in the future.";
+        public const string InvalidDateTimePhase2 = "Date for 'Phase 2' should be between 1 and 31 days after 'Phase 1'.";
+        public const string InvalidDateTimeFinished = "Date for 'Finished' phase can't be more than 1 day after 'Phase 2'.";
         public const string InvalidPointsValue = "Invalid points value.";
         public const string DeletedCategory = "Category is deleted.";
         public const string RequiredContestName = "Contest name is required.";

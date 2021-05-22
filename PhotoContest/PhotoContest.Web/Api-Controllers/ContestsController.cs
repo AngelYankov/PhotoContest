@@ -98,7 +98,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <returns>Returns the created contest or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpPost]
-        public async Task<IActionResult> CreateContest([FromBody] NewContestDTO dto)
+        public async Task<IActionResult> CreateContest([FromQuery] NewContestDTO dto)
         {
             try
             {
