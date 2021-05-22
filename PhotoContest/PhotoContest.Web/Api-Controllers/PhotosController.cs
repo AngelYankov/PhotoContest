@@ -106,6 +106,24 @@ namespace PhotoContest.Web.Api_Controllers
             }
         }
         /// <summary>
+        /// Rate a photo.
+        /// </summary>
+        /// <param name="id">Id of photo.</param>
+        /// <param name="points">Points for photo to receive.</param>
+        /// <returns>Returns message if photo is rated successfully.</returns>
+        public async Task<IActionResult> RatePhoto(Guid id, int points)
+        {
+            try
+            {
+                var result = await this.photoService.RatePhoto(id, points);
+                return Ok(result);
+            }
+            catch (Exception E)
+            {
+                return BadRequest(E.Message);
+            }
+        }
+        /// <summary>
         /// Delete a photo.
         /// </summary>
         /// <param name="id">Id to search for.</param>

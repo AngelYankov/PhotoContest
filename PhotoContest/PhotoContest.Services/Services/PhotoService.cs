@@ -41,11 +41,11 @@ namespace PhotoContest.Services.Services
             photo.PhotoUrl = newphotoDTO.PhotoUrl;
             photo.ContestId = newphotoDTO.ContestId;*/
 
-            if (newphotoDTO.Title == null) throw new ArgumentException(); 
-            if (newphotoDTO.Description == null) throw new ArgumentException(); 
-            if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(); 
-            if (newphotoDTO.UserId == Guid.Empty) throw new ArgumentException(); 
-            if (newphotoDTO.ContestId == Guid.Empty) throw new ArgumentException(); 
+            if (newphotoDTO.Title == null) throw new ArgumentException();
+            if (newphotoDTO.Description == null) throw new ArgumentException();
+            if (newphotoDTO.PhotoUrl == null) throw new ArgumentException();
+            if (newphotoDTO.UserId == Guid.Empty) throw new ArgumentException();
+            if (newphotoDTO.ContestId == Guid.Empty) throw new ArgumentException();
 
             var photoMapped = mapper.Map<Photo>(newphotoDTO);
             photoMapped.CreatedOn = DateTime.UtcNow;
@@ -105,9 +105,19 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
         }
+        /// <summary>
+        /// Rate a photo.
+        /// </summary>
+        /// <param name="id">Id of photo.</param>
+        /// <param name="points">Points for photo to receive.</param>
+        /// <returns>Returns message if photo is rated successfully.</returns>
         public async Task<string> RatePhoto(Guid id, int points)
         {
             var photo = await FindPhoto(id);
+            if (points < 1 || points > 10)
+            {
+                throw new ArgumentException("Invalid points value.");
+            }
             var photoRating = new PhotoRating();
             photoRating.PhotoId = photo.Id;
             //var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id.ToString() == ClaimTypes.NameIdentifier);
@@ -131,7 +141,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Photos
                                  //.Include(p => p.User)
                                  .Include(p => p.Contest)
-                                 .ThenInclude(c=>c.Category)
+                                 .ThenInclude(c => c.Category)
                                  .Where(p => p.IsDeleted == false)
                                  .FirstOrDefaultAsync(p => p.Id == id)
                                  ?? throw new ArgumentException();
