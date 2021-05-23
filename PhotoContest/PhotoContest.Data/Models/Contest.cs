@@ -19,8 +19,6 @@ namespace PhotoContest.Data.Models
         public Guid StatusId { get; set; }
         public Status Status { get; set; }
         public bool Open { get; set; }
-
-        [ValidateTimeNotInThePast(ErrorMessage = "Date cannot be in the past.")]
         public DateTime Phase1 { get; set; }
         public DateTime Phase2 { get; set; }
         public DateTime Finished { get; set; }

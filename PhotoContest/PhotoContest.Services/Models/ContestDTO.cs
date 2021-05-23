@@ -18,8 +18,6 @@ namespace PhotoContest.Services.Models
             this.Phase2 = contest.Phase2.ToString();
             this.Finished = contest.Finished.ToString();
         }
-        [JsonIgnore]
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public string Status { get; set; }
