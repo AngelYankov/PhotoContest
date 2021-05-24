@@ -21,7 +21,6 @@ namespace PhotoContest.Data.Models
         public string PhotoUrl { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
-        public bool UploadedPhoto { get; set; }
         public bool IsWrongCategory { get; set; }
         public IList<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
     }

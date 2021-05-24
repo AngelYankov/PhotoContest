@@ -371,10 +371,12 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">ID of the contest to get.</param>
         /// <returns>Returns a contest with certain ID or an appropriate error message.</returns>
-        private async Task<Contest> FindContestAsync(Guid id)
+        public async Task<Contest> FindContestAsync(Guid id)
         {
             return await this.dbContext
                              .Contests
+                             .Include(c=>c.Category)
+                             .Include(c=>c.Status)
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.Id == id)
                              ?? throw new ArgumentException(Exceptions.InvalidContestID);

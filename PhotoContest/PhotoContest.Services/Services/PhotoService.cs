@@ -21,11 +21,13 @@ namespace PhotoContest.Services.Services
     {
         private readonly PhotoContestContext dbContext;
         private readonly IHttpContextAccessor _context;
+        private readonly IContestService contestService;
 
-        public PhotoService(PhotoContestContext dbContext, IHttpContextAccessor _context)
+        public PhotoService(PhotoContestContext dbContext, IHttpContextAccessor _context, IContestService contestService)
         {
             this.dbContext = dbContext;
             this._context = _context;
+            this.contestService = contestService;
         }
         /// <summary>
         /// Create a photo.
@@ -39,6 +41,10 @@ namespace PhotoContest.Services.Services
             if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(Exceptions.RequiredPhotoURL);
             if (newphotoDTO.UserId == Guid.Empty) throw new ArgumentException(Exceptions.RequiredUserID);
             if (newphotoDTO.ContestId == Guid.Empty) throw new ArgumentException(Exceptions.RequiredContestID);
+            var contest = await this.contestService.FindContestAsync(newphotoDTO.ContestId)
+                ?? throw new ArgumentException("Invalid contest.");
+            //todo if contest is open
+
             var photo = new Photo()
             {
                 Title = newphotoDTO.Title,
@@ -129,6 +135,9 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.InvalidPointsValue);
             }
+            //var temp = photo.PhotoRatings;
+            //var temp2 = this.dbContext.PhotoRatings;
+
             var userName = _context.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.dbContext.Users.FirstAsync(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
             var photoRating = await this.dbContext.PhotoRatings
@@ -146,7 +155,7 @@ namespace PhotoContest.Services.Services
                                           .ThenInclude(pr=>pr.User)
                                        .Include(p => p.Contest)
                                           .ThenInclude(c => c.Category)
-                                       .Where(p => p.IsDeleted == false && p.ContestId==contestId)
+                                       .Where(p => p.IsDeleted == false && p.ContestId==contestId && p.IsWrongCategory==false)
                                        .Select(p=>new PhotoDTO(p))
                                        .ToListAsync();
         }
@@ -163,7 +172,7 @@ namespace PhotoContest.Services.Services
                                         .ThenInclude(pr => pr.User)
                                  .Include(p => p.Contest)
                                         .ThenInclude(c => c.Category)
-                                 .Where(p => p.IsDeleted == false)
+                                 .Where(p => p.IsDeleted == false && p.IsWrongCategory==false)
                                  .FirstOrDefaultAsync(p => p.Id == id)
                                  ?? throw new ArgumentException(Exceptions.InvalidPhotoID);
         }
