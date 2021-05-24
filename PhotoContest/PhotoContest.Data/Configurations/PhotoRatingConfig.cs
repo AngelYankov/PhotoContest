@@ -13,7 +13,7 @@ namespace PhotoContest.Data.Configurations
         {
             builder.HasKey(pr => new { pr.PhotoId, pr.UserId });
 
-            builder.HasOne(pr => pr.User)
+           /* builder.HasOne(pr => pr.User)
                 .WithMany(u => u.PhotoRatings)
                 .HasForeignKey(pr => pr.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -21,7 +21,7 @@ namespace PhotoContest.Data.Configurations
             builder.HasOne(pr => pr.Photo)
                 .WithMany(p => p.PhotoRatings)
                 .HasForeignKey(pr => pr.PhotoId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction);*/
         }
     }
 }

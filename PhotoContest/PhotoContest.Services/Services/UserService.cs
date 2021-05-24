@@ -149,12 +149,12 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="username">Username to search for.</param>
         /// <returns>Returns user with that username or an appropriate error message.</returns>
-        public async Task<User> GetUserAsync(string username)
+        public async Task<User> GetUserByUsernameAsync(string username)
         {
             return await this.dbContext
                              .Users
-                             .Where(c => c.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+                             .Where(u => u.IsDeleted == false)
+                             .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
         }
         /// <summary>

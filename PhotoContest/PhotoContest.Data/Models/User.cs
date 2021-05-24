@@ -20,7 +20,8 @@ namespace PhotoContest.Data
         public int OverallPoints { get; set; }
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
         public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
-        public ICollection<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
+        public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+        //public ICollection<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public DateTime DeletedOn { get; set; }

@@ -18,10 +18,10 @@ namespace PhotoContest.Services.Models
             this.Contest = photo.Contest.Name;
             this.Category = photo.Contest.Category.Name;
             int totalPoints = 0;
-            for (int i = 0; i < photo.PhotoRatings.Count; i++)
+            /*for (int i = 0; i < photo.PhotoRatings.Count; i++)
             {
                 totalPoints += photo.PhotoRatings[i].Points;
-            }
+            }*/
             this.Points = totalPoints;
         }
         public Guid Id{ get; set; }

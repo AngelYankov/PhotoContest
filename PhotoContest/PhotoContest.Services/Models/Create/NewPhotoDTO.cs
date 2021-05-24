@@ -14,8 +14,6 @@ namespace PhotoContest.Services.Models.Create
         [Required]
         public string PhotoUrl { get; set; }
         [Required]
-        public Guid UserId { get; set; }
-        [Required]
-        public Guid ContestId { get; set; }
+        public string ContestName{ get; set; }
     }
 }

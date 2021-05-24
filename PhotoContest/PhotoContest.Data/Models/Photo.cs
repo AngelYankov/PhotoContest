@@ -19,9 +19,11 @@ namespace PhotoContest.Data.Models
         public string Description { get; set; }
         [Required]
         public string PhotoUrl { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
         public bool IsWrongCategory { get; set; }
-        public IList<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
+        //public IList<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
     }
 }

@@ -16,6 +16,6 @@ namespace PhotoContest.Services.Contracts
         Task<PhotoDTO> UpdateAsync(UpdatePhotoDTO photoDTO, Guid id);
         Task<bool> DeleteAsync(Guid id);
         Task<PhotoDTO> RatePhoto(Guid id, int points);
-        Task<List<PhotoDTO>> GetPhotosForContest(Guid contestId);
+        Task<List<PhotoDTO>> GetPhotosForContestAsync(Guid contestId);
     }
 }

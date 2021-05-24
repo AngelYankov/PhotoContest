@@ -15,6 +15,11 @@ namespace PhotoContest.Data.Configurations
                 .WithMany(u => u.Photos)
                 .HasForeignKey(p => p.ContestId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(p => p.User)
+                .WithMany(u => u.Photos)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
