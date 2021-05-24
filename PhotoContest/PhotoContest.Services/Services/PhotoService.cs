@@ -45,13 +45,13 @@ namespace PhotoContest.Services.Services
             var contest = await this.contestService.FindContestByNameAsync(newphotoDTO.ContestName);
             if (!contest.isOpen)
             {
-                throw new ArgumentException("Contest is not yet open.");
+                throw new ArgumentException(Exceptions.ClosedContest);
             }
             var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(userName);
             if (await this.dbContext.Juries.FirstOrDefaultAsync(j => j.UserId == user.Id && j.ContestId == contest.Id) != null)
             {
-                throw new ArgumentException("User is jury in this contest.");
+                throw new ArgumentException(Exceptions.ExistingJury);
             }
             var photo = new Photo()
             {

@@ -2,6 +2,7 @@
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
+using PhotoContest.Services.ExceptionMessages;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using System;
@@ -35,13 +36,13 @@ namespace PhotoContest.Services.Services
         public async Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO)
         {
             var photo = await this.photoService.FindPhoto(newReviewDTO.PhotoId);
-            if (photo.Contest.Status.Name != "Phase2") throw new ArgumentException("Contest is not in phase2.");
-            if (newReviewDTO.Comment == null) throw new ArgumentException("the comment is not valid.");
+            if (photo.Contest.Status.Name != "Phase2") throw new ArgumentException(Exceptions.InvalidContestPhase);
+            if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
             var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(userName);
 
             if (this.dbContext.Reviews.Any(r => r.UserId == user.Id && r.PhotoId == photo.Id))
-                throw new ArgumentException("Photo is already reviewed.");
+                throw new ArgumentException(Exceptions.ReviewedPhoto);
 
             var review = new Review()
             {
