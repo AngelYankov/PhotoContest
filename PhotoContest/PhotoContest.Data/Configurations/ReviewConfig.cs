@@ -11,7 +11,7 @@ namespace PhotoContest.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Review> builder)
         {
-            builder.HasOne(r => r.User)
+            builder.HasOne(r => r.Evaluator)
                 .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.NoAction);

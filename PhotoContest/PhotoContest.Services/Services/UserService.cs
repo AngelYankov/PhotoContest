@@ -165,7 +165,7 @@ namespace PhotoContest.Services.Services
         public async Task<string> AddRoleAsync(AddRoleModel model)
         {
             var user = await this.userManager.FindByEmailAsync(model.Email)
-            ?? throw new ArgumentException(Exceptions.NotFoundEmail);
+                             ?? throw new ArgumentException(Exceptions.NotFoundEmail);
             var roleExists = this.dbContext.Roles.AsEnumerable().Where(r => r.Name.ToString().Equals(model.Role, StringComparison.OrdinalIgnoreCase)).ToList();
             if (roleExists.Count != 0)
             {

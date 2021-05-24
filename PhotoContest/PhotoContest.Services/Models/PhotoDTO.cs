@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace PhotoContest.Services.Models
 {
@@ -10,27 +11,20 @@ namespace PhotoContest.Services.Models
     {
         public PhotoDTO(Photo photo)
         {
-            this.Id = photo.Id;
             this.Title = photo.Title;
             this.Description = photo.Description;
             this.PhotoUrl = photo.PhotoUrl;
-           // this.User = photo.User.FirstName + photo.User.LastName;
+            this.User = photo.User.FirstName + photo.User.LastName;
             this.Contest = photo.Contest.Name;
             this.Category = photo.Contest.Category.Name;
-            int totalPoints = 0;
-            /*for (int i = 0; i < photo.PhotoRatings.Count; i++)
-            {
-                totalPoints += photo.PhotoRatings[i].Points;
-            }*/
-            this.Points = totalPoints;
+            this.Points = photo.AllPoints;
         }
-        public Guid Id{ get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string PhotoUrl { get; set; }
         public string User { get; set; }
         public string Contest { get; set; }
         public string Category { get; set; }
-        public int Points { get; set; }
+        public double Points { get; set; }
     }
 }
