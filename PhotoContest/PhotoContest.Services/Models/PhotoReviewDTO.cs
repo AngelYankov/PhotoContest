@@ -1,15 +1,13 @@
 ﻿using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace PhotoContest.Services.Models
 {
-    public class PhotoDTO
+    public class PhotoReviewDTO
     {
-        public PhotoDTO(Photo photo)
+        public PhotoReviewDTO(Photo photo)
         {
             this.Title = photo.Title;
             this.Description = photo.Description;
@@ -18,6 +16,10 @@ namespace PhotoContest.Services.Models
             this.Contest = photo.Contest.Name;
             this.Category = photo.Contest.Category.Name;
             this.Points = photo.AllPoints.ToString();
+            foreach (var review in photo.Reviews)
+            {
+                this.Comments.Add((review.Comment,review.Score));
+            }
         }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -26,5 +28,6 @@ namespace PhotoContest.Services.Models
         public string Contest { get; set; }
         public string Category { get; set; }
         public string Points { get; set; }
+        public List<(string, double)> Comments { get; set; } = new List<(string, double)>();
     }
 }

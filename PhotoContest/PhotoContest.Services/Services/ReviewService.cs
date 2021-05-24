@@ -55,7 +55,7 @@ namespace PhotoContest.Services.Services
             };
             if (newReviewDTO.WrongCategory)
             {
-                review.Comment = "Photo is in a wrong category.";
+                review.Comment = Exceptions.WrongCategoryComment;
                 review.Score = 0;
                 review.WrongCategory = true;
             }

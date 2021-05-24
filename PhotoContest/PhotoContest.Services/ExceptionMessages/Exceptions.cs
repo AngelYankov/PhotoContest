@@ -45,5 +45,8 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string NotAllowedInvitation = "Contest is not invitational.";
         public const string ReviewedPhoto = "Photo is already reviewed.";
         public const string ClosedContest = "Contest is not open yet.";
+        public const string NoParticipants = "There are no participants yet.";
+        public const string SuccesfullyAddedRole = "Role added succesfully.";
+        public const string WrongCategoryComment = "Photo is in a wrong category.";
     }
 }

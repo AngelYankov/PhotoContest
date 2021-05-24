@@ -13,10 +13,11 @@ namespace PhotoContest.Services.Contracts
     public interface IUserService
     {
         Task<UserDTO> CreateAsync(NewUserDTO newUserDTO);
+        Task<UserDTO> CreateOrganizerAsync(NewUserDTO newUserDTO);
         Task<IEnumerable<UserDTO>> GetAllAsync();
         Task<UserDTO> GetAsync(Guid id);
-        Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, Guid id);
-        Task<bool> DeleteAsync(Guid id);
+        Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, string username);
+        Task<bool> DeleteAsync(string username);
         Task<User> GetUserByUsernameAsync(string username);
         Task<string> AddRoleAsync(AddRoleModel model);
         Task<IEnumerable<UserDTO>> GetAllParticipantsAsync();

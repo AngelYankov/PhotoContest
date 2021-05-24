@@ -12,7 +12,7 @@ namespace PhotoContest.Services.Models
             this.FirstName = user.FirstName;
             this.LastName = user.LastName;
             this.Points = user.OverallPoints.ToString();
-            //this.Rank = user.Rank.Name;
+            this.Rank = user.Rank.Name;
         }
         public string FirstName { get; set; }
         public string LastName { get; set; }
