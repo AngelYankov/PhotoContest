@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PhotoContest.Data.Audit;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class PhotoRating
+    public class PhotoRating : Entity
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
