@@ -27,6 +27,11 @@ namespace PhotoContest.Services.Services
             this.userService = userService;
             this.contextAccessor = contextAccessor;
         }
+        /// <summary>
+        /// Create a review.
+        /// </summary>
+        /// <param name="newReviewDTO">Details of new review.</param>
+        /// <returns>Returns created review.</returns>
         public async Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO)
         {
             var photo = await this.photoService.FindPhoto(newReviewDTO.PhotoId);
@@ -50,7 +55,11 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new ReviewDTO(review);
         }
-
+        /// <summary>
+        /// Get all reviews for certain photo.
+        /// </summary>
+        /// <param name="id">Id of photo to search for.</param>
+        /// <returns>Returns all reviews.</returns>
         public async Task<List<ReviewDTO>> GetForPhotoAsync(Guid id)
         {
             var photo = await this.photoService.FindPhoto(id);
