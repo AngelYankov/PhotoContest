@@ -20,6 +20,9 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidDateTimePhase2 = "Date for 'Phase 2' should be between 1 and 31 days after 'Phase 1'.";
         public const string InvalidDateTimeFinished = "Date for 'Finished' phase can't be more than 1 day after 'Phase 2'.";
         public const string InvalidPointsValue = "Invalid points value.";
+        public const string InvalidJuryUser = "User cannot be chosen as jury.";
+        public const string InvalidContestPhase = "Contest is not in evaluation phase.";
+        public const string InvalidComment = "The comment is not valid.";
         public const string DeletedCategory = "Category is deleted.";
         public const string RequiredContestName = "Contest name is required.";
         public const string RequiredPhotoName = "Photo name is required.";
@@ -35,8 +38,12 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string IncorrectPassword = "Incorrect password.";
         public const string IncorrectCredentials = "Incorrect credentials for user.";
         public const string ExistingEmail = "Email already exists.";
+        public const string ExistingJury = "User is already jury in this contest.";
         public const string NotFoundEmail = "Email not found.";
         public const string NotFoundRole = "Role not found.";
         public const string NotAllowedEnrollment = "Only invited users can enroll in this contest.";
+        public const string NotAllowedInvitation = "Contest is not invitational.";
+        public const string ReviewedPhoto = "Photo is already reviewed.";
+        public const string ClosedContest = "Contest is not open yet.";
     }
 }

@@ -195,11 +195,15 @@ namespace PhotoContest.Services.Services
             var user = await this.userService.GetUserByUsernameAsync(username);
             if(user.Rank.Name != "Master" && user.Rank.Name != "Wise and Benevolent Photo Dictator")
             {
-                throw new ArgumentException("User cannot be chosen as jury.");
+                throw new ArgumentException(Exceptions.InvalidJuryUser);
             }
             if (await this.dbContext.Juries.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
-                throw new ArgumentException("User is already jury.");
+                throw new ArgumentException(Exceptions.ExistingJury);
+            }
+            if(contest.isOpen != false)
+            {
+                throw new ArgumentException(Exceptions.NotAllowedInvitation);
             }
             var juryMember = new JuryMember();
             juryMember.ContestId = contest.Id;
