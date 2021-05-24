@@ -35,7 +35,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string RequiredLastName = "Last name is required.";
         public const string RequiredEmail = "Email is required.";
         public const string EnrolledUser = "User already enrolled in this contest.";
-        public const string IncorrectPassword = "Incorrect password.";
+        public const string IncorrectPassword = "Password must contain letters and numbers.";
         public const string IncorrectCredentials = "Incorrect credentials for user.";
         public const string ExistingEmail = "Email already exists.";
         public const string ExistingJury = "User is already jury in this contest.";

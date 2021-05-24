@@ -121,7 +121,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="newUserDTO">Details of new user.</param>
         /// <returns>Returns created user.</returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("organizer")]
         public async Task<IActionResult> CreateOrganizerAsync([FromBody] NewUserDTO newUserDTO)
         {
             try
