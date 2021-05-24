@@ -121,7 +121,7 @@ namespace PhotoContest.Services.Services
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
 
-            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id))
+            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
                 throw new ArgumentException(Exceptions.EnrolledUser);
             }
@@ -191,7 +191,7 @@ namespace PhotoContest.Services.Services
         {
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
-            
+
             var allUserContests = await this.dbContext.UserContests
                                                 .Include(uc => uc.User)
                                                 .Include(uc => uc.Contest)
@@ -200,8 +200,8 @@ namespace PhotoContest.Services.Services
             foreach (var userContest in allUserContests)
             {
                 var contest = await this.dbContext.Contests
-                                  .Include(c=>c.Category)
-                                  .Include(c=>c.Status)
+                                  .Include(c => c.Category)
+                                  .Include(c => c.Status)
                                   .FirstAsync(c => c.Id == userContest.ContestId);
                 allUserContestsDTO.Add(new ContestDTO(contest));
             }
