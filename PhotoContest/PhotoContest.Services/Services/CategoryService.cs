@@ -48,9 +48,9 @@ namespace PhotoContest.Services.Services
         /// <param name="id">ID of the category to be updated.</param>
         /// <param name="newName">Name it should be updated to.</param>
         /// <returns>Returns the name of the updated category.</returns>
-        public async Task<string> UpdateAsync(Guid id, string newName)
+        public async Task<string> UpdateAsync(string categoryName, string newName)
         {
-            var category = await FindCategoryAsync(id);
+            var category = await FindCategoryAsync(categoryName);
             category.Name = newName;
             category.ModifiedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
@@ -62,9 +62,9 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">ID of the category.</param>
         /// <returns>Returns true or false if the category is deleted succesfully or an appropriate error message.</returns>
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(string categoryName)
         {
-            var category = await FindCategoryAsync(id);
+            var category = await FindCategoryAsync(categoryName);
             category.IsDeleted = true;
             category.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
@@ -76,9 +76,9 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">ID of category to search for.</param>
         /// <returns>Returns category with that ID or an appropriate error message.</returns>
-        private async Task<Category> FindCategoryAsync(Guid id)
+        private async Task<Category> FindCategoryAsync(string categoryName)
         {
-            var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id)
+            var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Name == categoryName)
                                     ?? throw new ArgumentException(Exceptions.InvalidCategory);
             if (category.IsDeleted)
             {
