@@ -47,14 +47,14 @@ namespace PhotoContest.Services.Services
 
             newContest.StatusId = status.Id;
 
-            newContest.Open = dto.Open;
+            newContest.isOpen = dto.isOpen;
 
-            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture));
-            newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture);
-            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture));
-            newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture);
-            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture));
-            newContest.Finished = DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm tt", CultureInfo.InvariantCulture);
+            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+            newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+            newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+            newContest.Finished = DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
 
             newContest.CreatedOn = DateTime.UtcNow;
             await this.dbContext.Contests.AddAsync(newContest);
@@ -68,9 +68,9 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">ID of the contest to delete.</param>
         /// <returns>Returns a boolean value if the contest is deleted.</returns>
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(string contestName)
         {
-            var contest = await FindContestAsync(id);
+            var contest = await FindContestByNameAsync(contestName);
             contest.DeletedOn = DateTime.UtcNow;
             contest.IsDeleted = true;
             await this.dbContext.SaveChangesAsync();
@@ -102,7 +102,7 @@ namespace PhotoContest.Services.Services
                              .Contests
                              .Include(c => c.Category)
                              .Include(a => a.Status)
-                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1"))
+                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1") && c.isOpen == true)
                              .Select(c => new ContestDTO(c))
                              .ToListAsync();
         }
@@ -117,6 +117,8 @@ namespace PhotoContest.Services.Services
         {
             var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower())
                 ?? throw new ArgumentException(Exceptions.InvalidContestName);
+            if (contest.isOpen == false)
+                throw new ArgumentException("Only invited users can enroll in this contest.");
 
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
@@ -140,40 +142,40 @@ namespace PhotoContest.Services.Services
         /// <param name="id">ID of the contest to update.</param>
         /// <param name="dto">Details of the contest to be updated.</param>
         /// <returns>Returns the updated contest or an appropriate error message.</returns>
-        public async Task<ContestDTO> UpdateAsync(Guid id, UpdateContestDTO dto)
+        public async Task<ContestDTO> UpdateAsync(string contestName, UpdateContestDTO dto)
         {
-            var contest = await FindContestAsync(id);
+            var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower());
             contest.Name = dto.Name ?? contest.Name;
-            if (dto.CategoryId != Guid.Empty)
+            if (dto.CategoryName != null)
             {
-                var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId)
+                var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Name == dto.CategoryName)
                 ?? throw new ArgumentException(Exceptions.InvalidCategory);
-                contest.CategoryId = dto.CategoryId;
+                contest.CategoryId = category.Id;
             }
-            if (dto.StatusId != Guid.Empty)
+            if (dto.StatusName != null)
             {
-                var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == dto.StatusId)
+                var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Name == dto.StatusName)
                                 ?? throw new ArgumentException(Exceptions.InvalidStatus);
-                contest.StatusId = dto.StatusId;
+                contest.StatusId = status.Id;
             }
-            if (dto.Phase1 != DateTime.MinValue)
+            if (dto.Phase1 != null)
             {
-                ValidatePhase1(dto.Phase1);
-                contest.Phase1 = dto.Phase1;
+                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+                contest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
             }
-            if (dto.Phase2 != DateTime.MinValue)
+            if (dto.Phase2 != null)
             {
-                ValidatePhase2(dto.Phase2, dto.Phase1);
-                contest.Phase2 = dto.Phase2;
+                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+                contest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
             }
-            if (dto.Finished != DateTime.MinValue)
+            if (dto.Finished != null)
             {
-                ValidateFinished(dto.Finished, dto.Phase2);
-                contest.Finished = dto.Finished;
+                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+                contest.Finished = DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
             }
-            if (dto.Open != false)
+            if (dto.isOpen != false)
             {
-                contest.Open = true;
+                contest.isOpen = true;
             }
 
             contest.ModifiedOn = DateTime.UtcNow;
@@ -380,6 +382,20 @@ namespace PhotoContest.Services.Services
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.Id == id)
                              ?? throw new ArgumentException(Exceptions.InvalidContestID);
+        }
+        
+        /// <summary>
+        /// Find a contest with certain name.
+        /// </summary>
+        /// <param name="id">Name of the contest to get.</param>
+        /// <returns>Returns a contest with certain ID or an appropriate error message.</returns>
+        public async Task<Contest> FindContestByNameAsync(string contestName)
+        {
+            return await this.dbContext
+                             .Contests
+                             .Where(c => c.IsDeleted == false)
+                             .FirstOrDefaultAsync(c => c.Name == contestName)
+                             ?? throw new ArgumentException(Exceptions.InvalidContestName);
         }
     }
 }
