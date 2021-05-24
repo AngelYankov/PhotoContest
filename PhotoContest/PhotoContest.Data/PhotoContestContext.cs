@@ -21,7 +21,7 @@ namespace PhotoContest.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserContest> UserContests { get; set; }
         public DbSet<JuryMember> Juries { get; set; }
-        public DbSet<PhotoRating> PhotoRatings { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,9 +29,9 @@ namespace PhotoContest.Data
             modelBuilder.ApplyConfiguration(new ContestConfig());
             modelBuilder.ApplyConfiguration(new JuryMemberConfig());
             modelBuilder.ApplyConfiguration(new PhotoConfig());
-            modelBuilder.ApplyConfiguration(new PhotoRatingConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new UserContestConfig());
+            modelBuilder.ApplyConfiguration(new ReviewConfig());
 
             this.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);

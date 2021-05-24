@@ -57,13 +57,13 @@ namespace PhotoContest.Services.Services
             };
             var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(userName);
-            var photoRating = new PhotoRating()
+            /*var photoRating = new PhotoRating()
             {
                 UserId = user.Id,
                 PhotoId = photo.Id,
                 CreatedOn = DateTime.UtcNow
-            };
-            await this.dbContext.PhotoRatings.AddAsync(photoRating);
+            };*/
+            //await this.dbContext.PhotoRatings.AddAsync(photoRating);
             await this.dbContext.Photos.AddAsync(photo);
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
@@ -142,11 +142,11 @@ namespace PhotoContest.Services.Services
 
             var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.dbContext.Users.FirstAsync(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
-            var photoRating = await this.dbContext.PhotoRatings
+            /*var photoRating = await this.dbContext.PhotoRatings
                                                   .Where(pr => pr.IsDeleted == false)
                                                   .FirstOrDefaultAsync(pr => pr.PhotoId == photo.Id && pr.UserId == user.Id);
             photoRating.Points = points;
-            photoRating.ModifiedOn = DateTime.UtcNow;
+            photoRating.ModifiedOn = DateTime.UtcNow;*/
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
         }

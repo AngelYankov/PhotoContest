@@ -21,6 +21,8 @@ namespace PhotoContest.Data
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
         public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
         //public ICollection<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
