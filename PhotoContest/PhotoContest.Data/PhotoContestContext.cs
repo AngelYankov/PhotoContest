@@ -46,14 +46,15 @@ namespace PhotoContest.Data
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
             //seed roles 
-            var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
+            var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN" };
+            var organizerRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
             var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
 
             //password hasher
             var passHasher = new PasswordHasher<User>();
 
-            //seed organizerUser
-            var adminUser = new User()
+            //seed organizer
+            var organizer = new User()
             {
                 Id = Guid.NewGuid(),
                 FirstName = "Eric",
@@ -67,9 +68,9 @@ namespace PhotoContest.Data
                 SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B",
                 LockoutEnabled = true
             };
-            adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
+            organizer.PasswordHash = passHasher.HashPassword(organizer, "eric.berg123");
 
-            //seed userRole
+            //seed user
             var user = new User()
             {
                 Id = Guid.NewGuid(),
@@ -86,17 +87,40 @@ namespace PhotoContest.Data
             };
             user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
 
-            //link fanUser to role
+            //seed admin
+            var admin = new User()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "Admin",
+                LastName = "Admin",
+                Email = "admin@mail.com",
+                NormalizedEmail = "ADMIN@MAIL.COM",
+                UserName = "admin@mail.com",
+                NormalizedUserName = "ADMIN@MAIL.COM",
+                CreatedOn = DateTime.UtcNow,
+                //RankId = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001"),
+                SecurityStamp = "DC6E275DD1E24957A7781D42BB68299B",
+                LockoutEnabled = true
+            };
+            admin.PasswordHash = passHasher.HashPassword(admin, "admin123");
+
+            //link user to role
             var normalUserRole = new IdentityUserRole<Guid>()
             {
                 RoleId = userRole.Id,
                 UserId = user.Id
             };
-            //link organizerUser to role
+            //link organizer to role
+            var organizerUserRole = new IdentityUserRole<Guid>()
+            {
+                RoleId = organizerRole.Id,
+                UserId = organizer.Id
+            };
+            //link admin to role
             var adminUserRole = new IdentityUserRole<Guid>()
             {
                 RoleId = adminRole.Id,
-                UserId = adminUser.Id
+                UserId = admin.Id
             };
 
             //seed categories
@@ -184,9 +208,9 @@ namespace PhotoContest.Data
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<Status>().HasData(statuses);
             modelBuilder.Entity<Rank>().HasData(ranks);
-            modelBuilder.Entity<User>().HasData(user, adminUser);
-            modelBuilder.Entity<Role>().HasData(adminRole, userRole);
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(normalUserRole, adminUserRole);
+            modelBuilder.Entity<User>().HasData(admin, user, organizer);
+            modelBuilder.Entity<Role>().HasData(adminRole,organizerRole, userRole);
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(adminUserRole,normalUserRole, organizerUserRole);
         }
     }
 }
