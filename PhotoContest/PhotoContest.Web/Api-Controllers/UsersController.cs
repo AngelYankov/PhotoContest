@@ -70,19 +70,19 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Update a user.
         /// </summary>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="username">Username to search for.</param>
         /// <param name="updateUserDTO">Details of user to be updated.</param>
         /// <returns>Returns updated user or an appropriate error message.</returns>
         // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         //[Authorize(Roles = "Organizer")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserDTO updateUserDTO, Guid id)
+        [HttpPut("{username}")]
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserDTO updateUserDTO, string username)
         {
             try
             {
-                var user = await this.userService.UpdateAsync(updateUserDTO, id);
+                var user = await this.userService.UpdateAsync(updateUserDTO, username);
                 return Ok(user);
             }
             catch (Exception e)
@@ -112,16 +112,16 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Delete a user.
         /// </summary>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="username">Username to search for.</param>
         /// <returns>Returns true if deleted successfully or an appropriate error message.</returns>
         // DELETE: api/Users/5
         //[Authorize(Roles = "Organizer")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        [HttpDelete("{username}")]
+        public async Task<IActionResult> DeleteAsync(string username)
         {
             try
             {
-                await this.userService.DeleteAsync(id);
+                await this.userService.DeleteAsync(username);
                 return NoContent();
             }
             catch (Exception e)
