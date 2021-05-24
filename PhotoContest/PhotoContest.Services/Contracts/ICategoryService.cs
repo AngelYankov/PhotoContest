@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoContest.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,5 +11,6 @@ namespace PhotoContest.Services.Services
         Task<IList<string>> GetAllAsync();
         Task<string> UpdateAsync(string categoryName, string newName);
         Task<bool> DeleteAsync(string categoryName);
+        Task<Category> FindCategoryByNameAsync(string categoryName);
     }
 }

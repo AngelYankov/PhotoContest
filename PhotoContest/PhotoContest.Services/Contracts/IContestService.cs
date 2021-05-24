@@ -12,7 +12,7 @@ namespace PhotoContest.Services.Services
     {
         Task<ContestDTO> CreateAsync(NewContestDTO dto);
         Task<IEnumerable<ContestDTO>> GetAllAsync();
-        Task<IEnumerable<ContestDTO>> GetAllOpenAsync();
+        Task<IEnumerable<ContestDTO>> GetAllOpenAsync(string phase);
         Task<ContestDTO> UpdateAsync(string contestName, UpdateContestDTO contest);
         Task<bool> DeleteAsync(string contestName);
         Task<IEnumerable<ContestDTO>> GetByPhaseAsync(string phaseName, string sortBy, string order);
