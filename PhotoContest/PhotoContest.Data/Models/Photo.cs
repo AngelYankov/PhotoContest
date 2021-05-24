@@ -23,6 +23,7 @@ namespace PhotoContest.Data.Models
         public User User { get; set; }
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public bool IsWrongCategory { get; set; }
         //public IList<PhotoRating> PhotoRatings { get; set; } = new List<PhotoRating>();
     }
