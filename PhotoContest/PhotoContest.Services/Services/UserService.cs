@@ -26,12 +26,10 @@ namespace PhotoContest.Services.Services
     public class UserService : IUserService
     {
         private readonly PhotoContestContext dbContext;
-        private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
-        public UserService(PhotoContestContext dbContext, IMapper mapper, UserManager<User> userManager)
+        public UserService(PhotoContestContext dbContext, UserManager<User> userManager)
         {
             this.dbContext = dbContext;
-            this.mapper = mapper;
             this.userManager = userManager;
         }
         /// <summary>
