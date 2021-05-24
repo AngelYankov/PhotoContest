@@ -11,6 +11,7 @@ namespace PhotoContest.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Contest> builder)
         {
+            builder.HasIndex(c => c.Name).IsUnique();
             builder.HasOne(contest => contest.Category)
                 .WithMany(category => category.Contests)
                 .HasForeignKey(contest => contest.CategoryId)

@@ -12,6 +12,7 @@ namespace PhotoContest.Data.Configurations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.Property(c => c.Name).IsRequired();
+            builder.HasIndex(c => c.Name).IsUnique();
         }
     }
 }
