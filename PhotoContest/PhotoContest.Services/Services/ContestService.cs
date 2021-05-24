@@ -23,12 +23,14 @@ namespace PhotoContest.Services.Services
         private readonly PhotoContestContext dbContext;
         private readonly IHttpContextAccessor contextAccessor;
         private readonly IUserService userService;
+        private readonly ICategoryService categoryService;
 
-        public ContestService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor, IUserService userService)
+        public ContestService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor, IUserService userService, ICategoryService categoryService)
         {
             this.dbContext = dbContext;
             this.contextAccessor = contextAccessor;
             this.userService = userService;
+            this.categoryService = categoryService;
         }
 
         /// <summary>
@@ -42,8 +44,7 @@ namespace PhotoContest.Services.Services
 
             newContest.Name = dto.Name ?? throw new ArgumentException(Exceptions.RequiredContestName);
 
-            var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == dto.CategoryName.ToLower())
-                ?? throw new ArgumentException(Exceptions.InvalidCategory);
+            var category = await this.categoryService.FindCategoryByNameAsync(dto.CategoryName);
             newContest.CategoryId = category.Id;
 
             var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Name == "Phase 1");
@@ -99,15 +100,35 @@ namespace PhotoContest.Services.Services
         /// Get all open contests.
         /// </summary>
         /// <returns>Returns all open contests.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetAllOpenAsync()
+        public async Task<IEnumerable<ContestDTO>> GetAllOpenAsync(string phase)
         {
-            return await this.dbContext
-                             .Contests
-                             .Include(c => c.Category)
-                             .Include(a => a.Status)
-                             .Where(c => c.IsDeleted == false && (c.Status.Name == "Phase1") && c.isOpen == true)
-                             .Select(c => new ContestDTO(c))
-                             .ToListAsync();
+            var allOpenContests = await this.dbContext
+                                            .Contests
+                                            .Include(c => c.Category)
+                                            .Include(a => a.Status)
+                                            .Where(c => c.IsDeleted == false && c.isOpen == true)
+                                            .Select(c => new ContestDTO(c))
+                                            .ToListAsync();
+            if (phase.Equals("Phase 1", StringComparison.OrdinalIgnoreCase))
+            {
+                return allOpenContests.Where(c => c.Status == "Phase1");
+            }
+            else if (phase.Equals("Phase 2", StringComparison.OrdinalIgnoreCase))
+            {
+                return allOpenContests.Where(c => c.Status == "Phase2");
+            }
+            else if (phase.Equals("Finished", StringComparison.OrdinalIgnoreCase))
+            {
+                return allOpenContests.Where(c => c.Status == "Finished");
+            }
+            else if (phase.Equals("All", StringComparison.OrdinalIgnoreCase))
+            {
+                return allOpenContests;
+            }
+            else
+            {
+                throw new ArgumentException(Exceptions.InvalidPhase);
+            }
         }
 
         /// <summary>
@@ -123,7 +144,7 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.NotAllowedEnrollment);
 
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
+            var user = await this.userService.GetUserByUsernameAsync(username);
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
@@ -147,7 +168,7 @@ namespace PhotoContest.Services.Services
         public async Task<bool> Invite(string contestName, string username)
         {
             var contest = await FindContestByNameAsync(contestName);
-            var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
+            var user = await this.userService.GetUserByUsernameAsync(username);
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
@@ -174,8 +195,7 @@ namespace PhotoContest.Services.Services
             contest.Name = dto.Name ?? contest.Name;
             if (dto.CategoryName != null)
             {
-                var category = await this.dbContext.Categories.FirstOrDefaultAsync(c => c.Name == dto.CategoryName)
-                ?? throw new ArgumentException(Exceptions.InvalidCategory);
+                var category = await this.categoryService.FindCategoryByNameAsync(dto.CategoryName);
                 contest.CategoryId = category.Id;
             }
             if (dto.StatusName != null)
@@ -218,7 +238,7 @@ namespace PhotoContest.Services.Services
         public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
         {
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
+            var user = await this.userService.GetUserByUsernameAsync(username);
 
             var allUserContests = await this.dbContext.UserContests
                                                 .Include(uc => uc.User)
@@ -403,13 +423,13 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext
                              .Contests
-                             .Include(c=>c.Category)
-                             .Include(c=>c.Status)
+                             .Include(c => c.Category)
+                             .Include(c => c.Status)
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.Id == id && c.IsDeleted == false)
                              ?? throw new ArgumentException(Exceptions.InvalidContestID);
         }
-        
+
         /// <summary>
         /// Find a contest with certain name.
         /// </summary>

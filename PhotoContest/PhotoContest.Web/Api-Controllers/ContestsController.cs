@@ -43,12 +43,13 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Get all open contests.
         /// </summary>
+        /// <param name="phase">all/Phase 1/Phase 2/Finished</param>
         /// <returns>Returns all open contests.</returns>
         [Authorize]
         [HttpGet("оpen")]
-        public async Task<IActionResult> GetOpenContests()
+        public async Task<IActionResult> GetOpenContests(string phase)
         {
-            var contests = await this.contestService.GetAllOpenAsync();
+            var contests = await this.contestService.GetAllOpenAsync(phase);
             return Ok(contests);
         }
 
