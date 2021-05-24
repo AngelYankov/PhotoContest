@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.Contracts;
 using PhotoContest.Services.ExceptionMessages;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
@@ -21,11 +22,13 @@ namespace PhotoContest.Services.Services
     {
         private readonly PhotoContestContext dbContext;
         private readonly IHttpContextAccessor contextAccessor;
+        private readonly IUserService userService;
 
-        public ContestService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor)
+        public ContestService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor, IUserService userService)
         {
             this.dbContext = dbContext;
             this.contextAccessor = contextAccessor;
+            this.userService = userService;
         }
 
         /// <summary>
@@ -108,19 +111,42 @@ namespace PhotoContest.Services.Services
         }
 
         /// <summary>
-        /// Enroll user to contest
+        /// Enroll user to contest.
         /// </summary>
         /// <param name="username">Username of the user to enroll.</param>
         /// <param name="contestName">Name of the contest to enroll in.</param>
         /// <returns>Return true if successful or an appropriate error message.</returns>
         public async Task<bool> Enroll(string contestName)
         {
-            var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower())
-                ?? throw new ArgumentException(Exceptions.InvalidContestName);
+            var contest = await FindContestByNameAsync(contestName);
             if (contest.isOpen == false)
-                throw new ArgumentException("Only invited users can enroll in this contest.");
+                throw new ArgumentException(Exceptions.NotAllowedEnrollment);
 
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
+
+            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
+            {
+                throw new ArgumentException(Exceptions.EnrolledUser);
+            }
+
+            var userContest = new UserContest();
+            userContest.ContestId = contest.Id;
+            userContest.UserId = user.Id;
+            await this.dbContext.UserContests.AddAsync(userContest);
+            await this.dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        /// <summary>
+        /// Invite user in contest.
+        /// </summary>
+        /// <param name="contestName">Name of the contest to invite to.</param>
+        /// <param name="username">Username of the user to invite.</param>
+        /// <returns>Return true if successful or an appropriate error message.</returns>
+        public async Task<bool> Invite(string contestName, string username)
+        {
+            var contest = await FindContestByNameAsync(contestName);
             var user = await this.dbContext.Users.FirstAsync(u => u.Email == username);
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
@@ -144,7 +170,7 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns the updated contest or an appropriate error message.</returns>
         public async Task<ContestDTO> UpdateAsync(string contestName, UpdateContestDTO dto)
         {
-            var contest = await this.dbContext.Contests.FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower());
+            var contest = await FindContestByNameAsync(contestName);
             contest.Name = dto.Name ?? contest.Name;
             if (dto.CategoryName != null)
             {
@@ -204,7 +230,7 @@ namespace PhotoContest.Services.Services
                 var contest = await this.dbContext.Contests
                                   .Include(c => c.Category)
                                   .Include(c => c.Status)
-                                  .FirstAsync(c => c.Id == userContest.ContestId);
+                                  .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
                 allUserContestsDTO.Add(new ContestDTO(contest));
             }
 
@@ -380,7 +406,7 @@ namespace PhotoContest.Services.Services
                              .Include(c=>c.Category)
                              .Include(c=>c.Status)
                              .Where(c => c.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.Id == id)
+                             .FirstOrDefaultAsync(c => c.Id == id && c.IsDeleted == false)
                              ?? throw new ArgumentException(Exceptions.InvalidContestID);
         }
         
@@ -394,7 +420,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext
                              .Contests
                              .Where(c => c.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.Name == contestName)
+                             .FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower() && c.IsDeleted == false)
                              ?? throw new ArgumentException(Exceptions.InvalidContestName);
         }
     }

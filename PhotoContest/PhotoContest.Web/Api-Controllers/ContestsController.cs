@@ -73,6 +73,27 @@ namespace PhotoContest.Web.Api_Controllers
         }
 
         /// <summary>
+        /// Invite user into a contest.
+        /// </summary>
+        /// <param name="contestName">Name of the contest to invite to.</param>
+        /// <param name="username">Username of the user to invite.</param>
+        /// <returns>Returns true if successful or an appropriate error message.</returns>
+        [Authorize(Roles = "Organizer")]
+        [HttpPost("invite")]
+        public async Task<IActionResult> Invite(string contestName, string username)
+        {
+            try
+            {
+                var isInvited = await this.contestService.Invite(contestName, username);
+                return Ok(isInvited);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Update a contest.
         /// </summary>
         /// <param name="contestName">Name for contest to update.</param>

@@ -37,5 +37,6 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string ExistingEmail = "Email already exists.";
         public const string NotFoundEmail = "Email not found.";
         public const string NotFoundRole = "Role not found.";
+        public const string NotAllowedEnrollment = "Only invited users can enroll in this contest.";
     }
 }
