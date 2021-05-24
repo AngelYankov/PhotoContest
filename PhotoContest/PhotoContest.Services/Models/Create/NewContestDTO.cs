@@ -19,6 +19,6 @@ namespace PhotoContest.Services.Models.Create
         [Required]
         public string Finished { get; set; }
         [Required]
-        public bool Open { get; set; }
+        public bool isOpen { get; set; }
     }
 }

@@ -13,10 +13,11 @@ namespace PhotoContest.Services.Services
         Task<ContestDTO> CreateAsync(NewContestDTO dto);
         Task<IEnumerable<ContestDTO>> GetAllAsync();
         Task<IEnumerable<ContestDTO>> GetAllOpenAsync();
-        Task<ContestDTO> UpdateAsync(Guid id, UpdateContestDTO contest);
-        Task<bool> DeleteAsync(Guid id);
+        Task<ContestDTO> UpdateAsync(string contestName, UpdateContestDTO contest);
+        Task<bool> DeleteAsync(string contestName);
         Task<IEnumerable<ContestDTO>> GetByPhaseAsync(string phaseName, string sortBy, string order);
         Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter);
         Task<bool> Enroll(string contestName);
+        Task<Contest> FindContestByNameAsync(string contestName);
     }
 }

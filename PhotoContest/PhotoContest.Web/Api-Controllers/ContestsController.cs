@@ -75,16 +75,16 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Update a contest.
         /// </summary>
-        /// <param name="id">ID for contest to update.</param>
+        /// <param name="contestName">Name for contest to update.</param>
         /// <param name="model">Details of the contest to be updated.</param>
         /// <returns>Returns the updated contest or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContest(Guid id, [FromBody] UpdateContestDTO model)
+        public async Task<IActionResult> UpdateContest(string contestName, [FromBody] UpdateContestDTO model)
         {
             try
             {
-                var contest = await this.contestService.UpdateAsync(id, model);
+                var contest = await this.contestService.UpdateAsync(contestName, model);
                 return Ok(contest);
             }
             catch (Exception e)
