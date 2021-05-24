@@ -17,8 +17,9 @@ namespace PhotoContest.Services.Services
         Task<bool> DeleteAsync(string contestName);
         Task<IEnumerable<ContestDTO>> GetByPhaseAsync(string phaseName, string sortBy, string order);
         Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter);
-        Task<bool> Enroll(string contestName);
-        Task<bool> Invite(string contestName, string username);
+        Task<bool> EnrollAsync(string contestName);
+        Task<bool> InviteAsync(string contestName, string username);
+        Task<bool> ChooseJuryAsync(string contestName, string username);
         Task<Contest> FindContestByNameAsync(string contestName);
         Task<Contest> FindContestAsync(Guid id);
     }

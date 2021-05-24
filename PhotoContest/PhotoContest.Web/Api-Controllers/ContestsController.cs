@@ -64,7 +64,7 @@ namespace PhotoContest.Web.Api_Controllers
         {
             try
             {
-                var isEnrolled = await this.contestService.Enroll(contestName);
+                var isEnrolled = await this.contestService.EnrollAsync(contestName);
                 return Ok(isEnrolled);
             }
             catch (Exception e)
@@ -85,7 +85,22 @@ namespace PhotoContest.Web.Api_Controllers
         {
             try
             {
-                var isInvited = await this.contestService.Invite(contestName, username);
+                var isInvited = await this.contestService.InviteAsync(contestName, username);
+                return Ok(isInvited);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Roles = "Organizer")]
+        [HttpPost("choose")]
+        public async Task<IActionResult> ChooseJury(string contestName, string username)
+        {
+            try
+            {
+                var isInvited = await this.contestService.ChooseJuryAsync(contestName, username);
                 return Ok(isInvited);
             }
             catch (Exception e)

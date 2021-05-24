@@ -137,7 +137,7 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username of the user to enroll.</param>
         /// <param name="contestName">Name of the contest to enroll in.</param>
         /// <returns>Return true if successful or an appropriate error message.</returns>
-        public async Task<bool> Enroll(string contestName)
+        public async Task<bool> EnrollAsync(string contestName)
         {
             var contest = await FindContestByNameAsync(contestName);
             if (contest.isOpen == false)
@@ -165,7 +165,7 @@ namespace PhotoContest.Services.Services
         /// <param name="contestName">Name of the contest to invite to.</param>
         /// <param name="username">Username of the user to invite.</param>
         /// <returns>Return true if successful or an appropriate error message.</returns>
-        public async Task<bool> Invite(string contestName, string username)
+        public async Task<bool> InviteAsync(string contestName, string username)
         {
             var contest = await FindContestByNameAsync(contestName);
             var user = await this.userService.GetUserByUsernameAsync(username);
@@ -182,6 +182,33 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return true;
         }
+
+        /// <summary>
+        /// Choose jury from users.
+        /// </summary>
+        /// <param name="contestName">Contest to choose jury for.</param>
+        /// <param name="username">Username of the user chosen.</param>
+        /// <returns>Return true if successful or an appropriate error message.</returns>
+        public async Task<bool> ChooseJuryAsync(string contestName, string username)
+        {
+            var contest = await FindContestByNameAsync(contestName);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            if(user.Rank.Name != "Master" && user.Rank.Name != "Wise and Benevolent Photo Dictator")
+            {
+                throw new ArgumentException("User cannot be chosen as jury.");
+            }
+            if (await this.dbContext.Juries.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
+            {
+                throw new ArgumentException("User is already jury.");
+            }
+            var juryMember = new JuryMember();
+            juryMember.ContestId = contest.Id;
+            juryMember.UserId = user.Id;
+            await this.dbContext.Juries.AddAsync(juryMember);
+            await this.dbContext.SaveChangesAsync();
+            return true;
+        }
+
 
         /// <summary>
         /// Update a contest by a certain ID and data.
