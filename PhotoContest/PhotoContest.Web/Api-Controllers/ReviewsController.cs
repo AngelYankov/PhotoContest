@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PhotoContest.Data;
+using PhotoContest.Data.Models;
+using PhotoContest.Services.Contracts;
+using PhotoContest.Services.Models.Create;
+
+namespace PhotoContest.Web.Api_Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ReviewsController : ControllerBase
+    {
+        private readonly IReviewService reviewService;
+
+        public ReviewsController(IReviewService reviewService)
+        {
+            this.reviewService = reviewService;
+        }
+        [Authorize(Roles = "Organizer")]
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(NewReviewDTO newReviewDTO)
+        {
+            try
+            {
+                var result = await this.reviewService.CreateAsync(newReviewDTO);
+                return Created("post",result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [Authorize(Roles ="Organizer,User")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetForPhotoAsync(Guid id)
+        {
+            try
+            {
+                var result = await this.reviewService.GetForPhotoAsync(id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [Authorize(Roles = "Organizer,User")]
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetForUserAsync(string username)
+        {
+            try
+            {
+                var result = await this.reviewService.GetForUserAsync(username);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+    }
+}
