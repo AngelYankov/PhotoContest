@@ -116,15 +116,15 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Delete a contest.
         /// </summary>
-        /// <param name="id">ID of the contest to delete.</param>
+        /// <param name="contestName">Name of the contest to delete.</param>
         /// <returns>Returns NoContent or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContest(Guid id)
+        public async Task<IActionResult> DeleteContest(string contestName)
         {
             try
             {
-                var contest = await this.contestService.DeleteAsync(id);
+                var contest = await this.contestService.DeleteAsync(contestName);
                 return NoContent();
             }
             catch (Exception e)
