@@ -40,15 +40,15 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Update a category.
         /// </summary>
-        /// <param name="id">ID of the category to update.</param>
+        /// <param name="categoryName">Name of the category to update.</param>
         /// <param name="name">Name of the category to be updated.</param>
         /// <returns>Returns the updated category or an appropriate error message.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, string name)
+        public async Task<IActionResult> UpdateAsync(string categoryName, string name)
         {
             try
             {
-                var category = await this.categoryService.UpdateAsync(id, name);
+                var category = await this.categoryService.UpdateAsync(categoryName, name);
                 return Ok(category);
             }
             catch (Exception e)
@@ -79,14 +79,14 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Delete a category.
         /// </summary>
-        /// <param name="id">ID of the category to delete.</param>
+        /// <param name="categoryName">Name of the category to delete.</param>
         /// <returns>Returns NoContent or an appropriate error message.</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(string categoryName)
         {
             try
             {
-                await this.categoryService.DeleteAsync(id);
+                await this.categoryService.DeleteAsync(categoryName);
                 return NoContent();
             }
             catch (Exception e)

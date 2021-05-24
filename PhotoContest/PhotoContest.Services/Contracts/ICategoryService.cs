@@ -8,7 +8,7 @@ namespace PhotoContest.Services.Services
     {
         Task<string> CreateAsync(string categoryName);
         Task<IList<string>> GetAllAsync();
-        Task<string> UpdateAsync(Guid id, string newName);
-        Task<bool> DeleteAsync(Guid id);
+        Task<string> UpdateAsync(string categoryName, string newName);
+        Task<bool> DeleteAsync(string categoryName);
     }
 }
