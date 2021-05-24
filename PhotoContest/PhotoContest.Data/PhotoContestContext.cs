@@ -43,9 +43,62 @@ namespace PhotoContest.Data
                 options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
         }
 
-
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
+            //seed roles 
+            var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
+            var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
+
+            //password hasher
+            var passHasher = new PasswordHasher<User>();
+
+            //seed organizerUser
+            var adminUser = new User()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "Eric",
+                LastName = "Berg",
+                Email = "eric.berg@mail.com",
+                NormalizedEmail = "ERIC.BERG@MAIL.COM",
+                UserName = "eric.berg@mail.com",
+                NormalizedUserName = "ERIC.BERG@MAIL.COM",
+                CreatedOn = DateTime.UtcNow,
+                RankId = Guid.Parse("0e4ac61d-7d3b-4dcb-9ed0-d47cf1c247ce"),
+                SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B",
+                LockoutEnabled = true
+            };
+            adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
+
+            //seed userRole
+            var user = new User()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "Georgi",
+                LastName = "Ivanov",
+                Email = "georgi.ivanov@mail.com",
+                NormalizedEmail = "GEORGI.IVANOV@MAIL.COM",
+                UserName = "georgi.ivanov@mail.com",
+                NormalizedUserName = "GEORGI.IVANOV@MAIL.COM",
+                CreatedOn = DateTime.UtcNow,
+                RankId = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001"),
+                SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B",
+                LockoutEnabled = true
+            };
+            user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
+
+            //link fanUser to role
+            var normalUserRole = new IdentityUserRole<Guid>()
+            {
+                RoleId = userRole.Id,
+                UserId = user.Id
+            };
+            //link organizerUser to role
+            var adminUserRole = new IdentityUserRole<Guid>()
+            {
+                RoleId = adminRole.Id,
+                UserId = adminUser.Id
+            };
+
             //seed categories
             var categories = new List<Category>()
             {
@@ -104,7 +157,7 @@ namespace PhotoContest.Data
             {
                 new Rank()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001"),
                     Name = "Junkie"
                 },
                 new Rank()
@@ -124,70 +177,16 @@ namespace PhotoContest.Data
                 },
                 new Rank()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("0e4ac61d-7d3b-4dcb-9ed0-d47cf1c247ce"),
                     Name = "Organizer"
                 }
             };
-
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<Status>().HasData(statuses);
             modelBuilder.Entity<Rank>().HasData(ranks);
-
-            //seed roles 
-            var adminRole = new Role() { Id = Guid.NewGuid(), Name = "Organizer", NormalizedName = "ORGANIZER" };
-            var userRole = new Role() { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" };
-            var roles = new List<Role>() { adminRole, userRole };
-
-            modelBuilder.Entity<Role>().HasData(roles);
-
-            //password hasher
-            var passHasher = new PasswordHasher<User>();
-
-            //seed organizerUser
-            var adminUser = new User();
-            adminUser.Id = Guid.NewGuid();
-            adminUser.FirstName = "Eric";
-            adminUser.LastName = "Berg";
-            adminUser.Email = "eric.berg@mail.com";
-            adminUser.NormalizedEmail = "ERIC.BERG@MAIL.COM";
-            adminUser.UserName = "eric.berg@mail.com";
-            adminUser.NormalizedUserName = "ERIC.BERG@MAIL.COM";
-            adminUser.CreatedOn = DateTime.UtcNow;
-            //adminUser.RankId = this.Ranks.Last().Id;
-            adminUser.PasswordHash = passHasher.HashPassword(adminUser, "eric.berg123");
-            adminUser.SecurityStamp = "DC6E275DD1E24957A7781D42BB68293B";
-            adminUser.LockoutEnabled = true;
-            modelBuilder.Entity<User>().HasData(adminUser);
-
-            //link organizerUser to role
-            var adminUserRole = new IdentityUserRole<Guid>();
-            adminUserRole.RoleId = adminRole.Id;
-            adminUserRole.UserId = adminUser.Id;
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(adminUserRole);
-
-            //seed userRole
-            var user = new User();
-            user.Id = Guid.NewGuid();
-            user.FirstName = "Georgi";
-            user.LastName = "Ivanov";
-            user.Email = "georgi.ivanov@mail.com";
-            user.NormalizedEmail = "GEORGI.IVANOV@MAIL.COM";
-            user.UserName = "georgi.ivanov@mail.com";
-            user.NormalizedUserName = "GEORGI.IVANOV@MAIL.COM";
-            user.CreatedOn = DateTime.UtcNow;
-            //adminUser.RankId = this.Ranks.FirstOrDefault().Id;
-            user.PasswordHash = passHasher.HashPassword(user, "georgi.ivanov123");
-            user.SecurityStamp = "DC6E275DD1E24957A7781D42BB68292B";
-            user.LockoutEnabled = true;
-            modelBuilder.Entity<User>().HasData(user);
-
-            //link fanUser to role
-            var normalUserRole = new IdentityUserRole<Guid>();
-            normalUserRole.RoleId = userRole.Id;
-            normalUserRole.UserId = user.Id;
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(normalUserRole);
-
-
+            modelBuilder.Entity<User>().HasData(user, adminUser);
+            modelBuilder.Entity<Role>().HasData(adminRole, userRole);
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(normalUserRole, adminUserRole);
         }
     }
 }
