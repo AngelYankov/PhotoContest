@@ -47,23 +47,20 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException("Contest is not yet open.");
             }
+            var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var user = await this.userService.GetUserByUsernameAsync(userName);
+            if (await this.dbContext.Juries.FirstOrDefaultAsync(j => j.UserId == user.Id && j.ContestId == contest.Id) != null)
+            {
+                throw new ArgumentException("User is jury in this contest.");
+            }
             var photo = new Photo()
             {
                 Title = newphotoDTO.Title,
                 Description = newphotoDTO.Description,
                 PhotoUrl = newphotoDTO.PhotoUrl,
                 ContestId = contest.Id,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow,
             };
-            var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.userService.GetUserByUsernameAsync(userName);
-            /*var photoRating = new PhotoRating()
-            {
-                UserId = user.Id,
-                PhotoId = photo.Id,
-                CreatedOn = DateTime.UtcNow
-            };*/
-            //await this.dbContext.PhotoRatings.AddAsync(photoRating);
             await this.dbContext.Photos.AddAsync(photo);
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
@@ -78,9 +75,6 @@ namespace PhotoContest.Services.Services
             var photo = await FindPhoto(id);
             photo.IsDeleted = true;
             photo.DeletedOn = DateTime.UtcNow;
-            //var photoRating = photo.PhotoRatings.Where(pr => pr.IsDeleted == false).FirstOrDefault(pr => pr.PhotoId == photo.Id);
-            //photoRating.IsDeleted = true;
-            //photoRating.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
             return photo.IsDeleted;
         }
@@ -91,9 +85,9 @@ namespace PhotoContest.Services.Services
         public async Task<IEnumerable<PhotoDTO>> GetAllAsync()
         {
             return await this.dbContext.Photos
-                                       //.Include(p => p.PhotoRatings.Where(pr => pr.IsDeleted == false))
-                                           // .ThenInclude(p => p.User)
+                                       .Include(p=>p.User)
                                        .Include(p => p.Contest)
+                                            .ThenInclude(c=>c.Category)
                                        .Where(p => p.IsDeleted == false)
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
@@ -125,39 +119,17 @@ namespace PhotoContest.Services.Services
             return new PhotoDTO(photo);
         }
         /// <summary>
-        /// Rate a photo.
+        /// Get all photos for certain contest.
         /// </summary>
-        /// <param name="id">Id of photo.</param>
-        /// <param name="points">Points for photo to receive.</param>
-        /// <returns>Returns message if photo is rated successfully.</returns>
-        public async Task<PhotoDTO> RatePhoto(Guid id, int points)
-        {
-            var photo = await FindPhoto(id);
-            if (points < 1 || points > 10)
-            {
-                throw new ArgumentException(Exceptions.InvalidPointsValue);
-            }
-            //var temp = photo.PhotoRatings;
-            //var temp2 = this.dbContext.PhotoRatings;
-
-            var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.dbContext.Users.FirstAsync(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
-            /*var photoRating = await this.dbContext.PhotoRatings
-                                                  .Where(pr => pr.IsDeleted == false)
-                                                  .FirstOrDefaultAsync(pr => pr.PhotoId == photo.Id && pr.UserId == user.Id);
-            photoRating.Points = points;
-            photoRating.ModifiedOn = DateTime.UtcNow;*/
-            await this.dbContext.SaveChangesAsync();
-            return new PhotoDTO(photo);
-        }
-        public async Task<List<PhotoDTO>> GetPhotosForContestAsync(Guid contestId)
+        /// <param name="contestName">Contest name to search for.</param>
+        /// <returns>Return all photos.</returns>
+        public async Task<List<PhotoDTO>> GetPhotosForContestAsync(string contestName)
         {
             return await this.dbContext.Photos
-                                       //.Include(p => p.PhotoRatings.Where(pr => pr.IsDeleted == false))
-                                         // .ThenInclude(pr => pr.User)
+                                       .Include(p=>p.User)
                                        .Include(p => p.Contest)
                                           .ThenInclude(c => c.Category)
-                                       .Where(p => p.IsDeleted == false && p.ContestId == contestId && p.IsWrongCategory == false)
+                                       .Where(p => p.IsDeleted == false && p.Contest.Name.ToLower() == contestName.ToLower())
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
@@ -167,14 +139,13 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns photo with that id or an appropriate error message.</returns>
-        private async Task<Photo> FindPhoto(Guid id)
+        public async Task<Photo> FindPhoto(Guid id)
         {
             return await this.dbContext.Photos
-                                 //.Include(p => p.PhotoRatings.Where(pr => pr.IsDeleted == false))
-                                     //   .ThenInclude(pr => pr.User)
+                                 .Include(p=>p.User)
                                  .Include(p => p.Contest)
                                         .ThenInclude(c => c.Category)
-                                 .Where(p => p.IsDeleted == false && p.IsWrongCategory == false)
+                                 .Where(p => p.IsDeleted == false)
                                  .FirstOrDefaultAsync(p => p.Id == id)
                                  ?? throw new ArgumentException(Exceptions.InvalidPhotoID);
         }

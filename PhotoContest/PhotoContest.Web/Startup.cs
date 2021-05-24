@@ -97,6 +97,7 @@ namespace PhotoContest.Web
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IReviewService, ReviewService>();
             services.TryAddScoped<SignInManager<User>>();
 
             services.AddRazorPages();
