@@ -35,12 +35,15 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns created review.</returns>
         public async Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO)
         {
-            
             var photo = await this.photoService.FindPhoto(newReviewDTO.PhotoId);
             if (photo.Contest.Status.Name != "Phase2") throw new ArgumentException(Exceptions.InvalidContestPhase);
             if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
             var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(userName);
+            if (!this.dbContext.Juries.Any(j => j.UserId == user.Id && j.ContestId == photo.ContestId && user.Rank.Name == "User"))
+            {
+                throw new ArgumentException("User is not in jury for this contest.");
+            }
 
             if (this.dbContext.Reviews.Any(r => r.UserId == user.Id && r.PhotoId == photo.Id))
                 throw new ArgumentException(Exceptions.ReviewedPhoto);

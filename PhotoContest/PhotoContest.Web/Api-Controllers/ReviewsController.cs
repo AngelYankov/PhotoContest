@@ -28,7 +28,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="newReviewDTO">Details of new review.</param>
         /// <returns>Returns created review.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Organizer, User")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(NewReviewDTO newReviewDTO)
         {
