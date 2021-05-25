@@ -81,10 +81,10 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="username">Username to search for.</param>
         /// <returns>Returns all reviews for a user.</returns>
-        public async Task<List<ReviewDTO>> GetForUserAsync(string username)
+        public async Task<List<ReviewDTO>> GetForUserAsync(Guid id)
         {
-            var user = await this.userService.GetUserByUsernameAsync(username);
-            return user.Reviews.OrderByDescending(r => r.CreatedOn).Select(r => new ReviewDTO(r)).ToList();
+            //var user = await this.userService.FindUser(id);
+            return this.dbContext.Reviews.Where(r=>r.UserId==id).OrderByDescending(r => r.CreatedOn).Select(r => new ReviewDTO(r)).ToList();
         }
     }
 }

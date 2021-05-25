@@ -67,12 +67,12 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="username">Username to search for.</param>
         /// <returns>Returns reviews for user.</returns>
         [Authorize(Roles = "Organizer,User")]
-        [HttpGet("{username}")]
-        public async Task<IActionResult> GetForUserAsync(string username)
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetForUserAsync(Guid id)
         {
             try
             {
-                var result = await this.reviewService.GetForUserAsync(username);
+                var result = await this.reviewService.GetForUserAsync(id);
                 return Ok(result);
             }
             catch (Exception e)

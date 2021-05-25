@@ -179,7 +179,7 @@ namespace PhotoContest.Services.Services
                              .Users
                              .Include(u => u.Rank)
                              .Where(u => u.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.UserName.ToLower().Equals(username.ToLower()))
+                             .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
         }
         /// <summary>
@@ -204,7 +204,7 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns user with that id or an appropriate error message.</returns>
-        private async Task<User> FindUser(Guid id)
+        public async Task<User> FindUser(Guid id)
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
