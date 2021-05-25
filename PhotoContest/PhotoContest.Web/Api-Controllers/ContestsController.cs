@@ -49,8 +49,15 @@ namespace PhotoContest.Web.Api_Controllers
         [HttpGet("оpen")]
         public async Task<IActionResult> GetOpenContests(string phase)
         {
-            var contests = await this.contestService.GetAllOpenAsync(phase);
-            return Ok(contests);
+            try
+            {
+                var contests = await this.contestService.GetAllOpenAsync(phase);
+                return Ok(contests);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>
@@ -116,7 +123,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="model">Details of the contest to be updated.</param>
         /// <returns>Returns the updated contest or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateContest(string contestName, [FromBody] UpdateContestDTO model)
         {
             try
@@ -156,7 +163,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="contestName">Name of the contest to delete.</param>
         /// <returns>Returns NoContent or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteContest(string contestName)
         {
             try

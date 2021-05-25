@@ -53,12 +53,12 @@ namespace PhotoContest.Services.Services
 
             newContest.IsOpen = dto.isOpen;
 
-            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
-            newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
-            newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
-            newContest.Finished = DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+            newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
+            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+            newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
+            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+            newContest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
 
             newContest.CreatedOn = DateTime.UtcNow;
             await this.dbContext.Contests.AddAsync(newContest);
@@ -111,11 +111,11 @@ namespace PhotoContest.Services.Services
                                             .ToListAsync();
             if (phase.Equals("Phase 1", StringComparison.OrdinalIgnoreCase))
             {
-                return allOpenContests.Where(c => c.Status == "Phase1");
+                return allOpenContests.Where(c => c.Status == "Phase 1");
             }
             else if (phase.Equals("Phase 2", StringComparison.OrdinalIgnoreCase))
             {
-                return allOpenContests.Where(c => c.Status == "Phase2");
+                return allOpenContests.Where(c => c.Status == "Phase 2");
             }
             else if (phase.Equals("Finished", StringComparison.OrdinalIgnoreCase))
             {
@@ -169,6 +169,11 @@ namespace PhotoContest.Services.Services
         {
             var contest = await FindContestByNameAsync(contestName);
             var user = await this.userService.GetUserByUsernameAsync(username);
+            //validation if ibvited user is organizer
+            if(user.Rank.Name == "Organizer")
+            {
+                throw new ArgumentException(Exceptions.InvalidParticipant);
+            }
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
@@ -223,7 +228,7 @@ namespace PhotoContest.Services.Services
         public async Task<ContestDTO> UpdateAsync(string contestName, UpdateContestDTO dto)
         {
             var contest = await FindContestByNameAsync(contestName);
-            contest.Name = dto.Name ?? contest.Name;
+            
             if (dto.CategoryName != null)
             {
                 var category = await this.categoryService.FindCategoryByNameAsync(dto.CategoryName);
@@ -237,19 +242,20 @@ namespace PhotoContest.Services.Services
             }
             if (dto.Phase1 != null)
             {
-                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
-                contest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+                contest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             if (dto.Phase2 != null)
             {
-                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
-                contest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+                contest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             if (dto.Finished != null)
             {
-                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
-                contest.Finished = DateTime.ParseExact(dto.Finished, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+                contest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
+            contest.Name = dto.Name ?? contest.Name;
             if (dto.isOpen != false)
             {
                 contest.IsOpen = true;
@@ -324,7 +330,7 @@ namespace PhotoContest.Services.Services
             {
                 foreach (var contest in allContests)
                 {
-                    if (contest.Status.Name == "Phase1")
+                    if (contest.Status.Name == "Phase 1")
                     {
                         var contestDTO = new ContestDTO(contest);
                         filteredContests.Add(contestDTO);
@@ -335,7 +341,7 @@ namespace PhotoContest.Services.Services
             {
                 foreach (var contest in allContests)
                 {
-                    if (contest.Status.Name == "Phase2")
+                    if (contest.Status.Name == "Phase 2")
                     {
                         var contestDTO = new ContestDTO(contest);
                         filteredContests.Add(contestDTO);
@@ -470,6 +476,8 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext
                              .Contests
+                             .Include(c=>c.Category)
+                             .Include(c=>c.Status)
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower() && c.IsDeleted == false)
                              ?? throw new ArgumentException(Exceptions.InvalidContestName);

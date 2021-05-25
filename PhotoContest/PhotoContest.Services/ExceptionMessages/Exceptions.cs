@@ -21,6 +21,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidDateTimeFinished = "Date for 'Finished' phase can't be more than 1 day after 'Phase 2'.";
         public const string InvalidPointsValue = "Invalid points value.";
         public const string InvalidJuryUser = "User cannot be chosen as jury.";
+        public const string InvalidParticipant = "User cannot be chosen as a contest participant.";
         public const string InvalidContestPhase = "Contest is not in evaluation phase.";
         public const string InvalidComment = "The comment is not valid.";
         public const string DeletedCategory = "Category is deleted.";
