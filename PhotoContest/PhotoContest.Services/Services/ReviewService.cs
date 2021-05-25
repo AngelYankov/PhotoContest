@@ -35,6 +35,7 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns created review.</returns>
         public async Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO)
         {
+            
             var photo = await this.photoService.FindPhoto(newReviewDTO.PhotoId);
             if (photo.Contest.Status.Name != "Phase2") throw new ArgumentException(Exceptions.InvalidContestPhase);
             if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
@@ -52,6 +53,12 @@ namespace PhotoContest.Services.Services
                 UserId = user.Id,
                 CreatedOn = DateTime.UtcNow
             };
+            if (newReviewDTO.WrongCategory)
+            {
+                review.Comment = Exceptions.WrongCategoryComment;
+                review.Score = 0;
+                review.WrongCategory = true;
+            }
             await this.dbContext.Reviews.AddAsync(review);
             await this.dbContext.SaveChangesAsync();
             return new ReviewDTO(review);
@@ -61,10 +68,20 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">Id of photo to search for.</param>
         /// <returns>Returns all reviews.</returns>
-        public async Task<List<ReviewDTO>> GetForPhotoAsync(Guid id)
+        public async Task<List<ReviewDTO>> GetForPhotoAsync(Guid photoId)
         {
-            var photo = await this.photoService.FindPhoto(id);
+            var photo = await this.photoService.FindPhoto(photoId);
             return photo.Reviews.Select(r => new ReviewDTO(r)).ToList();
+        }
+        /// <summary>
+        /// Get all reviews for a user.
+        /// </summary>
+        /// <param name="username">Username to search for.</param>
+        /// <returns>Returns all reviews for a user.</returns>
+        public async Task<List<ReviewDTO>> GetForUserAsync(string username)
+        {
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            return user.Reviews.OrderByDescending(r => r.CreatedOn).Select(r => new ReviewDTO(r)).ToList();
         }
     }
 }

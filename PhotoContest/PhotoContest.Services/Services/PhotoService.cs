@@ -133,6 +133,19 @@ namespace PhotoContest.Services.Services
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
+        /// <summary>
+        /// Get all photos with detailed info.
+        /// </summary>
+        /// <returns>Return all photos with score and comments.</returns>
+        public async Task<List<PhotoReviewDTO>> GetAllWithCommentsAndScoreAsync()
+        {
+            return await this.dbContext.Photos
+                                       .Include(p => p.User)
+                                       .Include(p => p.Contest)
+                                            .ThenInclude(c => c.Category)
+                                       .Include(p => p.Reviews)
+                                       .Select(p=>new PhotoReviewDTO(p)).ToListAsync();
+        }
 
         /// <summary>
         /// Find a photo.

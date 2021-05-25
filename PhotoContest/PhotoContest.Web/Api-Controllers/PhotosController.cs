@@ -29,7 +29,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <returns>Returns all photos.</returns>
         // GET: api/Photos
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -46,7 +46,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns photo with that id or an appropriate error message.</returns>
         // GET: api/Photos/5
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
@@ -69,7 +69,7 @@ namespace PhotoContest.Web.Api_Controllers
         // PUT: api/Photos/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody]UpdatePhotoDTO updateModel, Guid id)
         {
@@ -91,7 +91,7 @@ namespace PhotoContest.Web.Api_Controllers
         // POST: api/Photos
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin,User")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] NewPhotoDTO newPhotoDTO)
         {
@@ -111,7 +111,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns true if deleted succesfully or an appropriate error message.</returns>
         // DELETE: api/Photos/5
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
@@ -125,5 +125,43 @@ namespace PhotoContest.Web.Api_Controllers
                 return BadRequest(e.Message);
             }
         }
+        /// <summary>
+        /// Get all photos for contest.
+        /// </summary>
+        /// <param name="contestName">Contest name.</param>
+        /// <returns>Returns all photos for that contest.</returns>
+        [Authorize(Roles = "Admin,Organizer")]
+        [HttpGet("{contestName}")]
+        public async Task<IActionResult> GetPhotosForContestAsync(string contestName)
+        {
+            try
+            {
+                var result = await this.photoService.GetPhotosForContestAsync(contestName);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        /// <summary>
+        /// Get all photos with detailed info.
+        /// </summary>
+        /// <returns>Return all photos with score and comments.</returns>
+        [Authorize(Roles = "Admin,Organizer,User")]
+        [HttpGet("allinfo")]
+        public async Task<IActionResult> GetAllWithCommentsAndScoreAsync()
+        {
+            try
+            {
+                var result = await this.photoService.GetAllWithCommentsAndScoreAsync();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }
