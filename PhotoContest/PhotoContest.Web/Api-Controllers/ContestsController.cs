@@ -101,6 +101,12 @@ namespace PhotoContest.Web.Api_Controllers
             }
         }
 
+        /// <summary>
+        /// Choose jury members from users.
+        /// </summary>
+        /// <param name="contestName">Name of the contest to choose for.</param>
+        /// <param name="username">Username of the user to choose.</param>
+        /// <returns>Returns true if successful or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpPost("chooseJury")]
         public async Task<IActionResult> ChooseJury(string contestName, string username)
