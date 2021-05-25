@@ -51,7 +51,7 @@ namespace PhotoContest.Services.Services
 
             newContest.StatusId = status.Id;
 
-            newContest.isOpen = dto.isOpen;
+            newContest.IsOpen = dto.isOpen;
 
             ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
             newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
@@ -106,7 +106,7 @@ namespace PhotoContest.Services.Services
                                             .Contests
                                             .Include(c => c.Category)
                                             .Include(a => a.Status)
-                                            .Where(c => c.IsDeleted == false && c.isOpen == true)
+                                            .Where(c => c.IsDeleted == false && c.IsOpen == true)
                                             .Select(c => new ContestDTO(c))
                                             .ToListAsync();
             if (phase.Equals("Phase 1", StringComparison.OrdinalIgnoreCase))
@@ -140,7 +140,7 @@ namespace PhotoContest.Services.Services
         public async Task<bool> EnrollAsync(string contestName)
         {
             var contest = await FindContestByNameAsync(contestName);
-            if (contest.isOpen == false)
+            if (contest.IsOpen == false)
                 throw new ArgumentException(Exceptions.NotAllowedEnrollment);
 
             var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
@@ -201,7 +201,7 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
-            if(contest.isOpen != false)
+            if(contest.IsOpen != false)
             {
                 throw new ArgumentException(Exceptions.NotAllowedInvitation);
             }
@@ -252,7 +252,7 @@ namespace PhotoContest.Services.Services
             }
             if (dto.isOpen != false)
             {
-                contest.isOpen = true;
+                contest.IsOpen = true;
             }
 
             contest.ModifiedOn = DateTime.UtcNow;
