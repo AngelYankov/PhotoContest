@@ -43,7 +43,7 @@ namespace PhotoContest.Services.Services
             if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(Exceptions.RequiredPhotoURL);
             if (newphotoDTO.ContestName == null) throw new ArgumentException(Exceptions.InvalidContestName);
             var contest = await this.contestService.FindContestByNameAsync(newphotoDTO.ContestName);
-            if (!contest.IsOpen)
+            if (contest.Status.Name != "Phase 1")
             {
                 throw new ArgumentException(Exceptions.ClosedContest);
             }

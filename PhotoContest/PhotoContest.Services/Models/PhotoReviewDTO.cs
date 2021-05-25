@@ -12,13 +12,13 @@ namespace PhotoContest.Services.Models
             this.Title = photo.Title;
             this.Description = photo.Description;
             this.PhotoUrl = photo.PhotoUrl;
-            this.User = photo.User.FirstName + photo.User.LastName;
+            this.User = photo.User.FirstName+" "+photo.User.LastName;
             this.Contest = photo.Contest.Name;
             this.Category = photo.Contest.Category.Name;
             this.Points = photo.AllPoints.ToString();
             foreach (var review in photo.Reviews)
             {
-                this.Comments.Add((review.Comment,review.Score));
+                this.Reviews.Add((review.Comment,review.Score));
             }
         }
         public string Title { get; set; }
@@ -28,6 +28,6 @@ namespace PhotoContest.Services.Models
         public string Contest { get; set; }
         public string Category { get; set; }
         public string Points { get; set; }
-        public List<(string, double)> Comments { get; set; } = new List<(string, double)>();
+        public List<(string, double)> Reviews { get; set; } = new List<(string, double)>();
     }
 }

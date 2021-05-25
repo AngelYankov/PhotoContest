@@ -197,6 +197,7 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.NotFoundRole);
             }
             await this.userManager.AddToRoleAsync(user, model.Role);
+            //DO WE NEED TO CHANGE THE RANK?
             return Exceptions.SuccesfullyAddedRole;   //THIS ONLY ADDS ANOTHER ROLE, DO NOT CHANGE IT
         }
 
