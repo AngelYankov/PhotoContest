@@ -23,6 +23,11 @@ namespace PhotoContest.Web.Api_Controllers
         {
             this.reviewService = reviewService;
         }
+        /// <summary>
+        /// Create a review.
+        /// </summary>
+        /// <param name="newReviewDTO">Details of new review.</param>
+        /// <returns>Returns created review.</returns>
         [Authorize(Roles = "Organizer")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(NewReviewDTO newReviewDTO)
@@ -37,6 +42,11 @@ namespace PhotoContest.Web.Api_Controllers
                 return BadRequest(e.Message);
             }
         }
+        /// <summary>
+        /// Get review for photo by Id.
+        /// </summary>
+        /// <param name="id">Id of photo to search for.</param>
+        /// <returns>Returns review for photo.</returns>
         [Authorize(Roles ="Organizer,User")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetForPhotoAsync(Guid id)
@@ -51,6 +61,11 @@ namespace PhotoContest.Web.Api_Controllers
                 return BadRequest(e.Message);
             }
         }
+        /// <summary>
+        /// Get review for user.
+        /// </summary>
+        /// <param name="username">Username to search for.</param>
+        /// <returns>Returns reviews for user.</returns>
         [Authorize(Roles = "Organizer,User")]
         [HttpGet("{username}")]
         public async Task<IActionResult> GetForUserAsync(string username)

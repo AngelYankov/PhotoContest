@@ -98,7 +98,7 @@ namespace PhotoContest.Data
                 UserName = "admin@mail.com",
                 NormalizedUserName = "ADMIN@MAIL.COM",
                 CreatedOn = DateTime.UtcNow,
-                //RankId = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001"),
+                RankId = Guid.Parse("a036e464-8996-4e40-9a81-39239cf72402"),
                 SecurityStamp = "DC6E275DD1E24957A7781D42BB68299B",
                 LockoutEnabled = true
             };
@@ -203,6 +203,11 @@ namespace PhotoContest.Data
                 {
                     Id = Guid.Parse("0e4ac61d-7d3b-4dcb-9ed0-d47cf1c247ce"),
                     Name = "Organizer"
+                },
+                new Rank()
+                {
+                    Id = Guid.Parse("a036e464-8996-4e40-9a81-39239cf72402"),
+                    Name = "Admin"
                 }
             };
             modelBuilder.Entity<Category>().HasData(categories);

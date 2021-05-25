@@ -45,7 +45,7 @@ namespace PhotoContest.Services.Services
                 LastName = newUserDTO.LastName ?? throw new ArgumentException(Exceptions.RequiredLastName),
                 Email = newUserDTO.Email ?? throw new ArgumentException(Exceptions.RequiredEmail),
                 UserName = newUserDTO.Email,
-                Rank = await this.dbContext.Ranks.FirstAsync(),
+                Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r=>r.Name.ToLower() == "junkie"),
                 CreatedOn = DateTime.UtcNow
             };
             /*var rank = await this.dbContext.Ranks.FirstAsync();
@@ -77,7 +77,7 @@ namespace PhotoContest.Services.Services
                 LastName = newUserDTO.LastName ?? throw new ArgumentException(Exceptions.RequiredLastName),
                 Email = newUserDTO.Email ?? throw new ArgumentException(Exceptions.RequiredEmail),
                 UserName = newUserDTO.Email,
-                Rank = await this.dbContext.Ranks.LastAsync(),
+                Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r=>r.Name.ToLower() == "organizer"),
                 CreatedOn = DateTime.UtcNow
             };
             if (await this.userManager.FindByEmailAsync(newUserDTO.Email) == null)
@@ -124,7 +124,7 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
-                                       .Where(u => u.IsDeleted == false)
+                                       .Where(u => u.IsDeleted == false /*&& u.Rank.Name != "Organizer" && u.Rank.Name != "Admin"*/)
                                        .Select(u => new UserDTO(u))
                                        .ToListAsync();
         }
@@ -139,14 +139,14 @@ namespace PhotoContest.Services.Services
             var users = new List<User>();
             foreach (var userRole in userRoles)
             {
-                var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id == userRole.UserId);
+                var user = await this.dbContext.Users.Include(u=>u.Rank).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
                 users.Add(user);
             }
             if (users.Count == 0)
             {
                 throw new ArgumentException(Exceptions.NoParticipants);
             }
-            return users.OrderByDescending(u => u.OverallPoints).Select(u => new UserDTO(u));
+            return users.Select(u => new UserDTO(u)).OrderByDescending(u => u.Points); // TODO ASYNC
         }
 
         /// <summary>
@@ -160,8 +160,10 @@ namespace PhotoContest.Services.Services
             var user = await GetUserByUsernameAsync(username);
             user.FirstName = updateUserDTO.FirstName ?? user.FirstName;
             user.LastName = updateUserDTO.LastName ?? user.LastName;
-            if (updateUserDTO.RankId == Guid.Empty) throw new ArgumentException(Exceptions.RequiredRankID);
-            user.RankId = updateUserDTO.RankId;
+            if (updateUserDTO.RankId != Guid.Empty)
+            {
+                user.RankId = updateUserDTO.RankId;
+            }
             user.ModifiedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
@@ -177,7 +179,7 @@ namespace PhotoContest.Services.Services
                              .Users
                              .Include(u => u.Rank)
                              .Where(u => u.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
+                             .FirstOrDefaultAsync(c => c.UserName.ToLower().Equals(username.ToLower()))
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
         }
         /// <summary>
@@ -194,7 +196,7 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.NotFoundRole);
             }
             await this.userManager.AddToRoleAsync(user, model.Role);
-            return Exceptions.SuccesfullyAddedRole;
+            return Exceptions.SuccesfullyAddedRole;   //THIS ONLY ADDS ANOTHER ROLE, DO NOT CHANGE IT
         }
 
         /// <summary>
