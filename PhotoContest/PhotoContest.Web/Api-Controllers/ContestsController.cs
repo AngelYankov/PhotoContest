@@ -46,7 +46,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="phase">all/Phase 1/Phase 2/Finished</param>
         /// <returns>Returns all open contests.</returns>
         [Authorize]
-        [HttpGet("оpen")]
+        [HttpGet("findOpen")]
         public async Task<IActionResult> GetOpenContests(string phase)
         {
             try
@@ -102,7 +102,7 @@ namespace PhotoContest.Web.Api_Controllers
         }
 
         [Authorize(Roles = "Organizer")]
-        [HttpPost("choose")]
+        [HttpPost("chooseJury")]
         public async Task<IActionResult> ChooseJury(string contestName, string username)
         {
             try
@@ -185,7 +185,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="order">asc/desc</param>
         /// <returns>Returns filtered and/or sorted contests or an appropriate error message.</returns>
         [Authorize(Roles = "Organizer")]
-        [HttpGet("filterPhase")]
+        [HttpGet("filterByPhase")]
         public async Task<IActionResult> GetByPhase([FromQuery] string phaseName, string sortBy, string order)
         {
             try
@@ -205,7 +205,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="filter">open/closed</param>
         /// <returns></returns>
         [Authorize(Roles = "User")]
-        [HttpGet("filterUser")]
+        [HttpGet("filterForUser")]
         public async Task<IActionResult> GetByUser(string filter)
         {
             try
