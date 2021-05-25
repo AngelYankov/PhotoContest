@@ -330,11 +330,11 @@ namespace PhotoContest.Data
                     Id = Guid.Parse("f36e97ee-98af-4f26-93ef-066895d94b2a"),
                     Name = "Wild cats",
                     CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
-                    StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
+                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
                     IsOpen = true,
-                    Phase1 = DateTime.UtcNow,
-                    Phase2 = DateTime.Parse("10-06-2021 09:00", CultureInfo.InvariantCulture),
-                    Finished = DateTime.Parse("10-06-2021 19:00",CultureInfo.InvariantCulture)
+                    Phase1 = new DateTime(2021,05,10,9,0,0),
+                    Phase2 = DateTime.UtcNow,
+                    Finished = DateTime.UtcNow.AddHours(20)
                 },
                 new Contest()
                 {
@@ -343,9 +343,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"),
                     StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
                     IsOpen = true,
-                    Phase1 = DateTime.Parse("15-05-2021 09:00", CultureInfo.InvariantCulture),
-                    Phase2 = DateTime.Parse("25-05-2021 12:00", CultureInfo.InvariantCulture),
-                    Finished = DateTime.Parse("26-05-2021 09:00",CultureInfo.InvariantCulture)
+                    Phase1 = new DateTime(2021,05,15,9,0,0),
+                    Phase2 = new DateTime(2021,05,25,12,0,0),
+                    Finished =new DateTime(2021,05,26,9,0,0)
                 },
                 new Contest()
                 {
@@ -354,28 +354,142 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"),
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
                     IsOpen = true,
-                    Phase1 = DateTime.Parse("10-05-2021 09:00", CultureInfo.InvariantCulture),
-                    Phase2 = DateTime.Parse("20-05-2021 12:00", CultureInfo.InvariantCulture),
-                    Finished = DateTime.Parse("20-05-2021 09:00",CultureInfo.InvariantCulture)
+                    Phase1 =  new DateTime(2021,05,10,9,0,0),
+                    Phase2 = new DateTime(2021,05,20,12,0,0),// DateTime.ParseExact("20-05-2021 12:00","dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = new DateTime(2021,05,20,9,0,0)
                 },
                 new Contest()
                 {
                     Id = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
                     Name = "Birds",
                     CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
-                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
+                    StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
                     IsOpen = true,
-                    Phase1 = DateTime.Parse("10-05-2021 09:00", CultureInfo.InvariantCulture),
-                    Phase2 = DateTime.UtcNow,
-                    Finished = DateTime.Parse("26-05-2021 09:00",CultureInfo.InvariantCulture)
+                    Phase1 = DateTime.UtcNow,
+                    Phase2 = new DateTime(2021,06,10,9,0,0),
+                    Finished = new DateTime(2021,06,10,19,0,0)
                 }
             };
-            //ssed photos
+            //seed photos
             var photos = new List<Photo>()
             {
                 new Photo()
                 {
+                    Id = Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"),
+                    ContestId = Guid.Parse("f36e97ee-98af-4f26-93ef-066895d94b2a"),
+                    UserId = Guid.Parse("8a20e519-66ad-46b8-b6c3-18c36fa50a1d"),
+                    Title = "Lion King",
+                    Description = "Picture of a lion.",
+                    PhotoUrl = "www.lionPicture.com"
+                },
+                new Photo()
+                {
+                    Id = Guid.Parse("0fdb02e1-91e1-4132-9ccc-1f73c7f716b9"),
+                    ContestId = Guid.Parse("f36e97ee-98af-4f26-93ef-066895d94b2a"),
+                    UserId = Guid.Parse("56763358-b113-4f96-9a4a-5190c421f1fb"),
+                    Title = "Tiger",
+                    Description = "Picture of a tiger.",
+                    PhotoUrl = "www.tigerPicture.com"
+                },
+                new Photo()
+                {
+                    Id = Guid.Parse("fd4b4d23-a4db-4e8b-be63-4af3c4b45757"),
+                    ContestId = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
+                    UserId = Guid.Parse("021fa300-ffd4-48e2-a93f-d40c17d014f3"),
+                    Title = "Kawasaki Ninja",
+                    Description = "Picture of a Kawasaki.",
+                    PhotoUrl = "www.kawasakiPicture.com"
+                },
+                 new Photo()
+                {
+                    Id = Guid.Parse("507c5f65-497b-4a3c-95f6-cfbc86692ca5"),
+                    ContestId = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
+                    UserId = Guid.Parse("c463712b-e235-4fe5-840e-a99736c3fb76"),
+                    Title = "Honda CBR",
+                    Description = "Picture of a Honda.",
+                    PhotoUrl = "www.hondaPicture.com"
+                },
+                 new Photo()
+                {
+                    Id = Guid.Parse("59dd9540-a1d8-4360-99d5-ed8302aae5e2"),
+                    ContestId = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
+                    UserId = Guid.Parse("7cc9804e-2106-4943-994d-91be3d1fab8e"),
+                    Title = "Collibri",
+                    Description = "Picture of a colibri.",
+                    PhotoUrl = "www.colibriPicture.com"
+                },
+                 new Photo()
+                {
+                    Id = Guid.Parse("94499cdd-e18c-4743-b0c4-2e1b7564c46c"),
+                    ContestId = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
+                    UserId = Guid.Parse("71cd9097-0c95-4af2-9e43-da7324880583"),
+                    Title = "Eagle",
+                    Description = "Picture of an eagle.",
+                    PhotoUrl = "www.eaglePicture.com"
+                }
+            };
 
+            var reviews = new List<Review>()
+            {
+                new Review()
+                {
+                    Id = Guid.Parse("f55244de-da0f-4a9c-b8d9-7940a2f97083"),
+                    Comment = "Not so great quality of the picture.",
+                    Score = 4,
+                    UserId = Guid.Parse("a890fe35-c840-4484-bd80-67dbc94ab581"),
+                    PhotoId = Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"),
+                    WrongCategory = false,
+                    CreatedOn = DateTime.UtcNow
+                },
+                new Review()
+                {
+                    Id = Guid.Parse("8198e13a-30cb-4f4b-99f0-acf31a70b02d"),
+                    Comment = "Great lion.",
+                    Score = 8,
+                    UserId = Guid.Parse("e240edfc-64b9-4358-a869-5aadb719e128"),
+                    PhotoId = Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"),
+                    WrongCategory = false,
+                    CreatedOn = DateTime.UtcNow
+                },
+                new Review()
+                {
+                    Id = Guid.Parse("73fe1a7a-e31c-4b4e-a6fa-1ae65e7e1f28"),
+                    Comment = "Marvelous tiger.",
+                    Score = 10,
+                    UserId = Guid.Parse("e240edfc-64b9-4358-a869-5aadb719e128"),
+                    PhotoId = Guid.Parse("0fdb02e1-91e1-4132-9ccc-1f73c7f716b9"),
+                    WrongCategory = false,
+                    CreatedOn = DateTime.UtcNow
+                },
+                new Review()
+                {
+                    Id = Guid.Parse("b8e942fb-9e23-48b2-b15f-32a1e2c06315"),
+                    Comment = "Skinny tiger.",
+                    Score = 3,
+                    UserId = Guid.Parse("5d608fdc-f7d4-40f2-b052-61a7ea812a23"),
+                    PhotoId = Guid.Parse("0fdb02e1-91e1-4132-9ccc-1f73c7f716b9"),
+                    WrongCategory = false,
+                    CreatedOn = DateTime.UtcNow
+                },
+                new Review()
+                {
+                    Id = Guid.Parse("55cf8205-bfb9-4d8c-8ac1-7861a458bb10"),
+                    Comment = "Very good colour.",
+                    Score = 9,
+                    UserId = Guid.Parse("a890fe35-c840-4484-bd80-67dbc94ab581"),
+                    PhotoId = Guid.Parse("fd4b4d23-a4db-4e8b-be63-4af3c4b45757"),
+                    WrongCategory = false,
+                    CreatedOn = DateTime.UtcNow
+                },
+                new Review()
+                {
+                    Id = Guid.Parse("546ff836-f1c5-46e2-ba55-50729daf0419"),
+                    Comment = "Not a very good setting.",
+                    Score = 6,
+                    UserId = Guid.Parse("5d608fdc-f7d4-40f2-b052-61a7ea812a23"),
+                    PhotoId = Guid.Parse("fd4b4d23-a4db-4e8b-be63-4af3c4b45757"),
+                    WrongCategory = false,
+                    CreatedOn = DateTime.UtcNow
                 }
             };
 
@@ -386,6 +500,7 @@ namespace PhotoContest.Data
             modelBuilder.Entity<Role>().HasData(roles);
             modelBuilder.Entity<Contest>().HasData(contests);
             modelBuilder.Entity<Photo>().HasData(photos);
+            modelBuilder.Entity<Review>().HasData(reviews);
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(userRoles);
         }
     }
