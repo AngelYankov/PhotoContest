@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PhotoContest.Data.Models
 {
-    public class Status : Entity
+    public class Status 
     {
         [Key]
         public Guid Id { get; set; }

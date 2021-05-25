@@ -59,6 +59,7 @@ namespace PhotoContest.Services.Services
                 Description = newphotoDTO.Description,
                 PhotoUrl = newphotoDTO.PhotoUrl,
                 ContestId = contest.Id,
+                UserId = user.Id,
                 CreatedOn = DateTime.UtcNow,
             };
             await this.dbContext.Photos.AddAsync(photo);
@@ -125,6 +126,7 @@ namespace PhotoContest.Services.Services
         /// <returns>Return all photos.</returns>
         public async Task<List<PhotoDTO>> GetPhotosForContestAsync(string contestName)
         {
+            await this.contestService.FindContestByNameAsync(contestName);
             return await this.dbContext.Photos
                                        .Include(p=>p.User)
                                        .Include(p => p.Contest)

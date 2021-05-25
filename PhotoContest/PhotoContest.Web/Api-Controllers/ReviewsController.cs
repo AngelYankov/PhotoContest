@@ -64,7 +64,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Get review for user.
         /// </summary>
-        /// <param name="username">Username to search for.</param>
+        /// <param name="id">Id to search for.</param>
         /// <returns>Returns reviews for user.</returns>
         [Authorize(Roles = "Organizer,User")]
         [HttpGet("users/{id}")]

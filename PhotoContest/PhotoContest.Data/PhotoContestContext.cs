@@ -380,7 +380,8 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("8a20e519-66ad-46b8-b6c3-18c36fa50a1d"),
                     Title = "Lion King",
                     Description = "Picture of a lion.",
-                    PhotoUrl = "www.lionPicture.com"
+                    PhotoUrl = "www.lionPicture.com",
+                    CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
                 {
@@ -389,7 +390,8 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("56763358-b113-4f96-9a4a-5190c421f1fb"),
                     Title = "Tiger",
                     Description = "Picture of a tiger.",
-                    PhotoUrl = "www.tigerPicture.com"
+                    PhotoUrl = "www.tigerPicture.com",
+                    CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
                 {
@@ -398,7 +400,8 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("021fa300-ffd4-48e2-a93f-d40c17d014f3"),
                     Title = "Kawasaki Ninja",
                     Description = "Picture of a Kawasaki.",
-                    PhotoUrl = "www.kawasakiPicture.com"
+                    PhotoUrl = "www.kawasakiPicture.com",
+                    CreatedOn = DateTime.UtcNow
                 },
                  new Photo()
                 {
@@ -407,7 +410,8 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("c463712b-e235-4fe5-840e-a99736c3fb76"),
                     Title = "Honda CBR",
                     Description = "Picture of a Honda.",
-                    PhotoUrl = "www.hondaPicture.com"
+                    PhotoUrl = "www.hondaPicture.com",
+                    CreatedOn = DateTime.UtcNow
                 },
                  new Photo()
                 {
@@ -416,7 +420,8 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("7cc9804e-2106-4943-994d-91be3d1fab8e"),
                     Title = "Collibri",
                     Description = "Picture of a colibri.",
-                    PhotoUrl = "www.colibriPicture.com"
+                    PhotoUrl = "www.colibriPicture.com",
+                    CreatedOn = DateTime.UtcNow
                 },
                  new Photo()
                 {
@@ -425,10 +430,11 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("71cd9097-0c95-4af2-9e43-da7324880583"),
                     Title = "Eagle",
                     Description = "Picture of an eagle.",
-                    PhotoUrl = "www.eaglePicture.com"
+                    PhotoUrl = "www.eaglePicture.com",
+                    CreatedOn = DateTime.UtcNow
                 }
             };
-
+            //seed reviews
             var reviews = new List<Review>()
             {
                 new Review()

@@ -12,6 +12,6 @@ namespace PhotoContest.Services.Models.Update
 
         [StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
         public string LastName { get; set; }
-        public Guid RankId { get; set; }
+        //public string RankId { get; set; }
     }
 }

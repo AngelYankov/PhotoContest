@@ -160,10 +160,11 @@ namespace PhotoContest.Services.Services
             var user = await GetUserByUsernameAsync(username);
             user.FirstName = updateUserDTO.FirstName ?? user.FirstName;
             user.LastName = updateUserDTO.LastName ?? user.LastName;
-            if (updateUserDTO.RankId != Guid.Empty)
+            /*if (!string.IsNullOrEmpty(updateUserDTO.RankId))
             {
-                user.RankId = updateUserDTO.RankId;
-            }
+                
+                user.RankId = Guid.Parse(updateUserDTO.RankId);
+            }*/
             user.ModifiedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);

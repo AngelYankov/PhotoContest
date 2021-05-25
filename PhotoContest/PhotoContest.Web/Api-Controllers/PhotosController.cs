@@ -131,7 +131,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="contestName">Contest name.</param>
         /// <returns>Returns all photos for that contest.</returns>
         [Authorize(Roles = "Admin,Organizer")]
-        [HttpGet("{contestName}")]
+        [HttpGet("/contest/{contestName}")]
         public async Task<IActionResult> GetPhotosForContestAsync(string contestName)
         {
             try

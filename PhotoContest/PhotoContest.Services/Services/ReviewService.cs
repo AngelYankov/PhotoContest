@@ -79,7 +79,7 @@ namespace PhotoContest.Services.Services
         /// <summary>
         /// Get all reviews for a user.
         /// </summary>
-        /// <param name="username">Username to search for.</param>
+        /// <param name="id">Id to search for.</param>
         /// <returns>Returns all reviews for a user.</returns>
         public async Task<List<ReviewDTO>> GetForUserAsync(Guid id)
         {
