@@ -305,11 +305,11 @@ namespace PhotoContest.Services.Services
             {
                 return allUserContestsDTO;
             }
-            else if (filter.Equals("open", StringComparison.OrdinalIgnoreCase))
+            else if (filter.Equals("current", StringComparison.OrdinalIgnoreCase))
             {
                 return allUserContestsDTO.Where(c => c.Status != "Finished");
             }
-            else if (filter.Equals("closed", StringComparison.OrdinalIgnoreCase))
+            else if (filter.Equals("past", StringComparison.OrdinalIgnoreCase))
             {
                 return allUserContestsDTO.Where(c => c.Status == "Finished");
             }

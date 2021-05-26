@@ -208,7 +208,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Filter and/or sort contests by user.
         /// </summary>
-        /// <param name="filter">open/closed</param>
+        /// <param name="filter">current/past</param>
         /// <returns></returns>
         [Authorize(Roles = "User")]
         [HttpGet("filterForUser")]
