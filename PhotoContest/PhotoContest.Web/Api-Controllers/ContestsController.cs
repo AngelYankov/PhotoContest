@@ -186,7 +186,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Filter and/or sort contests by phase.
         /// </summary>
-        /// <param name="phaseName">phase1/phase2/finished</param>
+        /// <param name="phaseName">phase 1/phase 2/finished</param>
         /// <param name="sortBy">name/category/newest/oldest</param>
         /// <param name="order">asc/desc</param>
         /// <returns>Returns filtered and/or sorted contests or an appropriate error message.</returns>

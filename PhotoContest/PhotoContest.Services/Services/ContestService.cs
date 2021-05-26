@@ -53,11 +53,17 @@ namespace PhotoContest.Services.Services
 
             newContest.IsOpen = dto.isOpen;
 
-            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+            ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                           DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
-            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+
+            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                           DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                           DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
-            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+
+            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                             DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
 
             newContest.CreatedOn = DateTime.UtcNow;
@@ -206,7 +212,7 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
-            if(contest.IsOpen != false)
+            if(contest.IsOpen)
             {
                 throw new ArgumentException(Exceptions.NotAllowedInvitation);
             }
@@ -242,17 +248,21 @@ namespace PhotoContest.Services.Services
             }
             if (dto.Phase1 != null)
             {
-                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                               DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             if (dto.Phase2 != null)
             {
-                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                               DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                               DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             if (dto.Finished != null)
             {
-                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
+                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                                 DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             contest.Name = dto.Name ?? contest.Name;
@@ -326,7 +336,7 @@ namespace PhotoContest.Services.Services
                                         .ToListAsync();
             var filteredContests = new List<ContestDTO>();
 
-            if (phaseName.Equals("phase1", StringComparison.OrdinalIgnoreCase))
+            if (phaseName.Equals("phase 1", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var contest in allContests)
                 {
@@ -337,7 +347,7 @@ namespace PhotoContest.Services.Services
                     }
                 }
             }
-            else if (phaseName.Equals("phase2", StringComparison.OrdinalIgnoreCase))
+            else if (phaseName.Equals("phase 2", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var contest in allContests)
                 {
@@ -365,7 +375,7 @@ namespace PhotoContest.Services.Services
             }
             if (filteredContests.Count != 0 && sortBy != null)
             {
-                Sorting(filteredContests, sortBy, order);
+                filteredContests = Sorting(filteredContests, sortBy, order);
             }
             return filteredContests;
         }
@@ -376,7 +386,7 @@ namespace PhotoContest.Services.Services
         /// <param name="filteredContests">Contests that that are already filtered.</param>
         /// <param name="sortBy">Value to sort by.</param>
         /// <param name="order">Value to order by.</param>
-        private void Sorting(List<ContestDTO> filteredContests, string sortBy, string order)
+        private List<ContestDTO> Sorting(List<ContestDTO> filteredContests, string sortBy, string order)
         {
             if (sortBy == "name")
             {
@@ -384,11 +394,10 @@ namespace PhotoContest.Services.Services
                 {
                     case null:
                     case "asc":
-                        filteredContests = filteredContests.OrderBy(c => c.Name).ToList();
-                        break;
+                        return filteredContests = filteredContests.OrderBy(c => c.Name).ToList();
                     case "desc":
-                        filteredContests = filteredContests.OrderByDescending(c => c.Name).ToList();
-                        break;
+                        return filteredContests = filteredContests.OrderByDescending(c => c.Name).ToList();
+                    default: throw new ArgumentException("Invalid order type.");
                 }
             }
             else if (sortBy == "category")
@@ -397,20 +406,20 @@ namespace PhotoContest.Services.Services
                 {
                     case null:
                     case "asc":
-                        filteredContests = filteredContests.OrderBy(c => c.Category).ToList();
-                        break;
+                       return filteredContests = filteredContests.OrderBy(c => c.Category).ToList();
                     case "desc":
-                        filteredContests = filteredContests.OrderByDescending(c => c.Category).ToList();
-                        break;
+                        return filteredContests = filteredContests.OrderByDescending(c => c.Category).ToList();
+                    default: throw new ArgumentException("Invalid order type.");
+
                 }
             }
             else if (sortBy == "newest")
             {
-                filteredContests = filteredContests.OrderBy(c => c.Phase1).ToList();
+                return filteredContests = filteredContests.OrderBy(c => c.Phase1).ToList();
             }
             else if (sortBy == "oldest")
             {
-                filteredContests = filteredContests.OrderByDescending(c => c.Finished).ToList();
+                return filteredContests = filteredContests.OrderByDescending(c => c.Finished).ToList();
             }
             else
             {
@@ -422,9 +431,9 @@ namespace PhotoContest.Services.Services
         /// Validating the DateTime of Phase1
         /// </summary>
         /// <param name="date">Starting date of Phase1</param>
-        private void ValidatePhase1(DateTime date)
+        private void ValidatePhase1(DateTime date1, DateTime date2)
         {
-            if (date == DateTime.MinValue || date < DateTime.UtcNow)
+            if (date1 == DateTime.MinValue || date1 < DateTime.UtcNow || date1 > date2)
                 throw new ArgumentException(Exceptions.InvalidDateTimePhase1);
         }
 
@@ -433,9 +442,9 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="date1">Starting date of Phase2</param>
         /// <param name="date2">DateTime value of Phase1</param>
-        private void ValidatePhase2(DateTime date1, DateTime date2)
+        private void ValidatePhase2(DateTime date1, DateTime date2, DateTime date3)
         {
-            if (date1 == DateTime.MinValue || date1 <= date2 || date1 > date2.AddDays(31))
+            if (date1 == DateTime.MinValue || date1 <= date2 || date1 > date2.AddDays(31) || date1 > date3)
                 throw new ArgumentException(Exceptions.InvalidDateTimePhase2);
         }
 
