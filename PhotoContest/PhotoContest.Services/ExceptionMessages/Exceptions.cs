@@ -49,5 +49,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string NoParticipants = "There are no participants yet.";
         public const string SuccesfullyAddedRole = "Role added succesfully.";
         public const string WrongCategoryComment = "Photo is in a wrong category.";
+        public const string UserNotJury = "User is not in the jury for this contest.";
+        public const string InvalidUserAccessToPhotos = "User does not have access to the contest's photos.";
     }
 }

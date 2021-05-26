@@ -18,7 +18,6 @@ namespace PhotoContest.Web.Api_Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ContestsController : ControllerBase
     {
         private readonly IContestService contestService;
@@ -32,7 +31,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// Get all contests.
         /// </summary>
         /// <returns>Returns all contests.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpGet]
         public async Task<IActionResult> GetContests()
         {
@@ -46,7 +45,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="phase">all/Phase 1/Phase 2/Finished</param>
         /// <returns>Returns all open contests.</returns>
         [Authorize]
-        [HttpGet("findOpen")]
+        [HttpGet("open")]
         public async Task<IActionResult> GetOpenContests(string phase)
         {
             try
@@ -86,7 +85,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="contestName">Name of the contest to invite to.</param>
         /// <param name="username">Username of the user to invite.</param>
         /// <returns>Returns true if successful or an appropriate error message.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost("invite")]
         public async Task<IActionResult> Invite(string contestName, string username)
         {
@@ -107,7 +106,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="contestName">Name of the contest to choose for.</param>
         /// <param name="username">Username of the user to choose.</param>
         /// <returns>Returns true if successful or an appropriate error message.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost("chooseJury")]
         public async Task<IActionResult> ChooseJury(string contestName, string username)
         {
@@ -128,7 +127,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="contestName">Name for contest to update.</param>
         /// <param name="model">Details of the contest to be updated.</param>
         /// <returns>Returns the updated contest or an appropriate error message.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPut]
         public async Task<IActionResult> UpdateContest(string contestName, [FromBody] UpdateContestDTO model)
         {
@@ -148,7 +147,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="dto">Details of the contest to be created.</param>
         /// <returns>Returns the created contest or an appropriate error message.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         public async Task<IActionResult> CreateContest([FromQuery] NewContestDTO dto)
         {
@@ -168,7 +167,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="contestName">Name of the contest to delete.</param>
         /// <returns>Returns NoContent or an appropriate error message.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpDelete]
         public async Task<IActionResult> DeleteContest(string contestName)
         {
@@ -190,7 +189,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="sortBy">name/category/newest/oldest</param>
         /// <param name="order">asc/desc</param>
         /// <returns>Returns filtered and/or sorted contests or an appropriate error message.</returns>
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpGet("filterByPhase")]
         public async Task<IActionResult> GetByPhase([FromQuery] string phaseName, string sortBy, string order)
         {

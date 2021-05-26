@@ -197,9 +197,11 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.NotAllowedInvitation);
             }
 
-            var userContest = new UserContest();
-            userContest.ContestId = contest.Id;
-            userContest.UserId = user.Id;
+            var userContest = new UserContest()
+            {
+                ContestId = contest.Id,
+                UserId = user.Id,
+            };
             await this.dbContext.UserContests.AddAsync(userContest);
             await this.dbContext.SaveChangesAsync();
             return true;
@@ -326,7 +328,13 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.InvalidFilter);
             }
         }
-
+        public async Task<List<Contest>> GetAllFinishedContestsAsync()
+        {
+            return await this.dbContext.Contests
+                                       .Include(c => c.Status)
+                                       .Where(c => c.Status.Name == "Finished" && c.IsDeleted == false)
+                                       .ToListAsync();
+        }
         /// <summary>
         /// Filter and/or sort contests by phase.
         /// </summary>

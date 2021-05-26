@@ -28,7 +28,6 @@ namespace PhotoContest.Web.Api_Controllers
         /// Get all photos.
         /// </summary>
         /// <returns>Returns all photos.</returns>
-        // GET: api/Photos
         [Authorize(Roles = "Admin,Organizer")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
@@ -45,7 +44,6 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns photo with that id or an appropriate error message.</returns>
-        // GET: api/Photos/5
         [Authorize(Roles = "Admin,Organizer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
@@ -66,10 +64,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="id">Id search for.</param>
         /// <param name="updateModel">Details of photo to be updated.</param>
         /// <returns>Returns updated photo or an appropriate error message.</returns>
-        // PUT: api/Photos/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody]UpdatePhotoDTO updateModel, Guid id)
         {
@@ -88,10 +83,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="newPhotoDTO">New photo to be created.</param>
         /// <returns>Returns created photo or an appropriate error message.</returns>
-        // POST: api/Photos
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] NewPhotoDTO newPhotoDTO)
         {
@@ -131,7 +123,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="contestName">Contest name.</param>
         /// <returns>Returns all photos for that contest.</returns>
         [Authorize(Roles = "Admin,Organizer")]
-        [HttpGet("/contest/{contestName}")]
+        [HttpGet("contest")]
         public async Task<IActionResult> GetPhotosForContestAsync(string contestName)
         {
             try
@@ -147,14 +139,15 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Get all photos with detailed info.
         /// </summary>
+        /// <param name="contestName">Contest name.</param>
         /// <returns>Return all photos with score and comments.</returns>
-        [Authorize(Roles = "Admin,Organizer,User")]
-        [HttpGet("allinfo")]
-        public async Task<IActionResult> GetAllWithCommentsAndScoreAsync()
+        [Authorize]
+        [HttpGet("allInfo")]
+        public async Task<IActionResult> GetAllWithCommentsAndScoreAsync(string contestName)
         {
             try
             {
-                var result = await this.photoService.GetAllWithCommentsAndScoreAsync();
+                var result = await this.photoService.GetAllWithCommentsAndScoreAsync(contestName);
                 return Ok(result);
             }
             catch (Exception e)

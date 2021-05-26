@@ -99,6 +99,7 @@ namespace PhotoContest.Web
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IContestService, ContestService>();
+            services.AddScoped<IUserContestService, UserContestService>();
             services.TryAddScoped<SignInManager<User>>();
             //services.AddScoped<IContestBackgroundTask, ContestBackgroundTask>();
            // services.AddHostedService<BackgroundTasks>();

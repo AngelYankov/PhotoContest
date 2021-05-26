@@ -28,7 +28,6 @@ namespace PhotoContest.Web.Api_Controllers
         /// Get all users.
         /// </summary>
         /// <returns>Returns all users.</returns>
-        // GET: api/Users
         [Authorize(Roles = "Organizer,Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
@@ -40,7 +39,11 @@ namespace PhotoContest.Web.Api_Controllers
             }
             return Ok(allUsers);
         }
-        //TODO AUTHORIZE
+        /// <summary>
+        /// Get all participants
+        /// </summary>
+        /// <returns>Returns all participants</returns>
+        [Authorize(Roles ="Admin,Organizer")]
         [HttpGet("participants")]
         public async Task<IActionResult> GetAllParticipantsAsync()
         {
@@ -57,16 +60,15 @@ namespace PhotoContest.Web.Api_Controllers
         /// <summary>
         /// Get a user by id.
         /// </summary>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="username">Username to search for.</param>
         /// <returns>Returns a user with that id or an appropriate error message.</returns>
-        // GET: api/Users/5
         [Authorize(Roles = "Organizer,Admin")]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAsync(Guid id)
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetAsync(string username)
         {
             try
             {
-                var user = await this.userService.GetAsync(id);
+                var user = await this.userService.GetUserByUsernameAsync(username);
                 return Ok(user);
             }
             catch (Exception e)
@@ -80,9 +82,6 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="username">Username to search for.</param>
         /// <param name="updateUserDTO">Details of user to be updated.</param>
         /// <returns>Returns updated user or an appropriate error message.</returns>
-        // PUT: api/Users/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [Authorize(Roles = "Organizer,Admin")]
         [HttpPut("{username}")]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserDTO updateUserDTO, string username)
@@ -139,7 +138,6 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="username">Username to search for.</param>
         /// <returns>Returns true if deleted successfully or an appropriate error message.</returns>
-        // DELETE: api/Users/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{username}")]
         public async Task<IActionResult> DeleteAsync(string username)

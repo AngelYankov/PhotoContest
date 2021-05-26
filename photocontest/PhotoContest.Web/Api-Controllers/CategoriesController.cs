@@ -14,7 +14,7 @@ using PhotoContest.Services.Services;
 
 namespace PhotoContest.Web.Api_Controllers
 {
-    [Authorize(Roles = "Organizer")]
+    [Authorize(Roles = "Admin,Organizer")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -43,8 +43,8 @@ namespace PhotoContest.Web.Api_Controllers
         /// <param name="categoryName">Name of the category to update.</param>
         /// <param name="name">Name of the category to be updated.</param>
         /// <returns>Returns the updated category or an appropriate error message.</returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(string categoryName, string name)
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync([FromQuery]string categoryName, string name)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="categoryName">Name of the category to delete.</param>
         /// <returns>Returns NoContent or an appropriate error message.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{categoryName}")]
         public async Task<IActionResult> DeleteAsync(string categoryName)
         {
             try

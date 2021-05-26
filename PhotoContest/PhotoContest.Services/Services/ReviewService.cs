@@ -45,7 +45,7 @@ namespace PhotoContest.Services.Services
             {
                 if (!this.dbContext.Juries.Any(j => j.UserId == user.Id && j.ContestId == photo.ContestId))
                 {
-                    throw new ArgumentException("User is not in jury for this contest."); //TEST WHEN USER IS IN JURY
+                    throw new ArgumentException(Exceptions.UserNotJury); //TEST WHEN USER IS IN JURY
                 }
             }
             if (await this.dbContext.Reviews.AnyAsync(r => r.UserId == user.Id && r.PhotoId == photo.Id))

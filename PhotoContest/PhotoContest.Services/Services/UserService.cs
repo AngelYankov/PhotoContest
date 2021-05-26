@@ -45,7 +45,7 @@ namespace PhotoContest.Services.Services
                 LastName = newUserDTO.LastName ?? throw new ArgumentException(Exceptions.RequiredLastName),
                 Email = newUserDTO.Email ?? throw new ArgumentException(Exceptions.RequiredEmail),
                 UserName = newUserDTO.Email,
-                Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r=>r.Name.ToLower() == "junkie"),
+                Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Name.ToLower() == "junkie"),
                 CreatedOn = DateTime.UtcNow
             };
             /*var rank = await this.dbContext.Ranks.FirstAsync();
@@ -77,7 +77,7 @@ namespace PhotoContest.Services.Services
                 LastName = newUserDTO.LastName ?? throw new ArgumentException(Exceptions.RequiredLastName),
                 Email = newUserDTO.Email ?? throw new ArgumentException(Exceptions.RequiredEmail),
                 UserName = newUserDTO.Email,
-                Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r=>r.Name.ToLower() == "organizer"),
+                Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Name.ToLower() == "organizer"),
                 CreatedOn = DateTime.UtcNow
             };
             if (await this.userManager.FindByEmailAsync(newUserDTO.Email) == null)
@@ -125,7 +125,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
                                        .Include(u => u.Reviews)
-                                       .Where(u => u.IsDeleted == false /*&& u.Rank.Name != "Organizer" && u.Rank.Name != "Admin"*/)
+                                       .Where(u => u.IsDeleted == false)
                                        .Select(u => new UserDTO(u))
                                        .ToListAsync();
         }
@@ -140,14 +140,14 @@ namespace PhotoContest.Services.Services
             var users = new List<User>();
             foreach (var userRole in userRoles)
             {
-                var user = await this.dbContext.Users.Include(u=>u.Rank).Include(u => u.Reviews).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
+                var user = await this.dbContext.Users.Include(u => u.Rank).Include(u => u.Reviews).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
                 users.Add(user);
             }
             if (users.Count == 0)
             {
                 throw new ArgumentException(Exceptions.NoParticipants);
             }
-            return users.Select(u => new UserDTO(u)).OrderByDescending(u => u.Points); // TODO ASYNC
+            return users.Select(u => new UserDTO(u)).OrderByDescending(u => u.Points);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
-                                       .Include(u=>u.Reviews)
+                                       .Include(u => u.Reviews)
                                        .Where(u => u.IsDeleted == false)
                                        .FirstOrDefaultAsync(u => u.Id == id)
                                        ?? throw new ArgumentException(Exceptions.InvalidUserID);
@@ -245,5 +245,6 @@ namespace PhotoContest.Services.Services
                 }
             }
         }
+        
     }
 }

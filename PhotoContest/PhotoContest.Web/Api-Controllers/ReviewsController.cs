@@ -47,7 +47,7 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="id">Id of photo to search for.</param>
         /// <returns>Returns review for photo.</returns>
-        [Authorize(Roles ="Organizer,User")]
+        [Authorize(Roles ="Organizer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetForPhotoAsync(Guid id)
         {
@@ -66,8 +66,8 @@ namespace PhotoContest.Web.Api_Controllers
         /// </summary>
         /// <param name="username">Username to search for.</param>
         /// <returns>Returns reviews for user.</returns>
-        [Authorize(Roles = "Organizer,User")]
-        [HttpGet("users/{username}")]
+        [Authorize]
+        [HttpGet("username")]
         public async Task<IActionResult> GetForUserAsync(string username)
         {
             try
