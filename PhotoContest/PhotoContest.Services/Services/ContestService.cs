@@ -175,15 +175,25 @@ namespace PhotoContest.Services.Services
         {
             var contest = await FindContestByNameAsync(contestName);
             var user = await this.userService.GetUserByUsernameAsync(username);
-            //validation if ibvited user is organizer
+
             if(user.Rank.Name == "Organizer")
             {
                 throw new ArgumentException(Exceptions.InvalidParticipant);
             }
 
+            if(await this.dbContext.Juries.AnyAsync(j=>j.UserId==user.Id && j.ContestId == contest.Id))
+            {
+                throw new ArgumentException(Exceptions.ExistingJury);
+            }
+
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
                 throw new ArgumentException(Exceptions.EnrolledUser);
+            }
+
+            if (contest.IsOpen)
+            {
+                throw new ArgumentException(Exceptions.NotAllowedInvitation);
             }
 
             var userContest = new UserContest();
@@ -212,10 +222,7 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
-            if(contest.IsOpen)
-            {
-                throw new ArgumentException(Exceptions.NotAllowedInvitation);
-            }
+            
             var juryMember = new JuryMember();
             juryMember.ContestId = contest.Id;
             juryMember.UserId = user.Id;

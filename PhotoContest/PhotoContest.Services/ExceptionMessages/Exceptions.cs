@@ -39,7 +39,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string IncorrectPassword = "Password must contain letters and numbers.";
         public const string IncorrectCredentials = "Incorrect credentials for user.";
         public const string ExistingEmail = "Email already exists.";
-        public const string ExistingJury = "User is already jury in this contest.";
+        public const string ExistingJury = "User is jury in this contest.";
         public const string NotFoundEmail = "Email not found.";
         public const string NotFoundRole = "Role not found.";
         public const string NotAllowedEnrollment = "Only invited users can enroll in this contest.";
