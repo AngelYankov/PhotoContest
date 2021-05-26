@@ -217,5 +217,33 @@ namespace PhotoContest.Services.Services
                                        .FirstOrDefaultAsync(u => u.Id == id)
                                        ?? throw new ArgumentException(Exceptions.InvalidUserID);
         }
+
+        /// <summary>
+        /// Changing the rank of a user in the background.
+        /// </summary>
+        /// <returns></returns>
+        public async Task ChangeRank()
+        {
+            var contestants = await this.dbContext.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer").ToListAsync();
+            foreach (var contestant in contestants)
+            {
+                if (contestant.OverallPoints <= 50)
+                {
+                    contestant.RankId = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001");
+                }
+                if (contestant.OverallPoints > 50 && contestant.OverallPoints <= 150)
+                {
+                    contestant.RankId = Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1");
+                }
+                if (contestant.OverallPoints > 150 && contestant.OverallPoints <= 1000)
+                {
+                    contestant.RankId = Guid.Parse("a9576301-3157-454f-86ce-85bb5eb2dfc9");
+                }
+                if (contestant.OverallPoints > 1000)
+                {
+                    contestant.RankId = Guid.Parse("0b1728c7-5582-4958-9e97-52c9b1d44cdb");
+                }
+            }
+        }
     }
 }

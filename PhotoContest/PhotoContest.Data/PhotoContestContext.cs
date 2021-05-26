@@ -298,7 +298,7 @@ namespace PhotoContest.Data
                 },
                 new Rank()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1"),
                     Name = "Enthusiast"
                 },
                 new Rank()
