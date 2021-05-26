@@ -10,12 +10,12 @@ namespace PhotoContest.Services.Models
         public ReviewDTO(Review review)
         {
             this.Comment = review.Comment;
-            this.Score = review.Score.ToString();
+            this.Score = review.Score;
             this.Evaluator = review.Evaluator.FirstName+" "+review.Evaluator.LastName;
             this.PhotoTitle = review.Photo.Title;
         }
         public string Comment { get; set; }
-        public string Score { get; set; }
+        public double Score { get; set; }
         public string Evaluator { get; set; }
         public string PhotoTitle { get; set; }
     }

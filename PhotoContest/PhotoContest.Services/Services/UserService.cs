@@ -113,7 +113,7 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns user with that id or an appropriate error message.</returns>
         public async Task<UserDTO> GetAsync(Guid id)
         {
-            var user = await FindUser(id);
+            var user = await FindUserAsync(id);
             return new UserDTO(user);
         }
         /// <summary>
@@ -124,6 +124,7 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
+                                       .Include(u => u.Reviews)
                                        .Where(u => u.IsDeleted == false /*&& u.Rank.Name != "Organizer" && u.Rank.Name != "Admin"*/)
                                        .Select(u => new UserDTO(u))
                                        .ToListAsync();
@@ -139,7 +140,7 @@ namespace PhotoContest.Services.Services
             var users = new List<User>();
             foreach (var userRole in userRoles)
             {
-                var user = await this.dbContext.Users.Include(u=>u.Rank).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
+                var user = await this.dbContext.Users.Include(u=>u.Rank).Include(u => u.Reviews).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
                 users.Add(user);
             }
             if (users.Count == 0)
@@ -179,6 +180,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext
                              .Users
                              .Include(u => u.Rank)
+                             .Include(u => u.Reviews)
                              .Where(u => u.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
@@ -206,10 +208,11 @@ namespace PhotoContest.Services.Services
         /// </summary>
         /// <param name="id">Id to search for.</param>
         /// <returns>Returns user with that id or an appropriate error message.</returns>
-        public async Task<User> FindUser(Guid id)
+        public async Task<User> FindUserAsync(Guid id)
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
+                                       .Include(u=>u.Reviews)
                                        .Where(u => u.IsDeleted == false)
                                        .FirstOrDefaultAsync(u => u.Id == id)
                                        ?? throw new ArgumentException(Exceptions.InvalidUserID);

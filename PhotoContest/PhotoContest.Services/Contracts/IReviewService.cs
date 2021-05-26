@@ -11,6 +11,6 @@ namespace PhotoContest.Services.Contracts
     {
         Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO);
         Task<List<ReviewDTO>> GetForPhotoAsync(Guid id);
-        Task<List<ReviewDTO>> GetForUserAsync(Guid id);
+        Task<List<ReviewDTO>> GetForUserAsync(string username);
     }
 }

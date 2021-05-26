@@ -18,6 +18,6 @@ namespace PhotoContest.Services.Contracts
         Task<bool> DeleteAsync(Guid id);
         Task<List<PhotoDTO>> GetPhotosForContestAsync(string contestName);
         Task<List<PhotoReviewDTO>> GetAllWithCommentsAndScoreAsync();
-        Task<Photo> FindPhoto(Guid id);
+        Task<Photo> FindPhotoAsync(Guid id);
     }
 }
