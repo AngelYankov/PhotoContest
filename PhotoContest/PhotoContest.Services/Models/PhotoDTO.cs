@@ -17,7 +17,7 @@ namespace PhotoContest.Services.Models
             this.User = photo.User.FirstName+" "+photo.User.LastName;
             this.Contest = photo.Contest.Name;
             this.Category = photo.Contest.Category.Name;
-            this.Points = photo.AllPoints.ToString();
+            this.Points = photo.AllPoints;
         }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -25,6 +25,6 @@ namespace PhotoContest.Services.Models
         public string User { get; set; }
         public string Contest { get; set; }
         public string Category { get; set; }
-        public string Points { get; set; }
+        public double Points { get; set; }
     }
 }
