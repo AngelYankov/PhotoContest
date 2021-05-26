@@ -16,6 +16,7 @@ using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Contracts.SecurityContracts;
 using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Services;
+using PhotoContest.Services.Services.BackgroundTask;
 using PhotoContest.Services.Services.SecurityService;
 using System;
 using System.IO;
@@ -93,12 +94,14 @@ namespace PhotoContest.Web
                 .AddDefaultTokenProviders();
 
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IContestService, ContestService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IContestService, ContestService>();
             services.TryAddScoped<SignInManager<User>>();
+            //services.AddScoped<IContestBackgroundTask, ContestBackgroundTask>();
+           // services.AddHostedService<BackgroundTasks>();
 
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));

@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PhotoContest.Services.Services
@@ -62,7 +63,7 @@ namespace PhotoContest.Services.Services
                            DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
 
-            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+            ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                              DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
 
@@ -176,12 +177,12 @@ namespace PhotoContest.Services.Services
             var contest = await FindContestByNameAsync(contestName);
             var user = await this.userService.GetUserByUsernameAsync(username);
 
-            if(user.Rank.Name == "Organizer")
+            if (user.Rank.Name == "Organizer")
             {
                 throw new ArgumentException(Exceptions.InvalidParticipant);
             }
 
-            if(await this.dbContext.Juries.AnyAsync(j=>j.UserId==user.Id && j.ContestId == contest.Id))
+            if (await this.dbContext.Juries.AnyAsync(j => j.UserId == user.Id && j.ContestId == contest.Id))
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
@@ -214,7 +215,7 @@ namespace PhotoContest.Services.Services
         {
             var contest = await FindContestByNameAsync(contestName);
             var user = await this.userService.GetUserByUsernameAsync(username);
-            if(user.Rank.Name != "Master" && user.Rank.Name != "Wise and Benevolent Photo Dictator")
+            if (user.Rank.Name != "Master" && user.Rank.Name != "Wise and Benevolent Photo Dictator")
             {
                 throw new ArgumentException(Exceptions.InvalidJuryUser);
             }
@@ -222,7 +223,7 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
-            
+
             var juryMember = new JuryMember();
             juryMember.ContestId = contest.Id;
             juryMember.UserId = user.Id;
@@ -241,7 +242,7 @@ namespace PhotoContest.Services.Services
         public async Task<ContestDTO> UpdateAsync(string contestName, UpdateContestDTO dto)
         {
             var contest = await FindContestByNameAsync(contestName);
-            
+
             if (dto.CategoryName != null)
             {
                 var category = await this.categoryService.FindCategoryByNameAsync(dto.CategoryName);
@@ -255,20 +256,20 @@ namespace PhotoContest.Services.Services
             }
             if (dto.Phase1 != null)
             {
-                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                                DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             if (dto.Phase2 != null)
             {
-                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
-                               DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                               DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                                DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             if (dto.Finished != null)
             {
-                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture), 
+                ValidateFinished(DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                                  DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
@@ -391,25 +392,30 @@ namespace PhotoContest.Services.Services
         /// Changing the status of a contest in the background.
         /// </summary>
         /// <returns></returns>
-        public async Task ChangeStatus()
+        public async Task ChangeStatus(CancellationToken cancellationToken)
         {
             var contests = await this.dbContext.Contests.ToListAsync();
-            foreach (var contest in contests)
+
+            while (!cancellationToken.IsCancellationRequested)
             {
-                if(DateTime.UtcNow < contest.Phase2)
+                foreach (var contest in contests)
                 {
-                    contest.StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186");
+                    if (DateTime.UtcNow < contest.Phase2)
+                    {
+                        contest.StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186");
+                    }
+                    if (DateTime.UtcNow >= contest.Phase2 && DateTime.UtcNow < contest.Finished)
+                    {
+                        contest.StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc");
+                    }
+                    if (DateTime.UtcNow >= contest.Finished)
+                    {
+                        contest.StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6");
+                    }
+                    await this.dbContext.SaveChangesAsync();
                 }
-                if(DateTime.UtcNow >= contest.Phase2 && DateTime.UtcNow < contest.Finished)
-                {
-                    contest.StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc");
-                }
-                if(DateTime.UtcNow >= contest.Finished)
-                {
-                    contest.StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6");
-                }
+                await Task.Delay(1000 * 5);
             }
-            await this.dbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -438,7 +444,7 @@ namespace PhotoContest.Services.Services
                 {
                     case null:
                     case "asc":
-                       return filteredContests = filteredContests.OrderBy(c => c.Category).ToList();
+                        return filteredContests = filteredContests.OrderBy(c => c.Category).ToList();
                     case "desc":
                         return filteredContests = filteredContests.OrderByDescending(c => c.Category).ToList();
                     default: throw new ArgumentException("Invalid order type.");
@@ -517,8 +523,8 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext
                              .Contests
-                             .Include(c=>c.Category)
-                             .Include(c=>c.Status)
+                             .Include(c => c.Category)
+                             .Include(c => c.Status)
                              .Where(c => c.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower() && c.IsDeleted == false)
                              ?? throw new ArgumentException(Exceptions.InvalidContestName);
