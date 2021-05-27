@@ -180,7 +180,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext
                              .Users
                              .Include(u => u.Rank)
-                             .Include(u => u.Reviews)
+                             //.Include(u => u.Reviews)
                              .Where(u => u.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
