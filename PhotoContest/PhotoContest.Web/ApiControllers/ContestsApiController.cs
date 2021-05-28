@@ -14,15 +14,15 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using PhotoContest.Services.Services;
 
-namespace PhotoContest.Web.Api_Controllers
+namespace PhotoContest.Web.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContestsController : ControllerBase
+    public class ContestsApiController : ControllerBase
     {
         private readonly IContestService contestService;
 
-        public ContestsController(IContestService contestService)
+        public ContestsApiController(IContestService contestService)
         {
             this.contestService = contestService;
         }

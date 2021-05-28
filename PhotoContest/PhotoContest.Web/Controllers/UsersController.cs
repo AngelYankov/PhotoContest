@@ -13,12 +13,12 @@ using PhotoContest.Services.Models.Update;
 
 namespace PhotoContest.Web.Controllers
 {
-    public class UController : Controller
+    public class UsersController : Controller
     {
         private readonly PhotoContestContext _context;
         private readonly IUserService userService;
 
-        public UController(PhotoContestContext context, IUserService userService)
+        public UsersController(PhotoContestContext context, IUserService userService)
         {
             _context = context;
             this.userService = userService;

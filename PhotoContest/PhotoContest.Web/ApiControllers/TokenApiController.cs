@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PhotoContest.Web.Api_Controllers
+namespace PhotoContest.Web.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TokenController : ControllerBase
+    public class TokenApiController : ControllerBase
     {
         private readonly ITokenService tokenService;
-        public TokenController(ITokenService tokenService)
+        public TokenApiController(ITokenService tokenService)
         {
             this.tokenService = tokenService;
         }
