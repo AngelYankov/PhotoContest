@@ -50,7 +50,13 @@ namespace PhotoContest.Services.Services
             };
             /*var rank = await this.dbContext.Ranks.FirstAsync();
             user.RankId = rank.Id;*/
-            if (await this.userManager.FindByEmailAsync(newUserDTO.Email) == null)
+            var oldUser = await this.userManager.FindByEmailAsync(newUserDTO.Email);
+            if (oldUser != null && oldUser.IsDeleted == true)
+            {
+                oldUser.IsDeleted = false;
+                throw new ArgumentException(Exceptions.RestoreUserAccount);
+            }
+            if (oldUser == null)
             {
                 var result = await this.userManager.CreateAsync(user, newUserDTO.Password);
                 if (result.Succeeded)
@@ -245,6 +251,6 @@ namespace PhotoContest.Services.Services
                 }
             }
         }
-        
+
     }
 }

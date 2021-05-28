@@ -9,6 +9,7 @@ using PhotoContest.Data;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
+using PhotoContest.Services.Models.Update;
 
 namespace PhotoContest.Web
 {
@@ -31,22 +32,10 @@ namespace PhotoContest.Web
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(string username)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users
-                .Include(u => u.Rank)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            return View(new UserDTO(user));
         }
 
         // GET: Users/Create
@@ -64,27 +53,24 @@ namespace PhotoContest.Web
         {
             if (ModelState.IsValid)
             {
-                var user = await this.userService.CreateAsync(newUserDTO);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var user = await this.userService.CreateAsync(newUserDTO);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
             }
             return View();
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(string username)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            ViewData["RankId"] = new SelectList(_context.Ranks, "Id", "Id", user.RankId);
-            return View(user);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            return View(new UserDTO(user));
         }
 
         // POST: Users/Edit/5
@@ -92,35 +78,22 @@ namespace PhotoContest.Web
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("FirstName,LastName,RankId,OverallPoints,CreatedOn,ModifiedOn,DeletedOn,IsDeleted,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
+        public async Task<IActionResult> Edit(string username, UpdateUserDTO updateUserDTO)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    await this.userService.UpdateAsync(updateUserDTO, username);
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return RedirectToAction("Error");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["RankId"] = new SelectList(_context.Ranks, "Id", "Id", user.RankId);
-            return View(user);
+            return View();
         }
 
         // GET: Users/Delete/5

@@ -1,6 +1,7 @@
 ﻿using PhotoContest.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -17,7 +18,9 @@ namespace PhotoContest.Services.Models
             this.Points = user.OverallPoints;
             this.Rank = user.Rank.Name;
         }
+        [Display(Name ="First name")]
         public string FirstName { get; set; }
+        [Display(Name = "Last name")]
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }

@@ -51,5 +51,6 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string WrongCategoryComment = "Photo is in a wrong category.";
         public const string UserNotJury = "User is not in the jury for this contest.";
         public const string InvalidUserAccessToPhotos = "User does not have access to the contest's photos.";
+        public const string RestoreUserAccount = "Your account is currently deleted, you can recover it by logging in.";
     }
 }

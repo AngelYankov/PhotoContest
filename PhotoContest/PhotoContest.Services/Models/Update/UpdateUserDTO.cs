@@ -7,10 +7,12 @@ namespace PhotoContest.Services.Models.Update
 {
     public class UpdateUserDTO
     {
-        [StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
+        [Display(Name ="First name")]
+        [StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {2} and {1} characters.")]
         public string FirstName { get; set; }
 
-        [StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
+        [Display(Name = "Last name")]
+        [StringLength(20, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {2} and {1} characters.")]
         public string LastName { get; set; }
         //public string RankId { get; set; }
     }

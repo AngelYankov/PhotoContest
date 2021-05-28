@@ -50,8 +50,8 @@
                 @Html.DisplayFor(modelItem => user.Points)
             </td>
             <td>
-            <a asp-action="Edit" asp-route-id="@user.Email">Edit</a> |
-            <a asp-action="Details" asp-route-id="@user.Email">Details</a> |
+            <a asp-action="Edit" asp-route-Username="@user.Username">Edit</a> |
+            <a asp-action="Details" asp-route-Username="@user.Username">Details</a> |
             <a asp-action="Delete" asp-route-Username="@user.Username">Delete</a>
             </td>
         </tr>
