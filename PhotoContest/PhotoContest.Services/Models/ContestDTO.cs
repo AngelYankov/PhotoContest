@@ -24,10 +24,15 @@ namespace PhotoContest.Services.Models
         }
         public string Name { get; set; }
         public string Category { get; set; }
+        [Display(Name="Current phase")]
         public string Status { get; set; }
+        [Display(Name = "Phase 1")]
         public string Phase1 { get; set; }
+        [Display(Name = "Phase 2")]
         public string Phase2 { get; set; }
+        [Display(Name = "Finished")]
         public string Finished { get; set; }
+        [Display(Name = "Open or invitational")]
         public string OpenOrInvitational { get; set; }
     }
 }
