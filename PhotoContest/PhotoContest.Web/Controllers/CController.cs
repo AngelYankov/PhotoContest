@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.Models;
+using PhotoContest.Services.Models.Create;
+using PhotoContest.Services.Models.Update;
 using PhotoContest.Services.Services;
 
 namespace PhotoContest.Web
@@ -30,141 +33,101 @@ namespace PhotoContest.Web
         }
 
         // GET: Contests/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(string name)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+           var contest = await this.contestService.FindContestByNameAsync(name);
 
-            var contest = await _context.Contests
-                .Include(c => c.Category)
-                .Include(c => c.Status)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (contest == null)
-            {
-                return NotFound();
-            }
-
-            return View(contest);
+            return View(new ContestDTO(contest));
         }
 
         // GET: Contests/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
             return View();
         }
 
         // POST: Contests/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,StatusId,IsOpen,Phase1,Phase2,Finished,CreatedOn,ModifiedOn,DeletedOn,IsDeleted")] Contest contest)
+        public async Task<IActionResult> Create(NewContestDTO newContestDTO)
         {
-            if (ModelState.IsValid)
-            {
-                contest.Id = Guid.NewGuid();
-                _context.Add(contest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", contest.CategoryId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", contest.StatusId);
-            return View(contest);
-        }
-
-        // GET: Contests/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var contest = await _context.Contests.FindAsync(id);
-            if (contest == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", contest.CategoryId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", contest.StatusId);
-            return View(contest);
-        }
-
-        // POST: Contests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,CategoryId,StatusId,IsOpen,Phase1,Phase2,Finished,CreatedOn,ModifiedOn,DeletedOn,IsDeleted")] Contest contest)
-        {
-            if (id != contest.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(contest);
-                    await _context.SaveChangesAsync();
+                    await this.contestService.CreateAsync(newContestDTO);
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception e)
                 {
-                    if (!ContestExists(contest.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return BadRequest(e.Message);
                 }
-                return RedirectToAction(nameof(Index));
+
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", contest.CategoryId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", contest.StatusId);
-            return View(contest);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            return View();
+        }
+
+        // GET: Contests/Edit/5
+        public async Task<IActionResult> Edit(string name)
+        {
+
+            var contest = await this.contestService.FindContestByNameAsync(name);
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
+            return View(new ContestDTO(contest));
+        }
+
+        // POST: Contests/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string name, UpdateContestDTO updateContestDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.contestService.UpdateAsync(name, updateContestDTO);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
+            return View();
         }
 
         // GET: Contests/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(string name)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var contest = await this.contestService.FindContestByNameAsync(name);
 
-            var contest = await _context.Contests
-                .Include(c => c.Category)
-                .Include(c => c.Status)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (contest == null)
-            {
-                return NotFound();
-            }
-
-            return View(contest);
+            return View(new ContestDTO(contest));
         }
 
         // POST: Contests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(string name)
         {
-            var contest = await _context.Contests.FindAsync(id);
-            _context.Contests.Remove(contest);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ContestExists(Guid id)
-        {
-            return _context.Contests.Any(e => e.Id == id);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.contestService.DeleteAsync(name);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Error");
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

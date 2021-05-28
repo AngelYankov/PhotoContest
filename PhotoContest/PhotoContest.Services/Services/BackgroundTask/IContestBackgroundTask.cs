@@ -5,6 +5,6 @@ namespace PhotoContest.Services.Services.BackgroundTask
 {
     public interface IContestBackgroundTask
     {
-        Task ChangeStatus(CancellationToken cancellationToken);
+        Task ChangeStatus();
     }
 }

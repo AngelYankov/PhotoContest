@@ -14,6 +14,6 @@ namespace PhotoContest.Services.Models.Update
         public string Phase1 { get; set; }
         public string Phase2 { get; set; }
         public string Finished { get; set; }
-        public bool isOpen { get; set; }
+        public bool IsOpen { get; set; }
     }
 }
