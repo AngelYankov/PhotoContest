@@ -18,11 +18,13 @@ namespace PhotoContest.Web
     {
         private readonly PhotoContestContext _context;
         private readonly IContestService contestService;
+        private readonly ICategoryService categoryService;
 
-        public CController(PhotoContestContext context, IContestService contestService)
+        public CController(PhotoContestContext context, IContestService contestService, ICategoryService categoryService)
         {
             _context = context;
             this.contestService = contestService;
+            this.categoryService = categoryService;
         }
 
         // GET: Contests
@@ -43,7 +45,7 @@ namespace PhotoContest.Web
         // GET: Contests/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            ViewData["CategoryId"] = new SelectList(this._context.Categories, "Name", "Name");
             return View();
         }
 

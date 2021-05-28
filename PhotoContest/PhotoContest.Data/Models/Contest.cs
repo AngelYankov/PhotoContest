@@ -12,7 +12,7 @@ namespace PhotoContest.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        [Required, StringLength(50, MinimumLength = 5, ErrorMessage = "Contest name should be between {1} and {2} characters.")]
+        [Required, StringLength(50, MinimumLength = 5, ErrorMessage = "Value for contest {0} should be between {2} and {1} characters.")]
         public string Name { get; set; }
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
@@ -25,10 +25,5 @@ namespace PhotoContest.Data.Models
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
         public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
-        // lists for first,second,third place
-        /*public ICollection<Photo> FirstPlacePhotos { get; set; } = new List<Photo>();
-        public ICollection<Photo> SecondPlacePhotos { get; set; } = new List<Photo>();
-        public ICollection<Photo> ThirdPlacePhotos { get; set; } = new List<Photo>();*/
-
     }
 }

@@ -37,9 +37,9 @@ namespace PhotoContest.Services.Services
         /// Get all categories.
         /// </summary>
         /// <returns>Returns all names of the categories.</returns>
-        public async Task<IList<string>> GetAllAsync()
+        public async Task<IEnumerable<string>> GetAllAsync()
         {
-            return await this.dbContext.Categories.Where(c => c.IsDeleted == false).Select(c => c.Name).ToListAsync();
+            return await this.dbContext.Categories.Where(c => c.IsDeleted == false).Select(c=>c.Name).ToListAsync();
         }
 
         /// <summary>
