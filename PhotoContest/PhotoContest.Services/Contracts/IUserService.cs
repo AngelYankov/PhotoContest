@@ -22,5 +22,6 @@ namespace PhotoContest.Services.Contracts
         Task<string> AddRoleAsync(AddRoleModel model);
         Task<IEnumerable<UserDTO>> GetAllParticipantsAsync();
         Task<User> FindUserAsync(Guid id);
+        Task ChangeRank();
     }
 }

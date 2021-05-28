@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +13,15 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using PhotoContest.Services.Services;
 
-namespace PhotoContest.Web
+namespace PhotoContest.Web.Controllers
 {
-    public class CController : Controller
+    public class ContestsController : Controller
     {
         private readonly PhotoContestContext _context;
         private readonly IContestService contestService;
         private readonly ICategoryService categoryService;
 
-        public CController(PhotoContestContext context, IContestService contestService, ICategoryService categoryService)
+        public ContestsController(PhotoContestContext context, IContestService contestService, ICategoryService categoryService)
         {
             _context = context;
             this.contestService = contestService;
@@ -45,7 +46,7 @@ namespace PhotoContest.Web
         // GET: Contests/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(this._context.Categories, "Name", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
             return View();
         }
 

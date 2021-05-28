@@ -101,7 +101,6 @@ namespace PhotoContest.Web
             services.AddScoped<IContestService, ContestService>();
             services.AddScoped<IUserContestService, UserContestService>();
             services.TryAddScoped<SignInManager<User>>();
-            services.AddScoped<IContestBackgroundTask, ContestBackgroundTask>();
             services.AddHostedService<TimedHostedService>();
 
             services.AddRazorPages();
