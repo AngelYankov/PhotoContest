@@ -52,7 +52,7 @@ namespace PhotoContest.Services.Services
 
             newContest.StatusId = status.Id;
 
-            newContest.IsOpen = dto.isOpen;
+            newContest.IsOpen = dto.IsOpen;
 
             ValidatePhase1(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                            DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
@@ -276,7 +276,7 @@ namespace PhotoContest.Services.Services
                 contest.Finished = DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
             contest.Name = dto.Name ?? contest.Name;
-            if (dto.isOpen != false)
+            if (dto.IsOpen != false)
             {
                 contest.IsOpen = true;
             }

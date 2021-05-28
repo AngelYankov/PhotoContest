@@ -334,7 +334,7 @@ namespace PhotoContest.Data
                     IsOpen = true,
                     Phase1 = new DateTime(2021,05,10,9,0,0),
                     Phase2 = DateTime.UtcNow,
-                    Finished = DateTime.UtcNow.AddHours(20)
+                    Finished = DateTime.UtcNow.AddMinutes(5)
                 },
                 new Contest()
                 {
