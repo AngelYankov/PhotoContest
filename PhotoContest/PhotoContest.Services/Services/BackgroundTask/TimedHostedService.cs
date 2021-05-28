@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PhotoContest.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,12 +12,16 @@ namespace PhotoContest.Services.Services.BackgroundTask
 {
     public class TimedHostedService : IHostedService, IDisposable
     {
-        private readonly IContestBackgroundTask contestBackgroundTask;
+        private readonly IContestService contestService;
+        private readonly IUserService userService;
+        private readonly IUserContestService userContestService;
         private Timer timer;
 
         public TimedHostedService(IServiceProvider serviceProvider)
         {
-            this.contestBackgroundTask = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IContestBackgroundTask>();
+            this.contestService = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IContestService>();
+            this.userService = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IUserService>();
+            this.userContestService = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IUserContestService>();
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -26,7 +31,9 @@ namespace PhotoContest.Services.Services.BackgroundTask
 
         public void DoWork(object state)
         {
-            this.contestBackgroundTask.ChangeStatus();
+            this.contestService.ChangeStatus();
+            this.userContestService.CalculatePointsAsync();
+            this.userService.ChangeRank();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

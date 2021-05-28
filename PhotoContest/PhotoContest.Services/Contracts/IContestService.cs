@@ -25,5 +25,6 @@ namespace PhotoContest.Services.Services
         Task<Contest> FindContestAsync(Guid id);
         Task ChangeStatus(CancellationToken cancellationToken);
         Task<List<Contest>> GetAllFinishedContestsAsync();
+        Task ChangeStatus();
     }
 }
