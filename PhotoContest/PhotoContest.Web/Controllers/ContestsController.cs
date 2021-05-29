@@ -184,5 +184,33 @@ namespace PhotoContest.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        // Get contest to enroll
+        public async Task<IActionResult> GetEnroll()
+        {
+            ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
+
+            return View();
+        }
+
+        // POST: Contests/Delete/5
+        [HttpPost, ActionName("Enroll")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Enroll(string name)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.contestService.EnrollAsync(name);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Error");
+                }
+            }
+            return RedirectToAction("Index");
+        }
     }
 }
