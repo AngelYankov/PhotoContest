@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace PhotoContest.Services.Models
+namespace PhotoContest.Web.Models.ContestViewModels
 {
-    public class ContestDTO
+    public class ViewModel
     {
-        public ContestDTO(Contest contest)
+        public ViewModel(Contest contest)
         {
             this.Name = contest.Name;
             this.Category = contest.Category.Name;
@@ -24,7 +24,7 @@ namespace PhotoContest.Services.Models
         }
         public string Name { get; set; }
         public string Category { get; set; }
-        [Display(Name="Current phase")]
+        [Display(Name = "Current phase")]
         public string Status { get; set; }
         [Display(Name = "Phase 1")]
         public string Phase1 { get; set; }
@@ -36,3 +36,4 @@ namespace PhotoContest.Services.Models
         public string OpenOrInvitational { get; set; }
     }
 }
+

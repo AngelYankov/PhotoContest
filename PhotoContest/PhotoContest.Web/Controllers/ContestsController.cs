@@ -12,6 +12,8 @@ using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using PhotoContest.Services.Services;
+using PhotoContest.Web.Models;
+using PhotoContest.Web.Models.ContestViewModels;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -35,12 +37,39 @@ namespace PhotoContest.Web.Controllers
             return View(contests);
         }
 
+        // GET: Open Contests
+        public async Task<IActionResult> GetOpen(string phase)
+        {
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetOpenFiltered(string status)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var contests = await this.contestService.GetAllOpenAsync(status);
+                    return View(contests);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+            }
+            return View();
+        }
+
+
         // GET: Contests/Details/5
         public async Task<IActionResult> Details(string name)
         {
            var contest = await this.contestService.FindContestByNameAsync(name);
 
-            return View(new ContestDTO(contest));
+            return View(new ViewModel(contest));
         }
 
         // GET: Contests/Create
@@ -53,8 +82,18 @@ namespace PhotoContest.Web.Controllers
         // POST: Contests/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(NewContestDTO newContestDTO)
+        public async Task<IActionResult> Create(CreateViewModel createViewModel)
         {
+            var newContestDTO = new NewContestDTO()
+            {
+                Name = createViewModel.Name,
+                CategoryName = createViewModel.CategoryName,
+                IsOpen = createViewModel.IsOpen,
+                Phase1 = createViewModel.Phase1,
+                Phase2 = createViewModel.Phase2,
+                Finished = createViewModel.Finished
+            };
+
             if (ModelState.IsValid)
             {
                 try
@@ -77,21 +116,35 @@ namespace PhotoContest.Web.Controllers
         {
 
             var contest = await this.contestService.FindContestByNameAsync(name);
+            var updateContestDTO = new EditViewModel();
+
+            updateContestDTO.Name = contest.Name;
+            updateContestDTO.Category = contest.Category.Name;
+            updateContestDTO.IsContestOpen = contest.IsOpen;
+            updateContestDTO.Phase1 = contest.Phase1.ToString("dd.MM.yy HH:mm");
+            updateContestDTO.Phase2 = contest.Phase2.ToString("dd.MM.yy HH:mm");
+            updateContestDTO.Finished = contest.Finished.ToString("dd.MM.yy HH:mm");
 
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
-            return View(new ContestDTO(contest));
+            return View(updateContestDTO);
         }
 
         // POST: Contests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string name, UpdateContestDTO updateContestDTO)
+        public async Task<IActionResult> Edit(string name, EditViewModel editViewModel)
         {
+            var updateContestDTO = new UpdateContestDTO();
+            updateContestDTO.CategoryName = editViewModel.Category;
+            updateContestDTO.IsOpen = editViewModel.IsContestOpen;
+            updateContestDTO.Phase1 = editViewModel.Phase1;
+            updateContestDTO.Phase2 = editViewModel.Phase2;
+            updateContestDTO.Finished = editViewModel.Finished;
             if (ModelState.IsValid)
             {
                 try
                 {
+                    
                     await this.contestService.UpdateAsync(name, updateContestDTO);
                     return RedirectToAction(nameof(Index));
                 }
@@ -101,7 +154,6 @@ namespace PhotoContest.Web.Controllers
                 }
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
             return View();
         }
 

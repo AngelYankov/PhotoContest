@@ -23,7 +23,6 @@ namespace PhotoContest.Services.Services
         Task<bool> ChooseJuryAsync(string contestName, string username);
         Task<Contest> FindContestByNameAsync(string contestName);
         Task<Contest> FindContestAsync(Guid id);
-        Task ChangeStatus(CancellationToken cancellationToken);
         Task<List<Contest>> GetAllFinishedContestsAsync();
         Task ChangeStatus();
     }
