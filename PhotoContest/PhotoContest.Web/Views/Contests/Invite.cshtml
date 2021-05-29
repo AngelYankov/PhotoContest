@@ -1,0 +1,38 @@
+﻿@model PhotoContest.Web.Models.ContestViewModels.InviteViewModel
+
+@{
+    ViewData["Title"] = "Open";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Invite to contest</h1>
+
+<h4>Contests and users</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Invite">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Contest" class="control-label"></label>
+                <select asp-for="Contest" class="form-control" asp-items="ViewBag.Contests"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="User" class="control-label"></label>
+                <select asp-for="User" class="form-control" asp-items="ViewBag.Users"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Invite" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

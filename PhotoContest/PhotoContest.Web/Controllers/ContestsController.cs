@@ -186,7 +186,7 @@ namespace PhotoContest.Web.Controllers
         }
 
         // Get contest to enroll
-        public async Task<IActionResult> GetEnroll()
+        public async Task<IActionResult> Enroll()
         {
             ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
 
@@ -203,6 +203,35 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     await this.contestService.EnrollAsync(name);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        // Get contest to enroll
+        public async Task<IActionResult> Invite()
+        {
+            ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
+            ViewData["Users"] = new SelectList(_context.Users, "Name", "Name");
+
+            return View();
+        }
+
+        // POST: Contests/Delete/5
+        [HttpPost, ActionName("Invite")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Invite(string name, string username)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.contestService.InviteAsync(name, username);
                     return RedirectToAction("Index");
                 }
                 catch (Exception)
