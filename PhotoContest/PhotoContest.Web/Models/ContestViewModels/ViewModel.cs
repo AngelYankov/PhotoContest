@@ -1,4 +1,5 @@
 ﻿using PhotoContest.Data.Models;
+using PhotoContest.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,18 +10,15 @@ namespace PhotoContest.Web.Models.ContestViewModels
 {
     public class ViewModel
     {
-        public ViewModel(Contest contest)
+        public ViewModel(ContestDTO contestDTO)
         {
-            this.Name = contest.Name;
-            this.Category = contest.Category.Name;
-            this.Status = contest.Status.Name;
-            this.Phase1 = contest.Phase1.ToString("dd.MM.yy HH:mm");
-            this.Phase2 = contest.Phase2.ToString("dd.MM.yy HH:mm");
-            this.Finished = contest.Finished.ToString("dd.MM.yy HH:mm");
-            if (contest.IsOpen)
-                this.OpenOrInvitational = "Contest is open.";
-            else
-                this.OpenOrInvitational = "Contest is invitational.";
+            this.Name = contestDTO.Name;
+            this.Category = contestDTO.Category;
+            this.Status = contestDTO.Status;
+            this.Phase1 = contestDTO.Phase1;
+            this.Phase2 = contestDTO.Phase2;
+            this.Finished = contestDTO.Finished;
+            this.OpenOrInvitational = contestDTO.OpenOrInvitational;
         }
         public string Name { get; set; }
         public string Category { get; set; }

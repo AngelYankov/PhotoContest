@@ -34,11 +34,11 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var contests = await this.contestService.GetAllAsync();
-            return View(contests);
+            return View(contests.Select(c=>new ViewModel(c)));
         }
 
         // GET: Open Contests
-        public async Task<IActionResult> GetOpen(string phase)
+        public async Task<IActionResult> GetOpen()
         {
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
             return View();
@@ -52,7 +52,7 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     var contests = await this.contestService.GetAllOpenAsync(status);
-                    return View(contests);
+                    return View(contests.Select(c=>new ViewModel(c)));
                 }
                 catch (Exception e)
                 {
@@ -67,9 +67,9 @@ namespace PhotoContest.Web.Controllers
         // GET: Contests/Details/5
         public async Task<IActionResult> Details(string name)
         {
-           var contest = await this.contestService.FindContestByNameAsync(name);
-
-            return View(new ViewModel(contest));
+            var contest = await this.contestService.FindContestByNameAsync(name);
+            var contestDTO = new ContestDTO(contest);
+            return View(new ViewModel(contestDTO));
         }
 
         // GET: Contests/Create
@@ -144,7 +144,7 @@ namespace PhotoContest.Web.Controllers
             {
                 try
                 {
-                    
+
                     await this.contestService.UpdateAsync(name, updateContestDTO);
                     return RedirectToAction(nameof(Index));
                 }
@@ -161,8 +161,8 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Delete(string name)
         {
             var contest = await this.contestService.FindContestByNameAsync(name);
-
-            return View(new ContestDTO(contest));
+            var contestDTO = new ContestDTO(contest);
+            return View(new ViewModel(contestDTO));
         }
 
         // POST: Contests/Delete/5
@@ -188,15 +188,15 @@ namespace PhotoContest.Web.Controllers
         // Get contest to enroll
         public async Task<IActionResult> Enroll()
         {
-            ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
+            ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == true), "Name", "Name");
 
             return View();
         }
 
         // POST: Contests/Delete/5
-        [HttpPost, ActionName("Enroll")]
+        [HttpPost, ActionName("EnrollSubmit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Enroll(string name)
+        public async Task<IActionResult> EnrollSubmit(string name)
         {
             if (ModelState.IsValid)
             {
@@ -216,8 +216,8 @@ namespace PhotoContest.Web.Controllers
         // Get contest to enroll
         public async Task<IActionResult> Invite()
         {
-            ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
-            ViewData["Users"] = new SelectList(_context.Users, "Name", "Name");
+            ViewData["Contests"] = new SelectList(_context.Contests.Where(c=>c.IsOpen==false), "Name", "Name");
+            ViewData["Users"] = new SelectList(_context.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer"), "UserName", "UserName");
 
             return View();
         }
@@ -225,18 +225,18 @@ namespace PhotoContest.Web.Controllers
         // POST: Contests/Delete/5
         [HttpPost, ActionName("Invite")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Invite(string name, string username)
+        public async Task<IActionResult> Invite(InviteViewModel inviteViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await this.contestService.InviteAsync(name, username);
+                    await this.contestService.InviteAsync(inviteViewModel.Contest, inviteViewModel.Username);
                     return RedirectToAction("Index");
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return RedirectToAction("Error");
+                    return BadRequest(e.Message);
                 }
             }
             return RedirectToAction("Index");
