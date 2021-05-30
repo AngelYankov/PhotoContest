@@ -213,12 +213,13 @@ namespace PhotoContest.Web.Controllers
         }
 
         // Get contest to enroll
-        public async Task<IActionResult> Invite()
+        public async Task<IActionResult> Invite(string name)
         {
             ViewData["Contests"] = new SelectList(_context.Contests.Where(c=>c.IsOpen==false), "Name", "Name");
             ViewData["Users"] = new SelectList(_context.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer"), "UserName", "UserName");
-
-            return View();
+            var inviteViewModel = new InviteViewModel();
+            inviteViewModel.Name = name;
+            return View(inviteViewModel);
         }
 
         [HttpPost, ActionName("Invite")]
@@ -229,7 +230,7 @@ namespace PhotoContest.Web.Controllers
             {
                 try
                 {
-                    await this.contestService.InviteAsync(inviteViewModel.Contest, inviteViewModel.Username);
+                    await this.contestService.InviteAsync(inviteViewModel.Name, inviteViewModel.Username);
                     return RedirectToAction("Index");
                 }
                 catch (Exception e)
@@ -241,12 +242,14 @@ namespace PhotoContest.Web.Controllers
         }
 
         // Get contest to choose jury
-        public async Task<IActionResult> ChooseJury()
+        public async Task<IActionResult> ChooseJury(string name)
         {
-            ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
-            ViewData["Users"] = new SelectList(_context.Users.Where(u => u.Rank.Name == "Master" || u.Rank.Name == "Wise and Benevolent Photo Dictator"),
-                                                                                                                                 "UserName", "UserName");
-            return View();
+            ViewData["Users"] = new SelectList(_context.Users
+                                                       .Where(u => u.Rank.Name == "Master" || u.Rank.Name == "Wise and Benevolent Photo Dictator"),
+                                                                                                                           "UserName", "UserName");
+            var inviteViewModel = new InviteViewModel();
+            inviteViewModel.Name = name;
+            return View(inviteViewModel);
         }
 
         [HttpPost, ActionName("ChooseJury")]
@@ -257,7 +260,7 @@ namespace PhotoContest.Web.Controllers
             {
                 try
                 {
-                    await this.contestService.ChooseJuryAsync(inviteViewModel.Contest, inviteViewModel.Username);
+                    await this.contestService.ChooseJuryAsync(inviteViewModel.Name, inviteViewModel.Username);
                     return RedirectToAction("Index");
                 }
                 catch (Exception e)
