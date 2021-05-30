@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PhotoContest.Services.Models.ContestDTO>
+﻿@model IEnumerable<PhotoContest.Web.Models.ContestViewModels.ViewModel>
 
 @{
     ViewData["Title"] = "OpenContest";
@@ -58,6 +58,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Finished)
+                </td>
+                <td>
+                    <a asp-action="EnrollSubmit" asp-route-name="@item.Name">Enroll</a> 
                 </td>
             </tr>
         }

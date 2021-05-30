@@ -94,10 +94,12 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns all contests.</returns>
         public async Task<IEnumerable<ContestDTO>> GetAllAsync()
         {
+            
             return await this.dbContext
                              .Contests
                              .Include(c => c.Category)
-                             .Include(a => a.Status)
+                             .Include(c => c.Status)
+                             .Include(c => c.Photos)
                              .Where(c => c.IsDeleted == false)
                              .Select(c => new ContestDTO(c))
                              .ToListAsync();

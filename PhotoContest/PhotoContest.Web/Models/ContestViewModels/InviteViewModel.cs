@@ -8,6 +8,6 @@ namespace PhotoContest.Web.Models.ContestViewModels
     public class InviteViewModel
     {
         public string Contest { get; set; }
-        public string User { get; set; }
+        public string Username { get; set; }
     }
 }
