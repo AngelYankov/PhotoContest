@@ -69,7 +69,7 @@ namespace PhotoContest.Services.Services
                 }
             }
             //calculate points for each user participating in a Contest
-            foreach (var userContest in await this.dbContext.UserContests.ToListAsync())
+            foreach (var userContest in await this.dbContext.UserContests.Include(uc=>uc.User).ToListAsync())
             {
                 userContest.User.OverallPoints += userContest.Points;
             }

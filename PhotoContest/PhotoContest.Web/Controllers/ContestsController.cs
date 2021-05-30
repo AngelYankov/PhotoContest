@@ -193,7 +193,6 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
-        // POST: Contests/Delete/5
         [HttpPost, ActionName("EnrollSubmit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnrollSubmit(string name)
@@ -222,7 +221,6 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
-        // POST: Contests/Delete/5
         [HttpPost, ActionName("Invite")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Invite(InviteViewModel inviteViewModel)
@@ -232,6 +230,34 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     await this.contestService.InviteAsync(inviteViewModel.Contest, inviteViewModel.Username);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        // Get contest to choose jury
+        public async Task<IActionResult> ChooseJury()
+        {
+            ViewData["Contests"] = new SelectList(_context.Contests, "Name", "Name");
+            ViewData["Users"] = new SelectList(_context.Users.Where(u => u.Rank.Name == "Master" || u.Rank.Name == "Wise and Benevolent Photo Dictator"),
+                                                                                                                                 "UserName", "UserName");
+            return View();
+        }
+
+        [HttpPost, ActionName("ChooseJury")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChooseJury(InviteViewModel inviteViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.contestService.ChooseJuryAsync(inviteViewModel.Contest, inviteViewModel.Username);
                     return RedirectToAction("Index");
                 }
                 catch (Exception e)
