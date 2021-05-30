@@ -10,6 +10,7 @@ using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
+using PhotoContest.Web.Models.UserViewModels;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -27,13 +28,19 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var users = await this.userService.GetAllAsync();
-            return View(users);
+            return View(users.Select(u=>new UserViewModel(u)));
+        }
+        public async Task<IActionResult> ViewAllParticipants()
+        {
+            var users = await this.userService.GetAllParticipantsAsync();
+            return View(users.Select(u => new UserViewModel(u)));
         }
 
         public async Task<IActionResult> Details(string username)
         {
             var user = await this.userService.GetUserByUsernameAsync(username);
-            return View(new UserDTO(user));
+            var userDTO = new UserDTO(user);
+            return View(new UserViewModel(userDTO));
         }
 
         public IActionResult Create()
@@ -43,12 +50,20 @@ namespace PhotoContest.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(NewUserDTO newUserDTO)
+        public async Task<IActionResult> Create(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var newUserDTO = new NewUserDTO()
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Email = model.Email,
+                        EmailConfirmed = model.EmailConfirmed,
+                        Password = model.Password
+                    };
                     var user = await this.userService.CreateAsync(newUserDTO);
                     return RedirectToAction(nameof(Index));
                 }
@@ -61,17 +76,25 @@ namespace PhotoContest.Web.Controllers
         }
         public IActionResult CreateOrganizer()
         {
-            return RedirectToAction("Create");
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOrganizer(NewUserDTO newUserDTO)
+        public async Task<IActionResult> CreateOrganizer(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var newUserDTO = new NewUserDTO()
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Email = model.Email,
+                        EmailConfirmed = model.EmailConfirmed,
+                        Password = model.Password
+                    };
                     var user = await this.userService.CreateOrganizerAsync(newUserDTO);
                     return RedirectToAction(nameof(Index));
                 }
@@ -86,18 +109,24 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Edit(string username)
         {
             var user = await this.userService.GetUserByUsernameAsync(username);
-            return View(new UserDTO(user));
+            var userDTO = new UserDTO(user);
+            return View(new EditUserViewModel(userDTO));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string username, UpdateUserDTO updateUserDTO)
+        public async Task<IActionResult> Edit(string username, EditUserViewModel model)
         {
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var updateUserDTO = new UpdateUserDTO()
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                    };
                     await this.userService.UpdateAsync(updateUserDTO, username);
                     return RedirectToAction(nameof(Index));
                 }
@@ -112,7 +141,8 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Delete(string username)
         {
             var user = await this.userService.GetUserByUsernameAsync(username);
-            return View(new UserDTO(user));
+            var userDTO = new UserDTO(user);
+            return View(new UserViewModel(userDTO));
         }
 
         [HttpPost, ActionName("Delete")]
@@ -132,6 +162,31 @@ namespace PhotoContest.Web.Controllers
                 }
             }
             return RedirectToAction("Index");
+        }
+        public IActionResult SearchByUsername()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowUserInfo(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await this.userService.GetUserByUsernameAsync(model.Username);
+                    var userDTO = new UserDTO(user);
+                    var userViewModel = new UserViewModel(userDTO);
+                    return View(userViewModel);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return View();
         }
     }
 }

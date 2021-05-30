@@ -4,6 +4,12 @@ namespace PhotoContest.Web.Models
 {
     public class RegisterViewModel
     {
+		[Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for user {0} should be between {2} and {1} characters.")]
+		public string FirstName { get; set; }
+
+		[Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for user {0} should be between {2} and {1} characters.")]
+		public string LastName { get; set; }
+
 		[Required]
 		[EmailAddress]
 		[Display(Name = "E-mail")]
