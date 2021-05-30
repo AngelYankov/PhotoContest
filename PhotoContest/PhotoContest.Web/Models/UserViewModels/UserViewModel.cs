@@ -9,6 +9,10 @@ namespace PhotoContest.Web.Models.UserViewModels
 {
     public class UserViewModel
     {
+        public UserViewModel()
+        {
+
+        }
         public UserViewModel(UserDTO user)
         {
             this.FirstName = user.FirstName;

@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PhotoContest.Data;
+using PhotoContest.Services.Contracts;
+using PhotoContest.Services.Models;
+using PhotoContest.Services.Models.Create;
 using PhotoContest.Web.Models;
+using PhotoContest.Web.Models.UserViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +17,14 @@ namespace PhotoContest.Web.Controllers
     {
 		private readonly UserManager<User> userManager;
 		private readonly SignInManager<User> signInManager;
+        private readonly IUserService userService;
 
-		public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IUserService userService)
 		{
 			this.userManager = userManager;
 			this.signInManager = signInManager;
-		}
+            this.userService = userService;
+        }
 
 		[HttpGet]
 		public IActionResult Login()
@@ -54,17 +60,19 @@ namespace PhotoContest.Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var user = new User();
-				user.UserName = model.Email;
+				var user = new NewUserDTO();
+				user.FirstName = model.FirstName;
+				user.LastName = model.LastName;
 				user.Email = model.Email;
-				user.PasswordHash = model.Password;
+				user.EmailConfirmed = model.Email;
+				user.Password = model.Password;
 
-				var result = await this.userManager.CreateAsync(user, model.Password);
-				if (result.Succeeded)
-				{
-					return RedirectToAction("Index", "Home");
-				}
-			}
+				var result = await this.userService.CreateAsync(user);
+                /*if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }*/
+            }
 
 			return RedirectToAction("Error", "Home");
 		}

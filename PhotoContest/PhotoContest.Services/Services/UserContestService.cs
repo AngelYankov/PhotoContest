@@ -27,7 +27,7 @@ namespace PhotoContest.Services.Services
             var contests = await this.contestService.GetAllFinishedContestsAsync();
             foreach (var contest in contests)
             {
-                foreach (var photo in contest.Photos)
+                foreach (var photo in this.dbContext.Photos.Where(p=>p.ContestId==contest.Id)) // TODO
                 {
                     CalculatePhotoPoints(photo);
                 }

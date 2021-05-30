@@ -30,6 +30,11 @@ namespace PhotoContest.Web.Controllers
             var users = await this.userService.GetAllAsync();
             return View(users.Select(u=>new UserViewModel(u)));
         }
+        public async Task<IActionResult> ViewAllParticipants()
+        {
+            var users = await this.userService.GetAllParticipantsAsync();
+            return View(users.Select(u => new UserViewModel(u)));
+        }
 
         public async Task<IActionResult> Details(string username)
         {
@@ -157,6 +162,31 @@ namespace PhotoContest.Web.Controllers
                 }
             }
             return RedirectToAction("Index");
+        }
+        public IActionResult SearchByUsername()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowUserInfo(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await this.userService.GetUserByUsernameAsync(model.Username);
+                    var userDTO = new UserDTO(user);
+                    var userViewModel = new UserViewModel(userDTO);
+                    return View(userViewModel);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return View();
         }
     }
 }
