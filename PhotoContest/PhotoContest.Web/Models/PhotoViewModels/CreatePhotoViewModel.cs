@@ -14,7 +14,7 @@ namespace PhotoContest.Web.Models.PhotoViewModels
         public string Description { get; set; }
         [Required]
         public string PhotoUrl { get; set; }
-        [Required]
+        [Display(Name ="Contest:")]
         public string ContestName { get; set; }
     }
 }

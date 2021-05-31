@@ -79,6 +79,7 @@
                             <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
                             <a asp-action="Delete" asp-route-name="@item.Name">Delete</a> |
                             <a asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a> |
+                            <a asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">View all photos</a> |
                             @if (item.OpenOrInvitational == "Contest is invitational.")
                             {
                                 <a asp-action="Invite" asp-route-name="@item.Name">Invite</a>

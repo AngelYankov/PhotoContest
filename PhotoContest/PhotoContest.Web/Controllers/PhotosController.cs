@@ -51,12 +51,13 @@ namespace PhotoContest.Web.Controllers
             return View(photo);
         }
 
-        // GET: Photos/Create
-        public IActionResult Create()
+        public IActionResult Create(string contestName)
         {
-            //TODO only contests where in phase 1 by userId.
-            ViewData["ContestId"] = new SelectList(_context.Contests, "Name", "Name");
-            return View();
+            var createPhotoVM = new CreatePhotoViewModel()
+            {
+                ContestName = contestName
+            };
+            return View(createPhotoVM);
         }
 
         [HttpPost]
@@ -82,11 +83,14 @@ namespace PhotoContest.Web.Controllers
                     return BadRequest(e.Message);
                 }
             }
-            ViewData["ContestId"] = new SelectList(_context.Contests, "Name", "Name");
             return View(model);
         }
+        public async Task<IActionResult> GetContestsPhotos(string contestName)
+        {
+            var photos = await this.photoService.GetPhotosForContestAsync(contestName);
+            return View(photos.Select(p=>new PhotoViewModel(p)));
+        }
 
-        // GET: Photos/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -141,35 +145,25 @@ namespace PhotoContest.Web.Controllers
             return View(photo);
         }
 
-        // GET: Photos/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var photo = await _context.Photos
-                .Include(p => p.Contest)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (photo == null)
-            {
-                return NotFound();
-            }
-
-            return View(photo);
+            var photo = await this.photoService.GetAsync(id);
+            return View(new PhotoViewModel(photo));
         }
 
-        // POST: Photos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var photo = await _context.Photos.FindAsync(id);
-            _context.Photos.Remove(photo);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await this.photoService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         private bool PhotoExists(Guid id)

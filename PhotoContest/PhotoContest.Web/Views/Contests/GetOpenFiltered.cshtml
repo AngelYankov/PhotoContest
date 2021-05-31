@@ -37,35 +37,38 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpenOrInvitational)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phase1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phase2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Finished)
+            </td>
+            @if (item.Status == "Phase 1")
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    <a asp-action="EnrollSubmit" asp-route-name="@item.Name">Enroll</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category)
+                    <a asp-controller="Photos" asp-action="Create" asp-route-contestName="@item.Name">Add photo</a>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OpenOrInvitational)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phase1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phase2)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Finished)
-                </td>
-                @if (item.Status == "Phase 1")
-                {
-                    <td>
-                        <a asp-action="EnrollSubmit" asp-route-name="@item.Name">Enroll</a>
-                    </td>
-                }
-            </tr>
+            }
+        </tr>
         }
     </tbody>
 </table>
