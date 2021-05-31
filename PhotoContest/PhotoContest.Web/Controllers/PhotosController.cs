@@ -7,23 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.Contracts;
+using PhotoContest.Services.Models;
+using PhotoContest.Services.Models.Create;
+using PhotoContest.Web.Models.PhotoViewModels;
 
-namespace PhotoContest.Web
+namespace PhotoContest.Web.Controllers
 {
     public class PhotosController : Controller
     {
         private readonly PhotoContestContext _context;
+        private readonly IPhotoService photoService;
 
-        public PhotosController(PhotoContestContext context)
+        public PhotosController(PhotoContestContext context, IPhotoService photoService)
         {
             _context = context;
+            this.photoService = photoService;
         }
 
-        // GET: Photos
         public async Task<IActionResult> Index()
         {
-            var photoContestContext = _context.Photos.Include(p => p.Contest).Include(p => p.User);
-            return View(await photoContestContext.ToListAsync());
+            var photos = await this.photoService.GetAllAsync();
+            return View(photos.Select(p=>new PhotoViewModel(p)));
         }
 
         // GET: Photos/Details/5
@@ -49,28 +54,36 @@ namespace PhotoContest.Web
         // GET: Photos/Create
         public IActionResult Create()
         {
-            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            //TODO only contests where in phase 1 by userId.
+            ViewData["ContestId"] = new SelectList(_context.Contests, "Name", "Name");
             return View();
         }
 
-        // POST: Photos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,PhotoUrl,UserId,ContestId,AllPoints,CreatedOn,ModifiedOn,DeletedOn,IsDeleted")] Photo photo)
+        public async Task<IActionResult> Create(CreatePhotoViewModel model)
         {
             if (ModelState.IsValid)
             {
-                photo.Id = Guid.NewGuid();
-                _context.Add(photo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var newPhotoDTO = new NewPhotoDTO()
+                    {
+                        Title = model.Title,
+                        Description = model.Description,
+                        PhotoUrl = model.PhotoUrl,
+                        ContestName = model.ContestName
+                    };
+                    await this.photoService.CreateAsync(newPhotoDTO);
+                    return View(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
             }
-            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name", photo.ContestId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", photo.UserId);
-            return View(photo);
+            ViewData["ContestId"] = new SelectList(_context.Contests, "Name", "Name");
+            return View(model);
         }
 
         // GET: Photos/Edit/5
