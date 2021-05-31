@@ -72,21 +72,14 @@
                     @Html.DisplayFor(modelItem => item.Finished)
                 </td>
                 <td>
-                    @*@{
-                        if (User.IsInRole("Organizer"))
-                        {*@
-                            <a asp-action="Details" asp-route-name="@item.Name">Details</a> |
-                            <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
-                            <a asp-action="Delete" asp-route-name="@item.Name">Delete</a> |
-                            <a asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a> |
-                            @if (item.OpenOrInvitational == "Contest is invitational.")
-                            {
-                                <a asp-action="Invite" asp-route-name="@item.Name">Invite</a>
-                            }
-
-                        }
-                   @* }*@
-
+                    <a asp-action="Details" asp-route-name="@item.Name">Details</a> |
+                    <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
+                    <a asp-action="Delete" asp-route-name="@item.Name">Delete</a> |
+                    <a asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a> |
+                    @if (item.OpenOrInvitational == "Contest is invitational.")
+                    {
+                        <a asp-action="Invite" asp-route-name="@item.Name">Invite</a>
+                    }
                 </td>
             </tr>
         }
