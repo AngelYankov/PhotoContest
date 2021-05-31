@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data.Configurations;
@@ -6,15 +7,21 @@ using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace PhotoContest.Data
 {
     public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
     {
+        private readonly IWebHostEnvironment webHost;
+
         public PhotoContestContext() { }
-        public PhotoContestContext(DbContextOptions<PhotoContestContext> options)
-            : base(options) { }
+        public PhotoContestContext(DbContextOptions<PhotoContestContext> options, IWebHostEnvironment webHost)
+            : base(options)
+        {
+            this.webHost = webHost;
+        }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contest> Contests { get; set; }
@@ -380,7 +387,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("8a20e519-66ad-46b8-b6c3-18c36fa50a1d"),
                     Title = "Lion King",
                     Description = "Picture of a lion.",
-                    PhotoUrl = "www.lionPicture.com",
+                    PhotoUrl = "/Images/lion.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
@@ -390,7 +397,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("56763358-b113-4f96-9a4a-5190c421f1fb"),
                     Title = "Tiger",
                     Description = "Picture of a tiger.",
-                    PhotoUrl = "www.tigerPicture.com",
+                    PhotoUrl = "/Images/tiger.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
@@ -400,7 +407,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("021fa300-ffd4-48e2-a93f-d40c17d014f3"),
                     Title = "Kawasaki Ninja",
                     Description = "Picture of a Kawasaki.",
-                    PhotoUrl = "www.kawasakiPicture.com",
+                    PhotoUrl = "/Images/kawasaki.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
                  new Photo()
@@ -410,7 +417,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("c463712b-e235-4fe5-840e-a99736c3fb76"),
                     Title = "Honda CBR",
                     Description = "Picture of a Honda.",
-                    PhotoUrl = "www.hondaPicture.com",
+                    PhotoUrl = "/Images/honda.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
                  new Photo()
@@ -420,7 +427,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("7cc9804e-2106-4943-994d-91be3d1fab8e"),
                     Title = "Collibri",
                     Description = "Picture of a colibri.",
-                    PhotoUrl = "www.colibriPicture.com",
+                    PhotoUrl = "/Images/colibri.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
                  new Photo()
@@ -430,7 +437,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("71cd9097-0c95-4af2-9e43-da7324880583"),
                     Title = "Eagle",
                     Description = "Picture of an eagle.",
-                    PhotoUrl = "www.eaglePicture.com",
+                    PhotoUrl = "/Images/eagle.jpg",
                     CreatedOn = DateTime.UtcNow
                 }
             };
@@ -498,6 +505,7 @@ namespace PhotoContest.Data
                     CreatedOn = DateTime.UtcNow
                 }
             };
+            
 
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<Status>().HasData(statuses);
