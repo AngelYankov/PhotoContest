@@ -1,66 +1,73 @@
-﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PhotoContest.Data.Configurations;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 
-namespace PhotoContest.Data
+namespace PhotoContest.Tests
 {
-    public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
+    public class Utils
     {
-        private readonly IWebHostEnvironment webHost;
-
-        public PhotoContestContext() { }
-        public PhotoContestContext(DbContextOptions<PhotoContestContext> options, IWebHostEnvironment webHost)
-            : base(options)
+        public static DbContextOptions<PhotoContestContext> GetOptions(string databaseName)
         {
-            this.webHost = webHost;
+            return new DbContextOptionsBuilder<PhotoContestContext>()
+                .UseInMemoryDatabase(databaseName)
+                .Options;
         }
-        public DbSet<Rank> Ranks { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Contest> Contests { get; set; }
-        public DbSet<Status> Statuses { get; set; }
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<UserContest> UserContests { get; set; }
-        public DbSet<JuryMember> Juries { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public static List<Contest> SeedContests()
         {
-            modelBuilder.ApplyConfiguration(new CategoryConfig());
-            modelBuilder.ApplyConfiguration(new ContestConfig());
-            modelBuilder.ApplyConfiguration(new JuryMemberConfig());
-            modelBuilder.ApplyConfiguration(new PhotoConfig());
-            modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new UserContestConfig());
-            modelBuilder.ApplyConfiguration(new ReviewConfig());
-
-            this.Seed(modelBuilder);
-            base.OnModelCreating(modelBuilder);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            if (options.IsConfigured)
-                options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
-        }
-
-        protected virtual void Seed(ModelBuilder modelBuilder)
-        {
-            //seed roles 
-            var roles = new List<Role>()
+            return new List<Contest>()
             {
-                new Role() { Id = Guid.Parse("d0a458f4-cba3-4e49-a779-f79a9de41268"), Name = "Admin", NormalizedName = "ADMIN" },
-                new Role() { Id = Guid.Parse("8a73d7c7-c092-4281-8cde-6dd9a9dd747c"), Name = "Organizer", NormalizedName = "ORGANIZER" },
-                new Role() { Id = Guid.Parse("a117e076-855e-401a-aeab-844fee43a0a2"), Name = "User", NormalizedName = "USER" }
+                new Contest()
+                {
+                    Id = Guid.Parse("f36e97ee-98af-4f26-93ef-066895d94b2a"),
+                    Name = "Wild cats",
+                    CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
+                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
+                    IsOpen = true,
+                    Phase1 = new DateTime(2021, 05, 10, 9, 0, 0),
+                    Phase2 = DateTime.UtcNow,
+                    Finished = DateTime.UtcNow.AddMinutes(2)
+                },
+                new Contest()
+                {
+                    Id = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
+                    Name = "Best look",
+                    CategoryId = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"),
+                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
+                    IsOpen = true,
+                    Phase1 = new DateTime(2021, 05, 15, 9, 0, 0),
+                    Phase2 = new DateTime(2021, 05, 25, 12, 0, 0),
+                    Finished = new DateTime(2021, 05, 26, 9, 0, 0)
+                },
+                new Contest()
+                {
+                    Id = Guid.Parse("42541f52-8d30-4828-bf66-4eda82735edd"),
+                    Name = "Best building",
+                    CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"),
+                    StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
+                    IsOpen = true,
+                    Phase1 = new DateTime(2021, 05, 10, 9, 0, 0),
+                    Phase2 = new DateTime(2021, 05, 20, 12, 0, 0),// DateTime.ParseExact("20-05-2021 12:00","dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = new DateTime(2021, 05, 20, 9, 0, 0)
+                },
+                new Contest()
+                {
+                    Id = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
+                    Name = "Birds",
+                    CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
+                    StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
+                    IsOpen = true,
+                    Phase1 = DateTime.UtcNow,
+                    Phase2 = new DateTime(2021, 06, 10, 9, 0, 0),
+                    Finished = new DateTime(2021, 06, 10, 19, 0, 0)
+                }
             };
-            //seed users
+        }
+        public static List<User> SeedUsers()
+        {
             var users = new List<User>()
             {
                 new User()
@@ -220,14 +227,16 @@ namespace PhotoContest.Data
                     LockoutEnabled = true
                 }
             };
-            //hash passwords
             var passHasher = new PasswordHasher<User>();
             foreach (var user in users)
             {
                 user.PasswordHash = passHasher.HashPassword(user, user.FirstName.ToLower() + "123");
             }
-            //link userRoles
-            var userRoles = new List<IdentityUserRole<Guid>>()
+            return users;
+        }
+        public static List<IdentityUserRole<Guid>> SeedUserRoles()
+        {
+            return new List<IdentityUserRole<Guid>>()
             {
                 new IdentityUserRole<Guid>(){RoleId = Guid.Parse("d0a458f4-cba3-4e49-a779-f79a9de41268"),UserId = Guid.Parse("1d4c48e4-8870-417b-8ac6-e78efe1aaab5")}, //admin - admin
                 new IdentityUserRole<Guid>(){RoleId = Guid.Parse("8a73d7c7-c092-4281-8cde-6dd9a9dd747c"),UserId = Guid.Parse("e240edfc-64b9-4358-a869-5aadb719e128")}, // eric berg - organizer
@@ -241,145 +250,22 @@ namespace PhotoContest.Data
                 new IdentityUserRole<Guid>(){RoleId = Guid.Parse("a117e076-855e-401a-aeab-844fee43a0a2"),UserId = Guid.Parse("56763358-b113-4f96-9a4a-5190c421f1fb")}, //sam stevens - master-200points
                 new IdentityUserRole<Guid>(){RoleId = Guid.Parse("a117e076-855e-401a-aeab-844fee43a0a2"),UserId = Guid.Parse("c463712b-e235-4fe5-840e-a99736c3fb76")} //kyle sins - dictator-1200points
             };
+        }
+        public static List<Role> SeedRoles()
+        {
+            return new List<Role>()
+            {
+                new Role() { Id = Guid.Parse("d0a458f4-cba3-4e49-a779-f79a9de41268"), Name = "Admin", NormalizedName = "ADMIN" },
+                new Role() { Id = Guid.Parse("8a73d7c7-c092-4281-8cde-6dd9a9dd747c"), Name = "Organizer", NormalizedName = "ORGANIZER" },
+                new Role() { Id = Guid.Parse("a117e076-855e-401a-aeab-844fee43a0a2"), Name = "User", NormalizedName = "USER" }
+            };
+        }
+        public static List<Photo> SeedPhotos()
+        {
+            return new List<Photo>()
+            {
 
-            //seed categories
-            var categories = new List<Category>()
-            {
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Cars",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
-                    Name = "Animals",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Nature",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"),
-                    Name = "Architecture",
-                    CreatedOn = DateTime.UtcNow,
-                },
-                new Category()
-                {
-                    Id = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"),
-                    Name = "Motorcycles",
-                    CreatedOn = DateTime.UtcNow,
-                }
-            };
-            //seed statuses
-            var statuses = new List<Status>()
-            {
-                new Status()
-                {
-                    Id = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
-                    Name = "Phase 1"
-                },
-                new Status()
-                {
-                    Id = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
-                    Name = "Phase 2"
-                },
-                new Status()
-                {
-                    Id = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
-                    Name = "Finished"
-                },
-            };
-            //seed ranks
-            var ranks = new List<Rank>()
-            {
-                new Rank()
-                {
-                    Id = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001"),
-                    Name = "Junkie"
-                },
-                new Rank()
-                {
-                    Id = Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1"),
-                    Name = "Enthusiast"
-                },
-                new Rank()
-                {
-                    Id = Guid.Parse("a9576301-3157-454f-86ce-85bb5eb2dfc9"),
-                    Name = "Master"
-                },
-                new Rank()
-                {
-                    Id = Guid.Parse("0b1728c7-5582-4958-9e97-52c9b1d44cdb"),
-                    Name = "Wise and Benevolent Photo Dictator"
-                },
-                new Rank()
-                {
-                    Id = Guid.Parse("0e4ac61d-7d3b-4dcb-9ed0-d47cf1c247ce"),
-                    Name = "Organizer"
-                },
-                new Rank()
-                {
-                    Id = Guid.Parse("a036e464-8996-4e40-9a81-39239cf72402"),
-                    Name = "Admin"
-                }
-            };
-            //seed contents
-            var contests = new List<Contest>()
-            {
-                new Contest()
-                {
-                    Id = Guid.Parse("f36e97ee-98af-4f26-93ef-066895d94b2a"),
-                    Name = "Wild cats",
-                    CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
-                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
-                    IsOpen = true,
-                    Phase1 = new DateTime(2021,05,10,9,0,0),
-                    Phase2 = DateTime.UtcNow,
-                    Finished = DateTime.UtcNow.AddMinutes(2)
-                },
-                new Contest()
-                {
-                    Id = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
-                    Name = "Best look",
-                    CategoryId = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"),
-                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
-                    IsOpen = true,
-                    Phase1 = new DateTime(2021,05,15,9,0,0),
-                    Phase2 = new DateTime(2021,05,25,12,0,0),
-                    Finished =new DateTime(2021,05,26,9,0,0)
-                },
-                new Contest()
-                {
-                    Id = Guid.Parse("42541f52-8d30-4828-bf66-4eda82735edd"),
-                    Name = "Best building",
-                    CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"),
-                    StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
-                    IsOpen = true,
-                    Phase1 =  new DateTime(2021,05,10,9,0,0),
-                    Phase2 = new DateTime(2021,05,20,12,0,0),// DateTime.ParseExact("20-05-2021 12:00","dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
-                    Finished = new DateTime(2021,05,20,9,0,0)
-                },
-                new Contest()
-                {
-                    Id = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
-                    Name = "Birds",
-                    CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
-                    StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
-                    IsOpen = true,
-                    Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,10,9,0,0),
-                    Finished = new DateTime(2021,06,10,19,0,0)
-                }
-            };
-            //seed photos
-            var photos = new List<Photo>()
-            {
+
                 new Photo()
                 {
                     Id = Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"),
@@ -441,8 +327,46 @@ namespace PhotoContest.Data
                     CreatedOn = DateTime.UtcNow
                 }
             };
-            //seed reviews
-            var reviews = new List<Review>()
+        }
+        public static List<Category> SeedCategories()
+        {
+            return new List<Category>()
+            {
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Cars",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
+                    Name = "Animals",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Nature",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"),
+                    Name = "Architecture",
+                    CreatedOn = DateTime.UtcNow,
+                },
+                new Category()
+                {
+                    Id = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"),
+                    Name = "Motorcycles",
+                    CreatedOn = DateTime.UtcNow,
+                }
+            };
+        }
+        public static List<Review> SeedReviews()
+        {
+            return new List<Review>()
             {
                 new Review()
                 {
@@ -505,9 +429,12 @@ namespace PhotoContest.Data
                     CreatedOn = DateTime.UtcNow
                 }
             };
-            var userContests = new List<UserContest>()
+        }
+        public static List<UserContest> SeedUserContests()
+        {
+            return new List<UserContest>()
             {
-                new UserContest()
+                 new UserContest()
                 {
                     Id = Guid.Parse("be9c8856-5df8-4577-a7c9-f8f62f8de22c"),
                     ContestId = Guid.Parse("f36e97ee-98af-4f26-93ef-066895d94b2a"),
@@ -544,19 +471,6 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("71cd9097-0c95-4af2-9e43-da7324880583"),
                 }
             };
-            
-
-            modelBuilder.Entity<Category>().HasData(categories);
-            modelBuilder.Entity<Status>().HasData(statuses);
-            modelBuilder.Entity<Rank>().HasData(ranks);
-            modelBuilder.Entity<User>().HasData(users);
-            modelBuilder.Entity<Role>().HasData(roles);
-            modelBuilder.Entity<Contest>().HasData(contests);
-            modelBuilder.Entity<Photo>().HasData(photos);
-            modelBuilder.Entity<Review>().HasData(reviews);
-            modelBuilder.Entity<UserContest>().HasData(userContests);
-            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(userRoles);
         }
     }
 }
-

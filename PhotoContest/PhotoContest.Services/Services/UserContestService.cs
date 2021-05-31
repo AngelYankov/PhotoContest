@@ -27,12 +27,13 @@ namespace PhotoContest.Services.Services
             var contests = await this.contestService.GetAllFinishedContestsAsync();
             foreach (var contest in contests)
             {
-                foreach (var photo in this.dbContext.Photos.Where(p=>p.ContestId==contest.Id)) // TODO
+                var photos = await this.dbContext.Photos.Include(p=>p.Contest).Include(p=>p.User).Where(p => p.ContestId == contest.Id).ToListAsync();
+                foreach (var photo in photos) // TODO
                 {
-                    CalculatePhotoPoints(photo);
+                    await CalculatePhotoPoints(photo);
                 }
                 //Sort photos for first, second or third place
-                var sortedPhotos = contest.Photos.OrderByDescending(p => p.AllPoints).ToList();
+                var sortedPhotos = photos.OrderByDescending(p => p.AllPoints).ToList();
 
                 var FirstPlacePhotos = sortedPhotos.Where(p => p.AllPoints == sortedPhotos[0].AllPoints).ToList();
                 var countFirstPlacePhotos = FirstPlacePhotos.Count();
@@ -71,16 +72,20 @@ namespace PhotoContest.Services.Services
             //calculate points for each user participating in a Contest
             foreach (var userContest in await this.dbContext.UserContests.Include(uc=>uc.User).ToListAsync())
             {
-                userContest.User.OverallPoints += userContest.Points;
+                var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id == userContest.UserId);
+               user.OverallPoints += userContest.Points;
             }
+            await this.dbContext.SaveChangesAsync();
         }
-        private void CalculatePhotoPoints(Photo photo)
+        private async Task CalculatePhotoPoints(Photo photo)
         {
-            foreach (var review in photo.Reviews)
+            var reviews = await this.dbContext.Reviews.Include(r=>r.Photo).Include(r=>r.Evaluator).Where(r => r.PhotoId == photo.Id).ToListAsync();
+            foreach (var review in reviews)
             {
                 photo.AllPoints += review.Score;
             }
-            photo.AllPoints /= photo.Reviews.Count();
+            photo.AllPoints /= reviews.Count();
+            await this.dbContext.SaveChangesAsync();
         }
         private async Task CalculatePointsForUsersFirstPlaceAsync(int countFirstPlacePhotos, Contest contest, List<Photo> FirstPlacePhotos, List<Photo> SecondPlacePhotos)
         {
@@ -94,12 +99,12 @@ namespace PhotoContest.Services.Services
             }
             else if (countFirstPlacePhotos == 1)
             {
-                var photo = FirstPlacePhotos.First();
-                var userContest = await this.dbContext.UserContests.FirstOrDefaultAsync(uc => uc.UserId == photo.UserId && uc.ContestId == contest.Id);
+                var photoFirstPlace = FirstPlacePhotos.FirstOrDefault();
+                var userContest = await this.dbContext.UserContests.Include(uc=>uc.User).Include(uc => uc.Contest).FirstOrDefaultAsync(uc => uc.UserId == photoFirstPlace.UserId && uc.ContestId == contest.Id);
                 var photoSecondPlace = SecondPlacePhotos.FirstOrDefault();
                 if (photoSecondPlace != null)
                 {
-                    if (photo.AllPoints >= photoSecondPlace.AllPoints * 2)
+                    if (photoFirstPlace.AllPoints >= photoSecondPlace.AllPoints * 2)
                     {
                         userContest.Points = 75;
                     }
@@ -113,6 +118,7 @@ namespace PhotoContest.Services.Services
                     userContest.Points = 50;
                 }
             }
+            await this.dbContext.SaveChangesAsync();
         }
         private async Task CalculatePointsForUsersSecondPlaceAsync(int countSecondPlacePhotos, Contest contest, List<Photo> SecondPlacePhotos)
         {
@@ -126,10 +132,11 @@ namespace PhotoContest.Services.Services
             }
             else if (countSecondPlacePhotos == 1)
             {
-                var photo = SecondPlacePhotos.First();
-                var userContest = await this.dbContext.UserContests.FirstOrDefaultAsync(uc => uc.UserId == photo.UserId && uc.ContestId == contest.Id);
+                var photoSecondPlace = SecondPlacePhotos.First();
+                var userContest = await this.dbContext.UserContests.FirstOrDefaultAsync(uc => uc.UserId == photoSecondPlace.UserId && uc.ContestId == contest.Id);
                 userContest.Points = 35;
             }
+            await this.dbContext.SaveChangesAsync();
         }
         private async Task CalculatePointsForUsersThirdPlaceAsync(int countThirdPlacePhotos, Contest contest, List<Photo> ThirdPlacePhotos)
         {
@@ -143,10 +150,11 @@ namespace PhotoContest.Services.Services
             }
             else if (countThirdPlacePhotos == 1)
             {
-                var photo = ThirdPlacePhotos.First();
-                var userContest = await this.dbContext.UserContests.FirstOrDefaultAsync(uc => uc.UserId == photo.UserId && uc.ContestId == contest.Id);
+                var photoThirdPlace = ThirdPlacePhotos.First();
+                var userContest = await this.dbContext.UserContests.FirstOrDefaultAsync(uc => uc.UserId == photoThirdPlace.UserId && uc.ContestId == contest.Id);
                 userContest.Points = 20;
             }
+            await this.dbContext.SaveChangesAsync();
         }
     }
 }
