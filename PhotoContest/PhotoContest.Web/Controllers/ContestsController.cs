@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,17 +23,25 @@ namespace PhotoContest.Web.Controllers
         private readonly PhotoContestContext _context;
         private readonly IContestService contestService;
         private readonly ICategoryService categoryService;
+        private readonly SignInManager<User> signInManager;
 
-        public ContestsController(PhotoContestContext context, IContestService contestService, ICategoryService categoryService)
+        public ContestsController(PhotoContestContext context, IContestService contestService, ICategoryService categoryService, SignInManager<User> signInManager)
         {
             _context = context;
             this.contestService = contestService;
             this.categoryService = categoryService;
+            this.signInManager = signInManager;
         }
 
         // GET: Contests
+        //[Authorize]
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("User"))
+            {
+                ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
+                return View("GetOpen");
+            }
             var contests = await this.contestService.GetAllAsync();
             return View(contests.Select(c=>new ViewModel(c)));
         }
