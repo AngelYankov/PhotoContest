@@ -133,12 +133,8 @@ namespace PhotoContest.Services.Services
             var users = new List<User>();
             foreach (var userRole in userRoles)
             {
-                var user = await this.dbContext.Users.Include(u => u.Rank).Include(u => u.Reviews).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
+                var user = await this.dbContext.Users.Include(u => u.Rank).FirstOrDefaultAsync(u => u.Id == userRole.UserId);
                 users.Add(user);
-            }
-            if (users.Count == 0)
-            {
-                throw new ArgumentException(Exceptions.NoParticipants);
             }
             return users.Select(u => new UserDTO(u)).OrderByDescending(u => u.Points);
         }
@@ -154,11 +150,6 @@ namespace PhotoContest.Services.Services
             var user = await GetUserByUsernameAsync(username);
             user.FirstName = updateUserDTO.FirstName ?? user.FirstName;
             user.LastName = updateUserDTO.LastName ?? user.LastName;
-            /*if (!string.IsNullOrEmpty(updateUserDTO.RankId))
-            {
-                
-                user.RankId = Guid.Parse(updateUserDTO.RankId);
-            }*/
             user.ModifiedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
@@ -170,9 +161,6 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns user with that username or an appropriate error message.</returns>
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            /*var users = await this.dbContext.Users.ToListAsync();
-            var user = users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
-            return user;*/
             return await this.dbContext
                              .Users
                              .Include(u => u.Rank)
@@ -199,21 +187,6 @@ namespace PhotoContest.Services.Services
         }
 
         /// <summary>
-        /// Get user by id.
-        /// </summary>
-        /// <param name="id">Id to search for.</param>
-        /// <returns>Returns user with that id or an appropriate error message.</returns>
-        public async Task<User> FindUserAsync(Guid id)
-        {
-            return await this.dbContext.Users
-                                       .Include(u => u.Rank)
-                                       .Include(u => u.Reviews)
-                                       .Where(u => u.IsDeleted == false)
-                                       .FirstOrDefaultAsync(u => u.Id == id)
-                                       ?? throw new ArgumentException(Exceptions.InvalidUserID);
-        }
-
-        /// <summary>
         /// Changing the rank of a user in the background.
         /// </summary>
         /// <returns></returns>
@@ -222,13 +195,14 @@ namespace PhotoContest.Services.Services
             var contestants = await this.dbContext.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer").ToListAsync();
             foreach (var contestant in contestants)
             {
-                if (contestant.OverallPoints <= 50)
+                /*if (contestant.OverallPoints <= 50)
                 {
                     contestant.RankId = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001");
-                }
+                }*/
                 if (contestant.OverallPoints > 50 && contestant.OverallPoints <= 150)
                 {
                     contestant.RankId = Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1");
+                    //CHANGE ONLY RANKID NOT RANK
                 }
                 if (contestant.OverallPoints > 150 && contestant.OverallPoints <= 1000)
                 {
