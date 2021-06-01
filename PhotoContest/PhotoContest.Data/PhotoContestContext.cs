@@ -14,7 +14,6 @@ namespace PhotoContest.Data
 {
     public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
     {
-
         public PhotoContestContext() { }
         public PhotoContestContext(DbContextOptions<PhotoContestContext> options)
             : base(options)
@@ -43,11 +42,11 @@ namespace PhotoContest.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             if (options.IsConfigured)
                 options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
-        }
+        }*/
 
         protected virtual void Seed(ModelBuilder modelBuilder)
         {

@@ -78,7 +78,7 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns category with that ID or an appropriate error message.</returns>
         public async Task<Category> FindCategoryByNameAsync(string categoryName)
         {
-            var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Name == categoryName)
+            var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower())
                                     ?? throw new ArgumentException(Exceptions.InvalidCategory);
             if (category.IsDeleted)
             {

@@ -90,8 +90,9 @@ namespace PhotoContest.Web
                     options.Password.RequiredLength = 8;
                     options.Password.RequireLowercase = false;
                 })
-                .AddEntityFrameworkStores<PhotoContestContext>()
-                .AddDefaultTokenProviders();
+                .AddRoles<Role>()
+                .AddEntityFrameworkStores<PhotoContestContext>();
+                
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPhotoService, PhotoService>();
@@ -105,8 +106,8 @@ namespace PhotoContest.Web
 
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));
-            services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddAuthentication(options =>
+            //services.AddSingleton<IEmailSender, EmailSender>();
+            /*services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -126,7 +127,7 @@ namespace PhotoContest.Web
                         ValidAudience = Configuration["JWT:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
                     };
-                });
+                });*/
             services.AddControllersWithViews();
         }
 
