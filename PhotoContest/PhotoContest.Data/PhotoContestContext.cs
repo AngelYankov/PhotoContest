@@ -14,13 +14,11 @@ namespace PhotoContest.Data
 {
     public class PhotoContestContext : IdentityDbContext<User, Role, Guid>
     {
-        private readonly IWebHostEnvironment webHost;
 
         public PhotoContestContext() { }
-        public PhotoContestContext(DbContextOptions<PhotoContestContext> options, IWebHostEnvironment webHost)
+        public PhotoContestContext(DbContextOptions<PhotoContestContext> options)
             : base(options)
         {
-            this.webHost = webHost;
         }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Category> Categories { get; set; }
