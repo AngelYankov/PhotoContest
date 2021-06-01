@@ -48,8 +48,6 @@ namespace PhotoContest.Services.Services
                 Rank = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Name.ToLower() == "junkie"),
                 CreatedOn = DateTime.UtcNow
             };
-            /*var rank = await this.dbContext.Ranks.FirstAsync();
-            user.RankId = rank.Id;*/
             var oldUser = await this.userManager.FindByEmailAsync(newUserDTO.Email);
             if (oldUser != null && oldUser.IsDeleted == true)
             {
@@ -66,7 +64,6 @@ namespace PhotoContest.Services.Services
                 else { throw new ArgumentException(Exceptions.IncorrectPassword); }
             }
             else { throw new ArgumentException(Exceptions.ExistingEmail); }
-            // await this.dbContext.Users.AddAsync(user);
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
         }
@@ -113,16 +110,6 @@ namespace PhotoContest.Services.Services
             return user.IsDeleted;
         }
         /// <summary>
-        /// Get a user by id.
-        /// </summary>
-        /// <param name="id">Id to search for.</param>
-        /// <returns>Returns user with that id or an appropriate error message.</returns>
-        public async Task<UserDTO> GetAsync(Guid id)
-        {
-            var user = await FindUserAsync(id);
-            return new UserDTO(user);
-        }
-        /// <summary>
         /// Get all users.
         /// </summary>
         /// <returns>Returns all users.</returns>
@@ -130,7 +117,7 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext.Users
                                        .Include(u => u.Rank)
-                                       .Include(u => u.Reviews)
+                                       //.Include(u => u.Reviews)
                                        .Where(u => u.IsDeleted == false)
                                        .Select(u => new UserDTO(u))
                                        .ToListAsync();
@@ -183,10 +170,12 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns user with that username or an appropriate error message.</returns>
         public async Task<User> GetUserByUsernameAsync(string username)
         {
+            /*var users = await this.dbContext.Users.ToListAsync();
+            var user = users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
+            return user;*/
             return await this.dbContext
                              .Users
                              .Include(u => u.Rank)
-                             //.Include(u => u.Reviews)
                              .Where(u => u.IsDeleted == false)
                              .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);

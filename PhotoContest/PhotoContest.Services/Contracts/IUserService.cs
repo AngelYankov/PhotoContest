@@ -15,7 +15,6 @@ namespace PhotoContest.Services.Contracts
         Task<UserDTO> CreateAsync(NewUserDTO newUserDTO);
         Task<UserDTO> CreateOrganizerAsync(NewUserDTO newUserDTO);
         Task<IEnumerable<UserDTO>> GetAllAsync();
-        Task<UserDTO> GetAsync(Guid id);
         Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, string username);
         Task<bool> DeleteAsync(string username);
         Task<User> GetUserByUsernameAsync(string username);

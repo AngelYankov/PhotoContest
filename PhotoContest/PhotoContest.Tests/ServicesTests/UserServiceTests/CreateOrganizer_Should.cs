@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -8,19 +7,18 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PhotoContest.Tests.ServicesTests.UserServiceTests
 {
     [TestClass]
-    public class Create_Should
+    public class CreateOrganizer_Should
     {
         [TestMethod]
-        public async Task CreateNewUser()
+        public async Task CreateNewOrganizer()
         {
-            var options = Utils.GetOptions(nameof(CreateNewUser));
+            var options = Utils.GetOptions(nameof(CreateNewOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -31,7 +29,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
             newUserDTO.LastName = "Smith";
-            newUserDTO.Email = "john.smith@mail.com";
+            newUserDTO.Email = "john@mail.com";
             using (var arrContext = new PhotoContestContext(options))
             {
                 await arrContext.Ranks.AddRangeAsync(Utils.SeedRanks());
@@ -40,20 +38,20 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                var result = await sut.CreateAsync(newUserDTO);
+                var result = await sut.CreateOrganizerAsync(newUserDTO);
                 Assert.AreEqual(result.FirstName, newUserDTO.FirstName);
                 Assert.AreEqual(result.LastName, newUserDTO.LastName);
                 Assert.AreEqual(result.Email, newUserDTO.Email);
                 Assert.AreEqual(result.Username, newUserDTO.Email);
-                Assert.AreEqual(result.Rank, "Junkie");
+                Assert.AreEqual(result.Rank, "Organizer");
                 Assert.AreEqual(result.Points, 0);
                 Assert.IsInstanceOfType(result, typeof(UserDTO));
             }
         }
         [TestMethod]
-        public async Task Throw_When_InvalidFirstName()
+        public async Task Throw_When_InvalidFirstNameForOrganizer()
         {
-            var options = Utils.GetOptions(nameof(Throw_When_InvalidFirstName));
+            var options = Utils.GetOptions(nameof(Throw_When_InvalidFirstNameForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -65,13 +63,13 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newUserDTO));
+                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
         [TestMethod]
-        public async Task Throw_When_InvalidLastName()
+        public async Task Throw_When_InvalidLastNameForOrganizer()
         {
-            var options = Utils.GetOptions(nameof(Throw_When_InvalidLastName));
+            var options = Utils.GetOptions(nameof(Throw_When_InvalidLastNameForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -83,13 +81,13 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newUserDTO));
+                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
         [TestMethod]
-        public async Task Throw_When_InvalidEmail()
+        public async Task Throw_When_InvalidEmailForOrganizer()
         {
-            var options = Utils.GetOptions(nameof(Throw_When_InvalidEmail));
+            var options = Utils.GetOptions(nameof(Throw_When_InvalidEmailForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -101,13 +99,13 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newUserDTO));
+                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
         [TestMethod]
-        public async Task Throw_When_ExistingEmailWithDeletedAccount()
+        public async Task Throw_When_ExistingEmailWithDeletedAccountForOrganizer()
         {
-            var options = Utils.GetOptions(nameof(Throw_When_ExistingEmailWithDeletedAccount));
+            var options = Utils.GetOptions(nameof(Throw_When_ExistingEmailWithDeletedAccountForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -116,11 +114,11 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
             newUserDTO.LastName = "Smith";
-            newUserDTO.Email = "john.smith@mail.com";
+            newUserDTO.Email = "john@mail.com";
             var user = new Mock<User>().Object;
             user.FirstName = "John";
             user.LastName = "Smith";
-            user.Email = "john.smith@mail.com";
+            user.Email = "john@mail.com";
             user.IsDeleted = true;
 
             userManager.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
@@ -134,13 +132,13 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newUserDTO));
+                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
         [TestMethod] //TODO
-        public async Task Throw_When_IncorrectPassword()
+        public async Task Throw_When_IncorrectPasswordForOrganizer()
         {
-            /*var options = Utils.GetOptions(nameof(Throw_When_IncorrectPassword));
+            /*var options = Utils.GetOptions(nameof(Throw_When_IncorrectPasswordForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -162,15 +160,15 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newUserDTO));
+                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
 
             }*/
         }
 
         [TestMethod]
-        public async Task Throw_When_ExistingEmail()
+        public async Task Throw_When_ExistingEmailForOrganizer()
         {
-            var options = Utils.GetOptions(nameof(Throw_When_ExistingEmail));
+            var options = Utils.GetOptions(nameof(Throw_When_ExistingEmailForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
@@ -181,11 +179,11 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
             newUserDTO.LastName = "Smith";
-            newUserDTO.Email = "john.smith@mail.com";
+            newUserDTO.Email = "john@mail.com";
             var user = new Mock<User>().Object;
             user.FirstName = "John";
             user.LastName = "Smith";
-            user.Email = "john.smith@mail.com";
+            user.Email = "john@mail.com";
             userManager.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(user));
 
@@ -198,9 +196,8 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new UserService(actContext, userManager.Object);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newUserDTO));
+                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
     }
 }
-

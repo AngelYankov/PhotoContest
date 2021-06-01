@@ -472,5 +472,41 @@ namespace PhotoContest.Tests
                 }
             };
         }
+        public static List<Rank> SeedRanks()
+        {
+            return new List<Rank>()
+            {
+                new Rank()
+                {
+                    Id = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001"),
+                    Name = "Junkie"
+                },
+                new Rank()
+                {
+                    Id = Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1"),
+                    Name = "Enthusiast"
+                },
+                new Rank()
+                {
+                    Id = Guid.Parse("a9576301-3157-454f-86ce-85bb5eb2dfc9"),
+                    Name = "Master"
+                },
+                new Rank()
+                {
+                    Id = Guid.Parse("0b1728c7-5582-4958-9e97-52c9b1d44cdb"),
+                    Name = "Wise and Benevolent Photo Dictator"
+                },
+                new Rank()
+                {
+                    Id = Guid.Parse("0e4ac61d-7d3b-4dcb-9ed0-d47cf1c247ce"),
+                    Name = "Organizer"
+                },
+                new Rank()
+                {
+                    Id = Guid.Parse("a036e464-8996-4e40-9a81-39239cf72402"),
+                    Name = "Admin"
+                }
+            };
+        }
     }
 }
