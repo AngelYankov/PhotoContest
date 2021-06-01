@@ -24,7 +24,6 @@
     <Folder Include="ServicesTests\UserContestServiceTests\" />
     <Folder Include="ServicesTests\ReviewServiceTests\" />
     <Folder Include="ServicesTests\PhotoServiceTests\" />
-    <Folder Include="ServicesTests\UserServiceTests\" />
   </ItemGroup>
 
 </Project>
