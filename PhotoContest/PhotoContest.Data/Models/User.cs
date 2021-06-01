@@ -15,7 +15,7 @@ namespace PhotoContest.Data
         public string FirstName { get; set; }
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for user {0} should be between {2} and {1} characters.")]
         public string LastName { get; set; }
-        public Guid? RankId { get; set; }
+        public Guid RankId { get; set; }
         public Rank Rank { get; set; }
         public int OverallPoints { get; set; }
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
