@@ -42,11 +42,11 @@ namespace PhotoContest.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             if (options.IsConfigured)
                 options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
-        }
+        }*/
 
         protected virtual void Seed(ModelBuilder modelBuilder)
         {
