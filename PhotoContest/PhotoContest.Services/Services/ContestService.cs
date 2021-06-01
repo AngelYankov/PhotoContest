@@ -252,12 +252,7 @@ namespace PhotoContest.Services.Services
             {
                 var category = await this.categoryService.FindCategoryByNameAsync(dto.CategoryName);
                 contest.CategoryId = category.Id;
-            }
-            if (dto.StatusName != null)
-            {
-                var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Name == dto.StatusName)
-                                ?? throw new ArgumentException(Exceptions.InvalidStatus);
-                contest.StatusId = status.Id;
+                contest.Category = category;
             }
             if (dto.Phase1 != null)
             {
@@ -462,7 +457,7 @@ namespace PhotoContest.Services.Services
         /// <param name="date2">DateTime value of Phase1</param>
         private void ValidatePhase2(DateTime date1, DateTime date2, DateTime date3)
         {
-            if (date1 == DateTime.MinValue || date1 <= date2 || date1 > date2.AddDays(31) || date1 > date3)
+            if (date1 == DateTime.MinValue || date1 <= date2.AddDays(1) || date1 > date2.AddDays(31) || date1 > date3)
                 throw new ArgumentException(Exceptions.InvalidDateTimePhase2);
         }
 
@@ -475,23 +470,6 @@ namespace PhotoContest.Services.Services
         {
             if (date1 == DateTime.MinValue || date1 <= date2.AddHours(1) || date1 > date2.AddHours(24))
                 throw new ArgumentException(Exceptions.InvalidDateTimeFinished);
-        }
-
-
-        /// <summary>
-        /// Find a contest with certain ID.
-        /// </summary>
-        /// <param name="id">ID of the contest to get.</param>
-        /// <returns>Returns a contest with certain ID or an appropriate error message.</returns>
-        public async Task<Contest> FindContestAsync(Guid id)
-        {
-            return await this.dbContext
-                             .Contests
-                             .Include(c => c.Category)
-                             .Include(c => c.Status)
-                             .Where(c => c.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.Id == id && c.IsDeleted == false)
-                             ?? throw new ArgumentException(Exceptions.InvalidContestID);
         }
 
         /// <summary>

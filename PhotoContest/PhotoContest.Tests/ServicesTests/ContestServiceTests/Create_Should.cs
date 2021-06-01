@@ -26,9 +26,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Name = "NewestTest";
             newContestDTO.CategoryName = "Cars";
             newContestDTO.IsOpen = true;
-            newContestDTO.Phase1 = "01.06.21 20:00";
-            newContestDTO.Phase2 = "05.06.21 20:00";
-            newContestDTO.Finished = "06.06.21 10:00";
+            newContestDTO.Phase1 = DateTime.Now.AddHours(2).ToString("dd.MM.yy HH:mm");
+            newContestDTO.Phase2 = DateTime.Now.AddHours(30).ToString("dd.MM.yy HH:mm");
+            newContestDTO.Finished = DateTime.Now.AddHours(32).ToString("dd.MM.yy HH:mm");
 
             var categoryService = new Mock<ICategoryService>();
             var userService = new Mock<IUserService>();
@@ -64,8 +64,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.CategoryName = "Cars";
             newContestDTO.IsOpen = true;
             newContestDTO.Phase1 = "01.01.21 20:00";
-            newContestDTO.Phase2 = "05.06.21 20:00";
-            newContestDTO.Finished = "06.06.21 10:00";
+            newContestDTO.Phase2 = DateTime.Now.AddHours(30).ToString("dd.MM.yy HH:mm");
+            newContestDTO.Finished = DateTime.Now.AddHours(32).ToString("dd.MM.yy HH:mm");
 
             var categoryService = new Mock<ICategoryService>();
             var userService = new Mock<IUserService>();
@@ -95,9 +95,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Name = "NewestTest";
             newContestDTO.CategoryName = "Cars";
             newContestDTO.IsOpen = true;
-            newContestDTO.Phase1 = "01.06.21 20:00";
-            newContestDTO.Phase2 = "01.06.21 20:00";
-            newContestDTO.Finished = "06.06.21 10:00";
+            newContestDTO.Phase1 = DateTime.Now.AddHours(2).ToString("dd.MM.yy HH:mm");
+            newContestDTO.Phase2 = "02.06.21 20:00";
+            newContestDTO.Finished = DateTime.Now.AddHours(32).ToString("dd.MM.yy HH:mm");
 
             var categoryService = new Mock<ICategoryService>();
             var userService = new Mock<IUserService>();
@@ -127,9 +127,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Name = "NewestTest";
             newContestDTO.CategoryName = "Cars";
             newContestDTO.IsOpen = true;
-            newContestDTO.Phase1 = "01.06.21 20:00";
-            newContestDTO.Phase2 = "05.06.21 20:00";
-            newContestDTO.Finished = "07.06.21 10:00";
+            newContestDTO.Phase1 = DateTime.Now.AddHours(2).ToString("dd.MM.yy HH:mm");
+            newContestDTO.Phase2 = DateTime.Now.AddHours(30).ToString("dd.MM.yy HH:mm");
+            newContestDTO.Finished = "01.06.21 10:00";
 
             var categoryService = new Mock<ICategoryService>();
             var userService = new Mock<IUserService>();

@@ -508,7 +508,6 @@ namespace PhotoContest.Tests
                 }
             };
         }
-
         public static List<Status> SeedStatuses()
         {
             return new List<Status>()
@@ -530,7 +529,16 @@ namespace PhotoContest.Tests
                 },
             };
         }
-    
-
+        public static List<JuryMember> SeedJuries()
+        {
+            return new List<JuryMember>()
+            {
+                new JuryMember()
+                {
+                    ContestId = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
+                    UserId = Guid.Parse("c463712b-e235-4fe5-840e-a99736c3fb76")
+                },
+            };
+        }
     }
 }
