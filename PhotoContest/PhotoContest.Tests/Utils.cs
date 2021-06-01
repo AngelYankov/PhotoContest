@@ -508,5 +508,29 @@ namespace PhotoContest.Tests
                 }
             };
         }
+
+        public static List<Status> SeedStatuses()
+        {
+            return new List<Status>()
+            {
+                new Status()
+                {
+                    Id = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
+                    Name = "Phase 1"
+                },
+                new Status()
+                {
+                    Id = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
+                    Name = "Phase 2"
+                },
+                new Status()
+                {
+                    Id = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
+                    Name = "Finished"
+                },
+            };
+        }
+    
+
     }
 }

@@ -47,10 +47,11 @@ namespace PhotoContest.Services.Services
 
             var category = await this.categoryService.FindCategoryByNameAsync(dto.CategoryName);
             newContest.CategoryId = category.Id;
+            newContest.Category = category;
 
             var status = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Name == "Phase 1");
-
             newContest.StatusId = status.Id;
+            newContest.Status = status;
 
             newContest.IsOpen = dto.IsOpen;
 
@@ -505,7 +506,7 @@ namespace PhotoContest.Services.Services
                              .Include(c => c.Category)
                              .Include(c => c.Status)
                              .Where(c => c.IsDeleted == false)
-                             .FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower() && c.IsDeleted == false)
+                             .FirstOrDefaultAsync(c => c.Name.ToLower() == contestName.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidContestName);
         }
 

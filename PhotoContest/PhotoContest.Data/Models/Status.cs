@@ -11,6 +11,6 @@ namespace PhotoContest.Data.Models
         [Key]
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Contest> Contests { get; set; } = new HashSet<Contest>();
+        public ICollection<Contest> Contests { get; set; } = new List<Contest>();
     }
 }
