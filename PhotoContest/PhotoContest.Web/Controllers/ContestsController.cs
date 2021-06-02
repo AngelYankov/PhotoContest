@@ -194,7 +194,7 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // Get contest to enroll
+        [Authorize(Roles ="User")]
         public async Task<IActionResult> Enroll()
         {
             ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == true), "Name", "Name");

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -25,13 +26,22 @@ namespace PhotoContest.Services.Services
         private readonly IHttpContextAccessor contextAccessor;
         private readonly IUserService userService;
         private readonly ICategoryService categoryService;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
-        public ContestService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor, IUserService userService, ICategoryService categoryService)
+        public ContestService(PhotoContestContext dbContext, 
+            /*IHttpContextAccessor contextAccessor, */
+            IUserService userService, 
+            ICategoryService categoryService,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             this.dbContext = dbContext;
-            this.contextAccessor = contextAccessor;
+           /* this.contextAccessor = contextAccessor;*/
             this.userService = userService;
             this.categoryService = categoryService;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         /// <summary>
@@ -153,7 +163,8 @@ namespace PhotoContest.Services.Services
             if (contest.IsOpen == false)
                 throw new ArgumentException(Exceptions.NotAllowedEnrollment);
 
-            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
             var user = await this.userService.GetUserByUsernameAsync(username);
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
@@ -290,7 +301,8 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns the contests that correspond to the filter.</returns>
         public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
         {
-            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
             var user = await this.userService.GetUserByUsernameAsync(username);
 
             var allUserContests = await this.dbContext.UserContests

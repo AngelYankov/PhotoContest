@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -23,13 +24,22 @@ namespace PhotoContest.Services.Services
         private readonly IHttpContextAccessor contextAccessor;
         private readonly IContestService contestService;
         private readonly IUserService userService;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
-        public PhotoService(PhotoContestContext dbContext, IHttpContextAccessor contextAccessor, IContestService contestService, IUserService userService)
+        public PhotoService(PhotoContestContext dbContext, 
+            /*IHttpContextAccessor contextAccessor,*/ 
+            IContestService contestService, 
+            IUserService userService,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             this.dbContext = dbContext;
-            this.contextAccessor = contextAccessor;
+           /* this.contextAccessor = contextAccessor;*/
             this.contestService = contestService;
             this.userService = userService;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         /// <summary>
         /// Create a photo.
@@ -47,8 +57,9 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ClosedContest);
             }
-            var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.userService.GetUserByUsernameAsync(userName);
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var user = await this.userService.GetUserByUsernameAsync(username);
             if (await this.dbContext.Juries.FirstOrDefaultAsync(j => j.UserId == user.Id && j.ContestId == contest.Id) != null)
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
@@ -143,8 +154,9 @@ namespace PhotoContest.Services.Services
         /// <returns>Return all photos with score and comments.</returns>
         public async Task<List<PhotoReviewDTO>> GetAllWithCommentsAndScoreAsync(string contestName)
         {
-            var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.userService.GetUserByUsernameAsync(userName);
+            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await this.userService.GetUserByUsernameAsync(username);
             var contest = await this.contestService.FindContestByNameAsync(contestName);
 
             if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")

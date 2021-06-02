@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -20,14 +21,23 @@ namespace PhotoContest.Services.Services
         private readonly PhotoContestContext dbContext;
         private readonly IPhotoService photoService;
         private readonly IUserService userService;
-        private readonly IHttpContextAccessor contextAccessor;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        /*private readonly IHttpContextAccessor contextAccessor;*/
 
-        public ReviewService(PhotoContestContext dbContext, IPhotoService photoService, IUserService userService, IHttpContextAccessor contextAccessor)
+        public ReviewService(PhotoContestContext dbContext, 
+            IPhotoService photoService, 
+            IUserService userService, 
+            /*IHttpContextAccessor contextAccessor,*/
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             this.dbContext = dbContext;
             this.photoService = photoService;
             this.userService = userService;
-            this.contextAccessor = contextAccessor;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            /*this.contextAccessor = contextAccessor;*/
         }
         /// <summary>
         /// Create a review.
@@ -39,8 +49,9 @@ namespace PhotoContest.Services.Services
             var photo = await this.photoService.FindPhotoAsync(newReviewDTO.PhotoId);
             if (photo.Contest.Status.Name != "Phase 2") throw new ArgumentException(Exceptions.InvalidContestPhase);
             if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
-            var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await this.userService.GetUserByUsernameAsync(userName);
+            //var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await this.userService.GetUserByUsernameAsync(username);
             if (user.Rank.Name == "User")
             {
                 if (!this.dbContext.Juries.Any(j => j.UserId == user.Id && j.ContestId == photo.ContestId))

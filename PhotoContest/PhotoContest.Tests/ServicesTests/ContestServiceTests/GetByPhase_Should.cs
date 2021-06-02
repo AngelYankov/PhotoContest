@@ -743,9 +743,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
         }
 
         [TestMethod]
-        public async Task ThrowWhen_OrderBy_Incorrect()
+        public async Task ThrowWhen_IncorrectOrderBy()
         {
-            var options = Utils.GetOptions(nameof(ThrowWhen_SortBy_Incorrect));
+            var options = Utils.GetOptions(nameof(ThrowWhen_IncorrectOrderBy));
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
