@@ -304,16 +304,20 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> GetByPhase()
+        {
+            return View();
+        }
 
         [HttpPost, ActionName("GetByPhaseFiltered")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GetByPhaseFiltered(string filter, string sortBy, string orderBy)
+        public async Task<IActionResult> GetByPhaseFiltered(string phase, string sortBy, string orderBy)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var contests = await this.contestService.GetByPhaseAsync(filter, sortBy, orderBy);
+                    var contests = await this.contestService.GetByPhaseAsync(phase, sortBy, orderBy);
                     return View(contests.Select(c => new ViewModel(c)));
                 }
                 catch (Exception e)

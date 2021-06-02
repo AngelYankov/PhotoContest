@@ -7,13 +7,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>All contests</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
-</p>
-<p>
-    <a asp-action="GetOpen">Open contests</a>
+    <a asp-action="Create">Create new contest</a>  |  <a asp-action="GetByPhase">Filter contests</a>
 </p>
 
 <table class="table">
@@ -88,3 +85,7 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
