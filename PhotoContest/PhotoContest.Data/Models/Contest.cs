@@ -25,5 +25,6 @@ namespace PhotoContest.Data.Models
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
         public ICollection<UserContest> UserContests { get; set; } = new List<UserContest>();
         public ICollection<JuryMember> Juries { get; set; } = new List<JuryMember>();
+        public bool IsCalculated { get; set; }
     }
 }
