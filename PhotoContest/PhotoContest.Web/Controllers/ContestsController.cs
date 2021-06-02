@@ -279,5 +279,29 @@ namespace PhotoContest.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> GetByUser()
+        {
+            return View();
+        }
+
+        [HttpPost, ActionName("GetByUserFiltered")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetByUserFiltered(string filter)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.contestService.GetByUserAsync(filter);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return RedirectToAction("Index");
+        }
     }
 }
