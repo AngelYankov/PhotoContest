@@ -1,5 +1,5 @@
 ﻿@model UserViewModel
-
+@inject SignInManager<User> SignInManager
 @{
     ViewData["Title"] = "ShowUserInfo";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -45,10 +45,20 @@
             <td>
                 @Html.DisplayFor(modelItem => Model.Points)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> |
-                <a asp-action="Delete" asp-route-Username="@Model.Username">Delete</a>
-            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
+                    <a asp-action="Delete" asp-route-Username="@Model.Username">Delete</a>
+                </td>
+            }
+            else if (User.IsInRole("Organizer"))
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
+                </td>
+            }
+
         </tr>
     </tbody>
 </table>
