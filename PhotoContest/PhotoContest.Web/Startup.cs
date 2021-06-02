@@ -91,8 +91,9 @@ namespace PhotoContest.Web
                     options.Password.RequireLowercase = false;
                 })
                 .AddRoles<Role>()
-                .AddEntityFrameworkStores<PhotoContestContext>();
-                
+                .AddEntityFrameworkStores<PhotoContestContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
+
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPhotoService, PhotoService>();
@@ -106,7 +107,7 @@ namespace PhotoContest.Web
 
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));
-            //services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IEmailSender, EmailSender>();
             /*services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

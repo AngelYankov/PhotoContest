@@ -14,5 +14,6 @@ namespace PhotoContest.Data.Models
         public Guid ContestId { get; set; }
         public Contest Contest { get; set; }
         public int Points { get; set; }
+
     }
 }

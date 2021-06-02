@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UserViewModel>
-
+@inject SignInManager<User> SignInManager
 @{
     ViewData["Title"] = "ViewAllParticipants";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -31,28 +31,37 @@
     <tbody>
         @foreach (var user in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => user.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => user.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => user.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => user.Rank)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => user.Points)
-                </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => user.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => user.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => user.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => user.Rank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => user.Points)
+            </td>
+            @if (User.IsInRole("Admin"))
+            {
                 <td>
                     <a asp-action="Edit" asp-route-Username="@user.Username">Edit</a> |
-                    <a asp-action="Details" asp-route-Username="@user.Username">Details</a> |
                     <a asp-action="Delete" asp-route-Username="@user.Username">Delete</a>
                 </td>
-            </tr>
+            }
+            else if (User.IsInRole("Organizer"))
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-Username="@user.Username">Edit</a> |
+                </td>
+            }
+
+        </tr>
         }
     </tbody>
 </table>
