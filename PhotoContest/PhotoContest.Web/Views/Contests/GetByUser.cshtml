@@ -7,17 +7,17 @@
 
 <h1>My contests</h1>
 
-<h4>Choose to current or past</h4>
+<h4>Choose current or past contest</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="GetByUserFiltered">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Filter" class="control-label"></label>
-                <input asp-for="Filter" class="form-control" >
-            </div>
+            <select asp-for="Filter" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option value="">All</option>
+                <option value="current">Current</option>
+                <option value="past">Past</option>
+            </select>
             <div class="form-group">
                 <input type="submit" value="Get" class="btn btn-primary" />
             </div>
@@ -26,7 +26,10 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">All contests</a>
+</div>
+<div>
+    <a asp-controller="Home" asp-action="Index">Back to home</a>
 </div>
 
 @section Scripts {

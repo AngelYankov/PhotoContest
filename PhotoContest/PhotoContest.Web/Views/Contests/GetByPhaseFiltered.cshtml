@@ -1,20 +1,11 @@
 ﻿@model IEnumerable<ViewModel>
 
-@inject UserManager<User> UserManager
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Filtered contests";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<p>
-    <a asp-action="GetOpen">Open contests</a>
-</p>
+<h1>Filtered contests</h1>
 
 <table class="table">
     <thead>
@@ -68,23 +59,24 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Finished)
                 </td>
-                <td>
-                    <a asp-action="Details" asp-route-name="@item.Name">Details</a> |
-                    <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
-                    <a asp-action="Delete" asp-route-name="@item.Name">Delete</a> |
-                    <a asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">View photos</a> |
-                    @if (item.Status == "Phase 1" || item.Status == "Phase 2")
-                    {
-                        <text>
-                            <a asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a> |
-                        </text>
-                    }
-                    @if (item.OpenOrInvitational == "Contest is invitational." && item.Status == "Phase 1")
-                    {
-                        <a asp-action="Invite" asp-route-name="@item.Name">Invite</a>
-                    }
-                </td>
+                @if (item.Status == "Phase 1")
+                {
+                    <td>
+                        <a asp-controller="Contests" asp-action="Invite" asp-route-contestName="@item.Name">Invite</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>
 </table>
+
+<div>
+    <a asp-action="GetOpen">Back to filtering</a>
+</div>
+<div>
+    <a asp-action="Index">Back to list</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

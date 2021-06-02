@@ -43,7 +43,7 @@ namespace PhotoContest.Web.Controllers
                 return View("GetOpen");
             }
             var contests = await this.contestService.GetAllAsync();
-            return View(contests.Select(c=>new ViewModel(c)));
+            return View(contests.Select(c => new ViewModel(c)));
         }
 
         // GET: Open Contests
@@ -61,7 +61,7 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     var contests = await this.contestService.GetAllOpenAsync(status);
-                    return View(contests.Select(c=>new ViewModel(c)));
+                    return View(contests.Select(c => new ViewModel(c)));
                 }
                 catch (Exception e)
                 {
@@ -194,7 +194,7 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles ="User")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Enroll()
         {
             ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == true), "Name", "Name");
@@ -224,7 +224,7 @@ namespace PhotoContest.Web.Controllers
         // Get contest to enroll
         public async Task<IActionResult> Invite(string name)
         {
-            ViewData["Contests"] = new SelectList(_context.Contests.Where(c=>c.IsOpen==false), "Name", "Name");
+            ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == false), "Name", "Name");
             ViewData["Users"] = new SelectList(_context.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer"), "UserName", "UserName");
             var inviteViewModel = new InviteViewModel();
             inviteViewModel.Name = name;
@@ -293,8 +293,28 @@ namespace PhotoContest.Web.Controllers
             {
                 try
                 {
-                    await this.contestService.GetByUserAsync(filter);
-                    return RedirectToAction("Index");
+                    var contests = await this.contestService.GetByUserAsync(filter);
+                    return View(contests.Select(c => new ViewModel(c)));
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpPost, ActionName("GetByPhaseFiltered")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetByPhaseFiltered(string filter, string sortBy, string orderBy)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var contests = await this.contestService.GetByPhaseAsync(filter, sortBy, orderBy);
+                    return View(contests.Select(c => new ViewModel(c)));
                 }
                 catch (Exception e)
                 {

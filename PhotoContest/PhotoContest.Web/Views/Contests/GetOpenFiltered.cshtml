@@ -20,16 +20,7 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OpenOrInvitational)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phase1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phase2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Finished)
+                @Html.DisplayNameFor(model => model.TimeUntilNextPhase)
             </th>
             <th></th>
         </tr>
@@ -48,16 +39,7 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OpenOrInvitational)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phase1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phase2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Finished)
+                @Html.DisplayFor(modelItem => item.TimeUntilNextPhase)
             </td>
             @if (item.Status == "Phase 1")
             {
