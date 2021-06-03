@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label asp-for="Input.ConfirmPassword"></label>
                 @*<input asp-for="Input.ConfirmPassword" class="form-control" />*@
-                <input asp-for="Input.Password" id="inputPassword" type="password" placeholder="Confirm password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                <input asp-for="Input.ConfirmPassword" id="inputPassword" type="password" placeholder="Confirm password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Register</button>

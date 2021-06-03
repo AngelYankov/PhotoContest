@@ -42,6 +42,11 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Categories.Where(c => c.IsDeleted == false).Select(c=>c.Name).ToListAsync();
         }
 
+        public async Task<IEnumerable<Category>> GetAllBaseAsync()
+        {
+            return await this.dbContext.Categories.Where(c => c.IsDeleted == false).ToListAsync();
+        }
+
         /// <summary>
         /// Update name of a category.
         /// </summary>

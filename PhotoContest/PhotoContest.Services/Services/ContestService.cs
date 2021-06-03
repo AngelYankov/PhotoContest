@@ -29,15 +29,15 @@ namespace PhotoContest.Services.Services
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
-        public ContestService(PhotoContestContext dbContext, 
+        public ContestService(PhotoContestContext dbContext,
             /*IHttpContextAccessor contextAccessor, */
-            IUserService userService, 
+            IUserService userService,
             ICategoryService categoryService,
             UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
             this.dbContext = dbContext;
-           /* this.contextAccessor = contextAccessor;*/
+            /* this.contextAccessor = contextAccessor;*/
             this.userService = userService;
             this.categoryService = categoryService;
             this.userManager = userManager;
@@ -105,7 +105,7 @@ namespace PhotoContest.Services.Services
         /// <returns>Returns all contests.</returns>
         public async Task<IEnumerable<ContestDTO>> GetAllAsync()
         {
-            
+
             return await this.dbContext
                              .Contests
                              .Include(c => c.Category)
@@ -172,9 +172,12 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.EnrolledUser);
             }
 
-            var userContest = new UserContest();
-            userContest.ContestId = contest.Id;
-            userContest.UserId = user.Id;
+            var userContest = new UserContest()
+            {
+                ContestId = contest.Id,
+                UserId = user.Id,
+                IsInvited = true
+            };
             await this.dbContext.UserContests.AddAsync(userContest);
             await this.dbContext.SaveChangesAsync();
             return true;
@@ -215,6 +218,7 @@ namespace PhotoContest.Services.Services
             {
                 ContestId = contest.Id,
                 UserId = user.Id,
+                IsInvited = true
             };
             await this.dbContext.UserContests.AddAsync(userContest);
             await this.dbContext.SaveChangesAsync();

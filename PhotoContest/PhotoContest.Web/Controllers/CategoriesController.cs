@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PhotoContest.Data;
 using PhotoContest.Services.Services;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace PhotoContest.Web.Controllers
 {
+    [Authorize(Roles = "Admin, Organizer")]
     public class CategoriesController : Controller
     {
         private readonly PhotoContestContext _context;

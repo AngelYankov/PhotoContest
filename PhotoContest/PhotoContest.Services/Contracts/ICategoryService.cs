@@ -9,6 +9,7 @@ namespace PhotoContest.Services.Services
     {
         Task<string> CreateAsync(string categoryName);
         Task<IEnumerable<string>> GetAllAsync();
+        Task<IEnumerable<Category>> GetAllBaseAsync();
         Task<string> UpdateAsync(string categoryName, string newName);
         Task<bool> DeleteAsync(string categoryName);
         Task<Category> FindCategoryByNameAsync(string categoryName);
