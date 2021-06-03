@@ -7,10 +7,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Open contests</h1>
+<h1>All contests</h1>
 
 <table class="table">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -30,39 +30,54 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeUntilNextPhase)
-            </td>
-            @if (item.Status == "Phase 1" && !item.AllUserContests.Any(uc=>uc.Contest.Name == item.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
-            {
+            <tr>
                 <td>
-                    <a asp-action="EnrollSubmit" asp-route-name="@item.Name">Enroll</a>
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-controller="Photos" asp-action="Create" asp-route-contestName="@item.Name">Add photo</a>
+                    @Html.DisplayFor(modelItem => item.Category)
                 </td>
-            }
-        </tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeUntilNextPhase)
+                </td>
+                @if (item.Status == "Phase 1" && !item.AllUserContests.Any(uc => uc.Contest.Name == item.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
+                {
+                    <td>
+                        <a class="btn btn-outline-dark" asp-action="Enroll" asp-route-name="@item.Name">Enroll</a>
+                    </td>
+                }
+                else if (item.Status == "Phase 1" && item.AllUserContests.Any(uc => uc.Contest.Name == item.Name
+                                                 && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)
+                                                 && !item.AllPhotos.Any(p => p.Contest == item.Name && p.Username == UserManager.GetUserName(this.SignInManager.Context.User))))
+                {
+                    <td>
+                        <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="Create" asp-route-contestName="@item.Name">Add photo</a>
+                    </td>
+                }
+                else if (item.Status == "Phase 1" && item.AllPhotos.Any(p => p.Contest == item.Name && p.Username == UserManager.GetUserName(this.SignInManager.Context.User)))
+                {
+                    <td>
+                        <p>Photo waiting evaluation.</p>
+                    </td>
+                }
+                else if (item.Status == "Finished" && item.AllUserContests.Any(uc => uc.Contest.Name == item.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
+                {
+                    <td>
+                        <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">View photos</a>
+                    </td>
+                }
+            </tr>
         }
     </tbody>
 </table>
 
 <div>
-    <a asp-action="GetOpen">Back to filtering</a>
+    <a class="btn btn-outline-dark" asp-action="GetOpen">Back to filtering</a>
 </div>
-<div>
-    <a asp-action="Index">Back to list</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

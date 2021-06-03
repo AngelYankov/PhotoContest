@@ -26,18 +26,21 @@ namespace PhotoContest.Web.Controllers
         private readonly ICategoryService categoryService;
         private readonly SignInManager<User> signInManager;
         private readonly IUserContestService userContestService;
+        private readonly IPhotoService photoService;
 
         public ContestsController(PhotoContestContext context,
                                   IContestService contestService,
                                   ICategoryService categoryService, 
                                   SignInManager<User> signInManager,
-                                  IUserContestService userContestService)
+                                  IUserContestService userContestService,
+                                  IPhotoService photoService)
         {
             _context = context;
             this.contestService = contestService;
             this.categoryService = categoryService;
             this.signInManager = signInManager;
             this.userContestService = userContestService;
+            this.photoService = photoService;
         }
 
         // GET: Contests
@@ -69,7 +72,8 @@ namespace PhotoContest.Web.Controllers
                 {
                     var contests = await this.contestService.GetAllOpenAsync(status);
                     var userContests = await this.userContestService.GetAllUserContestsAsync();
-                    return View(contests.Select(c => new ViewModel(c) { AllUserContests = userContests}));
+                    var photos = await this.photoService.GetAllAsync();
+                    return View(contests.Select(c => new ViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList()}));
                 }
                 catch (Exception e)
                 {
@@ -202,12 +206,14 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> Enroll()
+        //[Authorize(Roles = "User")]
+        public async Task<IActionResult> Enroll(string name)
         {
             ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == true), "Name", "Name");
-
-            return View();
+            var contest = await this.contestService.FindContestByNameAsync(name);
+            var enrolView = new ViewModel(new ContestDTO(contest));
+            enrolView.Name = name;
+            return View(enrolView);
         }
 
         [HttpPost, ActionName("EnrollSubmit")]
@@ -302,7 +308,10 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     var contests = await this.contestService.GetByUserAsync(filter);
-                    return View(contests.Select(c => new ViewModel(c)));
+                    var userContests = await this.userContestService.GetAllUserContestsAsync();
+                    var photos = await this.photoService.GetAllAsync();
+                    return View(contests.Select(c => new ViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList(), Filter = filter }));
+
                 }
                 catch (Exception e)
                 {

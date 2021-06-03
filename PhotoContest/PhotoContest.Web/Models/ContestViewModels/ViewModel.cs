@@ -46,9 +46,11 @@ namespace PhotoContest.Web.Models.ContestViewModels
         [Display(Name = "Next phase begins on:")]
         public string TimeUntilNextPhase { get; set; }
 
-        [Display(Name = "Open or invitational")]
+        [Display(Name = "Тype")]
         public string OpenOrInvitational { get; set; }
         public List<UserContest> AllUserContests { get; set; } = new List<UserContest>();
+        public List<PhotoDTO> AllPhotos { get; set; } = new List<PhotoDTO>();
+        public string Filter { get; set; }
     }
 }
 

@@ -8,7 +8,7 @@
 <h1>Filtered contests</h1>
 
 <table class="table">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -62,7 +62,7 @@
                 @if (item.Status == "Phase 1")
                 {
                     <td>
-                        <a asp-controller="Contests" asp-action="Invite" asp-route-contestName="@item.Name">Invite</a>
+                        <a class="btn btn-outline-dark" asp-controller="Contests" asp-action="Invite" asp-route-contestName="@item.Name">Invite</a>
                     </td>
                 }
             </tr>
@@ -71,10 +71,10 @@
 </table>
 
 <div>
-    <a asp-action="GetByPhase">Back to filtering</a>
+    <a class="btn btn-outline-dark" asp-action="GetByPhase">Back to filtering</a>
 </div>
 <div>
-    <a asp-action="Index">All contests</a>
+    <a class="btn btn-outline-dark" asp-action="Index">All contests</a>
 </div>
 
 @section Scripts {
