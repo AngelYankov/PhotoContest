@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<PhotoViewModel>
-
+@inject SignInManager<User> signInManager
 @{
     ViewData["Title"] = "GetContestsPhotos";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,7 +8,7 @@
 <h1>Contest's photos</h1>
 
 <table class="table">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -58,15 +58,17 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Points)
-                    @*</td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
+                <td>
+                    @if (this.signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Organizer")))
+                    {
+                        <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                        <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
 <div>
-    <a asp-controller="Contests" asp-action="Index">Back to List</a>
+    <a class="btn btn-outline-dark" asp-controller="Contests" asp-action="Index">Back to List</a>
 </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,17 +26,21 @@ namespace PhotoContest.Web.Controllers
             this.userService = userService;
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Index()
         {
             var users = await this.userService.GetAllAsync();
             return View(users.Select(u=>new UserViewModel(u)));
         }
+
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> ViewAllParticipants()
         {
             var users = await this.userService.GetAllParticipantsAsync();
             return View(users.Select(u => new UserViewModel(u)));
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Details(string username)
         {
             var user = await this.userService.GetUserByUsernameAsync(username);
@@ -43,7 +48,8 @@ namespace PhotoContest.Web.Controllers
             return View(new UserViewModel(userDTO));
         }
 
-        public IActionResult Create()
+
+        /*public IActionResult Create()
         {
             return View();
         }
@@ -73,12 +79,15 @@ namespace PhotoContest.Web.Controllers
                 }
             }
             return View();
-        }
+        }*/
+
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateOrganizer()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrganizer(CreateUserViewModel model)
@@ -106,6 +115,7 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(string username)
         {
             var user = await this.userService.GetUserByUsernameAsync(username);
@@ -113,6 +123,7 @@ namespace PhotoContest.Web.Controllers
             return View(new EditUserViewModel(userDTO));
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string username, EditUserViewModel model)
@@ -138,6 +149,7 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string username)
         {
             var user = await this.userService.GetUserByUsernameAsync(username);
@@ -145,6 +157,7 @@ namespace PhotoContest.Web.Controllers
             return View(new UserViewModel(userDTO));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string username)
@@ -163,11 +176,14 @@ namespace PhotoContest.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [Authorize(Roles = "Admin,Organizer")]
         public IActionResult SearchByUsername()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowUserInfo(UserViewModel model)

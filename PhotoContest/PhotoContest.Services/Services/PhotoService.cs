@@ -21,7 +21,7 @@ namespace PhotoContest.Services.Services
     public class PhotoService : IPhotoService
     {
         private readonly PhotoContestContext dbContext;
-        private readonly IHttpContextAccessor contextAccessor;
+        /*private readonly IHttpContextAccessor contextAccessor;*/
         private readonly IContestService contestService;
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
@@ -100,7 +100,6 @@ namespace PhotoContest.Services.Services
                                        .Include(p => p.User)
                                        .Include(p => p.Contest)
                                             .ThenInclude(c => c.Category)
-                                       .Include(u => u.Reviews)
                                        .Where(p => p.IsDeleted == false)
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();

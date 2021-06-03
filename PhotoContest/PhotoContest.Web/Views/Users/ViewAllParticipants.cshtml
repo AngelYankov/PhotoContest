@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>All Participants</h1>
+<h1>All participants</h1>
 
 <table class="table">
     <thead class="table-dark">
@@ -54,7 +54,7 @@
             {
                 <td>
                     <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@user.Username">Edit</a> 
-                    <a class="btn btn-outline-dark" asp-action="Delete" asp-route-Username="@user.Username">Delete</a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-Username="@user.Username">Delete</a>
                 </td>
             }
             else if (User.IsInRole("Organizer"))

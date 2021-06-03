@@ -14,6 +14,8 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Web.Models.PhotoViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using PhotoContest.Services.Models.Update;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -29,33 +31,13 @@ namespace PhotoContest.Web.Controllers
             this.photoService = photoService;
             this.webHostEnvironment = webHostEnvironment;
         }
-
+        [Authorize(Roles ="Admin,Organizer")]
         public async Task<IActionResult> Index()
         {
             var photos = await this.photoService.GetAllAsync();
             return View(photos.Select(p=>new PhotoViewModel(p)));
         }
-
-        // GET: Photos/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var photo = await _context.Photos
-                .Include(p => p.Contest)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (photo == null)
-            {
-                return NotFound();
-            }
-
-            return View(photo);
-        }
-
+        [Authorize(Roles = "Admin,User")]
         public IActionResult Create(string contestName)
         {
             var createPhotoVM = new CreatePhotoViewModel()
@@ -64,7 +46,8 @@ namespace PhotoContest.Web.Controllers
             };
             return View(createPhotoVM);
         }
-
+        
+        [Authorize(Roles = "Admin,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePhotoViewModel model)
@@ -99,72 +82,49 @@ namespace PhotoContest.Web.Controllers
             }
             return View(model);
         }
+        [Authorize(Roles = "Admin,Organizer,User")]
         public async Task<IActionResult> GetContestsPhotos(string contestName)
         {
             var photos = await this.photoService.GetPhotosForContestAsync(contestName);
             return View(photos.Select(p=>new PhotoViewModel(p)));
         }
-
-        public async Task<IActionResult> Edit(Guid? id)
+        [Authorize(Roles = "Admin,Organizer")]
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var photo = await _context.Photos.FindAsync(id);
-            if (photo == null)
-            {
-                return NotFound();
-            }
-            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name", photo.ContestId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", photo.UserId);
-            return View(photo);
+            var photo = await this.photoService.GetAsync(id);
+            return View(new EditPhotoViewModel(photo));
         }
-
-        // POST: Photos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description,PhotoUrl,UserId,ContestId,AllPoints,CreatedOn,ModifiedOn,DeletedOn,IsDeleted")] Photo photo)
+        public async Task<IActionResult> Edit(Guid id, EditPhotoViewModel model)
         {
-            if (id != photo.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(photo);
-                    await _context.SaveChangesAsync();
+                    var updateDTO = new UpdatePhotoDTO()
+                    {
+                        Title = model.Title,
+                        Description = model.Description
+                    };
+                    var photo = await this.photoService.UpdateAsync(updateDTO, id);
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception e)
                 {
-                    if (!PhotoExists(photo.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return BadRequest(e.Message);
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name", photo.ContestId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", photo.UserId);
-            return View(photo);
+            return View(model);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var photo = await this.photoService.GetAsync(id);
             return View(new PhotoViewModel(photo));
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -184,11 +144,6 @@ namespace PhotoContest.Web.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
-
-        private bool PhotoExists(Guid id)
-        {
-            return _context.Photos.Any(e => e.Id == id);
         }
     }
 }
