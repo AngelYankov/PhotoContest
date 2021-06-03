@@ -8,7 +8,7 @@
 <h1>User's info</h1>
 
 <table class="table">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
@@ -48,14 +48,14 @@
             @if (User.IsInRole("Admin"))
             {
                 <td>
-                    <a asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
-                    <a asp-action="Delete" asp-route-Username="@Model.Username">Delete</a>
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
+                    <a class="btn btn-outline-dark" asp-action="Delete" asp-route-Username="@Model.Username">Delete</a>
                 </td>
             }
             else if (User.IsInRole("Organizer"))
             {
                 <td>
-                    <a asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
                 </td>
             }
 

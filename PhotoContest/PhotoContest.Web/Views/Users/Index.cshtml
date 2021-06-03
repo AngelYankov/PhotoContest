@@ -7,33 +7,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>All users</h1>
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <p>
-        <a asp-controller="Users" asp-action="CreateOrganizer">Create new organizer</a>
-    </p>
-    <p>
-        <a asp-controller="Users" asp-action="ViewAllParticipants">View all participants</a>
-    </p>
-    <p>
-        <a asp-controller="Users" asp-action="SearchByUsername">Search user by username</a>
+        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="CreateOrganizer">Create new organizer</a>
+        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="ViewAllParticipants">View all participants</a>
+        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="SearchByUsername">Search user by username</a>
     </p>
 }
 else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
 {
     <p>
-        <a asp-controller="Users" asp-action="ViewAllParticipants">View all participants</a>
-    </p>
-    <p>
-        <a asp-controller="Users" asp-action="SearchByUsername">Search user by username</a>
+        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="ViewAllParticipants">View all participants</a>
+        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="SearchByUsername">Search user by username</a>
     </p>
 }
 
 
 <table class="table">
-    <thead>
+    <thead class="table-dark">
         <tr>
+            <th>#</th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
@@ -53,9 +48,11 @@ else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
         </tr>
     </thead>
     <tbody>
+        @{var x = 0; }
         @foreach (var user in Model)
         {
             <tr>
+                <td scope="row">@Interlocked.Increment(ref x)</td>
                 <td>
                     @Html.DisplayFor(modelItem => user.FirstName)
                 </td>
@@ -74,12 +71,12 @@ else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-Username="@user.Username">Edit</a>
-                        <a asp-action="Delete" asp-route-Username="@user.Username">Delete</a>
+                        <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@user.Username">Edit</a>
+                        <a class="btn btn-outline-dark" asp-action="Delete" asp-route-Username="@user.Username">Delete</a>
                     }
                     else if (User.IsInRole("Organizer"))
                     {
-                        <a asp-action="Edit" asp-route-Username="@user.Username">Edit</a>
+                        <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@user.Username">Edit</a>
                     }
                 </td>
             </tr>
