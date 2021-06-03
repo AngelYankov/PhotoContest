@@ -1,32 +1,36 @@
-﻿@model ViewModel
+﻿@model ContetsViewModel
 
 @{
     ViewData["Title"] = "Enroll";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Contests to enroll</h1>
+<h3>Are you sure you want to enroll in this contest?</h3>
 
-<h4>Contest</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="EnrollSubmit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            <input type="hidden" asp-for="Name" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <select asp-for="Name" class="form-control" asp-items="ViewBag.Contests"></select>
+                <label asp-for="Name" class="control-label">Contest name:</label> @Html.DisplayFor(model => model.Name)
             </div>
             <div class="form-group">
-                <input type="submit" value="Enroll" class="btn btn-primary" />
+                <label asp-for="Category" class="control-label">Contest category:</label> @Html.DisplayFor(model => model.Category)
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeUntilNextPhase" class="control-label">You can enroll and upload a photo before:</label> @Html.DisplayFor(model => model.TimeUntilNextPhase)
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Enroll" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

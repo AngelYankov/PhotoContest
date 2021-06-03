@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ViewModel>
+﻿@model IEnumerable<ContetsViewModel>
 
 @inject UserManager<User> UserManager
 
@@ -10,12 +10,14 @@
 <h1>All contests</h1>
 
 <p>
-    <a asp-action="Create">Create new contest</a>  |  <a asp-action="GetByPhase">Filter contests</a>
+    <a class="btn btn-outline-dark" asp-action="Create">Create new contest</a>
+    <a class="btn btn-outline-dark" asp-action="GetByPhase">Filter contests</a>
 </p>
 
 <table class="table">
-    <thead>
+    <thead class="table-dark">
         <tr>
+            <th>#</th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -41,9 +43,11 @@
         </tr>
     </thead>
     <tbody>
+        @{ var x = 0;}
         @foreach (var item in Model)
         {
             <tr>
+                <td>@Interlocked.Increment(ref x)</td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -66,19 +70,17 @@
                     @Html.DisplayFor(modelItem => item.Finished)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-name="@item.Name">Details</a> |
-                    <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
-                    <a asp-action="Delete" asp-route-name="@item.Name">Delete</a> |
-                    <a asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">View photos</a> |
+                    <a class="btn btn-outline-dark" asp-action="Details" asp-route-name="@item.Name">Details</a>
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@item.Name">Edit</a>
+                    <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">Photos</a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-name="@item.Name">Delete</a>
                     @if (item.Status == "Phase 1" || item.Status == "Phase 2")
                     {
-                        <text>
-                            <a asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a> |
-                        </text>
+                        <a class="btn btn-outline-dark" asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a>
                     }
-                    @if (item.OpenOrInvitational == "Contest is invitational." && item.Status == "Phase 1")
+                    @if (item.OpenOrInvitational == "Invitational" && item.Status == "Phase 1")
                     {
-                        <a asp-action="Invite" asp-route-name="@item.Name">Invite</a>
+                        <a class="btn btn-outline-dark" asp-action="Invite" asp-route-name="@item.Name">Invite</a>
                     }
                 </td>
             </tr>

@@ -9,5 +9,6 @@ namespace PhotoContest.Web.Models.ContestViewModels
     {
         public string Name { get; set; }
         public string Username { get; set; }
+        public Guid UserId { get; set; }
     }
 }

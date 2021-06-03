@@ -18,9 +18,9 @@ namespace PhotoContest.Services.Models
             this.Phase2 = contest.Phase2.ToString("dd.MM.yy HH:mm");
             this.Finished = contest.Finished.ToString("dd.MM.yy HH:mm");
             if (contest.IsOpen)
-                this.OpenOrInvitational = "Contest is open.";
+                this.OpenOrInvitational = "Open";
             else
-                this.OpenOrInvitational = "Contest is invitational.";
+                this.OpenOrInvitational = "Invitational";
         }
         public string Name { get; set; }
         public string Category { get; set; }

@@ -19,15 +19,13 @@
                 <option value="phase 2">Phase 2</option>
                 <option value="finished">Finished</option>
             </select>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                <input type="submit" value="Filter" class="btn btn-success" />
+                <a class="btn btn-outline-dark" asp-controller="Home" asp-action="Index">Back to home</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-controller="Home" asp-action="Index">Back to home</a>
 </div>
 
 @section Scripts {
