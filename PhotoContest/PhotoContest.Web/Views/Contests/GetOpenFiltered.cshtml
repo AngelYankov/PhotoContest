@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<ViewModel>
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = "OpenContest";
@@ -41,7 +43,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TimeUntilNextPhase)
             </td>
-            @if (item.Status == "Phase 1")
+            @if (item.Status == "Phase 1" && !item.AllUserContests.Any(uc=>uc.Contest.Name == item.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
             {
                 <td>
                     <a asp-action="EnrollSubmit" asp-route-name="@item.Name">Enroll</a>

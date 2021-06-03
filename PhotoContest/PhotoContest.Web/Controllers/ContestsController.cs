@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
+using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
@@ -24,13 +25,19 @@ namespace PhotoContest.Web.Controllers
         private readonly IContestService contestService;
         private readonly ICategoryService categoryService;
         private readonly SignInManager<User> signInManager;
+        private readonly IUserContestService userContestService;
 
-        public ContestsController(PhotoContestContext context, IContestService contestService, ICategoryService categoryService, SignInManager<User> signInManager)
+        public ContestsController(PhotoContestContext context,
+                                  IContestService contestService,
+                                  ICategoryService categoryService, 
+                                  SignInManager<User> signInManager,
+                                  IUserContestService userContestService)
         {
             _context = context;
             this.contestService = contestService;
             this.categoryService = categoryService;
             this.signInManager = signInManager;
+            this.userContestService = userContestService;
         }
 
         // GET: Contests
@@ -61,7 +68,8 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     var contests = await this.contestService.GetAllOpenAsync(status);
-                    return View(contests.Select(c => new ViewModel(c)));
+                    var userContests = await this.userContestService.GetAllUserContestsAsync();
+                    return View(contests.Select(c => new ViewModel(c) { AllUserContests = userContests}));
                 }
                 catch (Exception e)
                 {
