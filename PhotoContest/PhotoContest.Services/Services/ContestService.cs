@@ -69,8 +69,8 @@ namespace PhotoContest.Services.Services
                            DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Phase1 = DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
 
-            ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
-                           DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+            ValidatePhase2(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                           DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                            DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
             newContest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
 
@@ -273,8 +273,8 @@ namespace PhotoContest.Services.Services
             }
             if (dto.Phase2 != null)
             {
-                ValidatePhase2(DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
-                               DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                ValidatePhase2(DateTime.ParseExact(dto.Phase1, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                               DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                                DateTime.ParseExact(dto.Finished, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture));
                 contest.Phase2 = DateTime.ParseExact(dto.Phase2, "dd.MM.yy HH:mm", CultureInfo.InvariantCulture);
             }
@@ -455,32 +455,34 @@ namespace PhotoContest.Services.Services
         /// <summary>
         /// Validating the DateTime of Phase1
         /// </summary>
-        /// <param name="date">Starting date of Phase1</param>
-        private void ValidatePhase1(DateTime date1, DateTime date2)
+        /// <param name="phase1">Starting date of Phase1</param>
+        /// <param name="phase2">Starting date of Phase2</param>
+        private void ValidatePhase1(DateTime phase1, DateTime phase2)
         {
-            if (date1 == DateTime.MinValue || date1 < DateTime.UtcNow || date1 > date2)
+            if (phase1 == DateTime.MinValue || phase1 < DateTime.UtcNow || phase1 > phase2)
                 throw new ArgumentException(Exceptions.InvalidDateTimePhase1);
         }
 
         /// <summary>
         /// Validating DateTime of Phase2
         /// </summary>
-        /// <param name="date1">Starting date of Phase2</param>
-        /// <param name="date2">DateTime value of Phase1</param>
-        private void ValidatePhase2(DateTime date1, DateTime date2, DateTime date3)
+        /// <param name="phase1">Starting date of Phase1</param>
+        /// <param name="phase2">DateTime value of Phase2</param>
+        /// <param name="finished">DateTime value of Finished</param>
+        private void ValidatePhase2(DateTime phase1, DateTime phase2, DateTime finished)
         {
-            if (date1 == DateTime.MinValue || date1 <= date2.AddDays(1) || date1 > date2.AddDays(31) || date1 > date3)
+            if (phase2 == DateTime.MinValue || phase2 <= phase1.AddDays(1) || phase2 > phase1.AddDays(31) || phase2 > finished)
                 throw new ArgumentException(Exceptions.InvalidDateTimePhase2);
         }
 
         /// <summary>
         /// Validating DateTime for Finished
         /// </summary>
-        /// <param name="date1">Starting DateTime of Finished</param>
-        /// <param name="date2">DateTime value of Phase2</param>
-        private void ValidateFinished(DateTime date1, DateTime date2)
+        /// <param name="finished">Starting DateTime of Finished</param>
+        /// <param name="phase2">DateTime value of Phase2</param>
+        private void ValidateFinished(DateTime finished, DateTime phase2)
         {
-            if (date1 == DateTime.MinValue || date1 <= date2.AddHours(1) || date1 > date2.AddHours(24))
+            if (finished == DateTime.MinValue || finished <= phase2.AddHours(1) || finished > phase2.AddHours(24))
                 throw new ArgumentException(Exceptions.InvalidDateTimeFinished);
         }
 

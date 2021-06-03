@@ -3,6 +3,7 @@ using PhotoContest.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,18 @@ namespace PhotoContest.Web.Models.ContestViewModels
             this.Phase2 = contestDTO.Phase2;
             this.Finished = contestDTO.Finished;
             this.OpenOrInvitational = contestDTO.OpenOrInvitational;
+            if (this.Status == "Phase 1")
+            {
+                this.TimeUntilNextPhase = Phase2;
+            }
+            if (this.Status == "Phase 2")
+            {
+                this.TimeUntilNextPhase = Finished;
+            }
+            if(this.Status == "Finished")
+            {
+                this.TimeUntilNextPhase = "Contest is in the final phase.";
+            }
         }
         public string Name { get; set; }
         public string Category { get; set; }
@@ -30,6 +43,9 @@ namespace PhotoContest.Web.Models.ContestViewModels
         public string Phase2 { get; set; }
         [Display(Name = "Finished")]
         public string Finished { get; set; }
+        [Display(Name = "Next phase begins on:")]
+        public string TimeUntilNextPhase { get; set; }
+
         [Display(Name = "Open or invitational")]
         public string OpenOrInvitational { get; set; }
     }
