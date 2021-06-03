@@ -63,6 +63,11 @@
                     {
                         <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
                         <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @if (item.Contest)
+                        {
+
+                        }
+                        <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@item.Id">Rate</a>
                     }
                 </td>
             </tr>

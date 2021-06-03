@@ -25,9 +25,9 @@ namespace PhotoContest.Services.Services
         private readonly SignInManager<User> signInManager;
         /*private readonly IHttpContextAccessor contextAccessor;*/
 
-        public ReviewService(PhotoContestContext dbContext, 
-            IPhotoService photoService, 
-            IUserService userService, 
+        public ReviewService(PhotoContestContext dbContext,
+            IPhotoService photoService,
+            IUserService userService,
             /*IHttpContextAccessor contextAccessor,*/
             UserManager<User> userManager,
             SignInManager<User> signInManager)
@@ -74,7 +74,7 @@ namespace PhotoContest.Services.Services
             {
                 review.Comment = Exceptions.WrongCategoryComment;
                 review.Score = 0;
-                review.WrongCategory = true;
+                photo.IsInWrongCategory = true;
             }
             await this.dbContext.Reviews.AddAsync(review);
             await this.dbContext.SaveChangesAsync();

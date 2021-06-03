@@ -88,15 +88,16 @@ namespace PhotoContest.Services.Services
         private async Task CalculatePhotoPoints(Photo photo)
         {
             var reviews = await this.dbContext.Reviews.Include(r => r.Photo).Include(r => r.Evaluator).Where(r => r.PhotoId == photo.Id).ToListAsync();
+            if (reviews.Count() == 0 )
+            {
+                photo.AllPoints = 3;
+                return;
+            }
             foreach (var review in reviews)
             {
                 photo.AllPoints += review.Score;
             }
-            if (reviews.Count() != 0)
-            {
-                photo.AllPoints = photo.AllPoints / reviews.Count();
-            }
-
+            photo.AllPoints = photo.AllPoints / reviews.Count();   
             // await this.dbContext.SaveChangesAsync();
         }
         private async Task CalculatePointsForUsersFirstPlaceAsync(int countFirstPlacePhotos, Contest contest, List<Photo> FirstPlacePhotos, List<Photo> SecondPlacePhotos)

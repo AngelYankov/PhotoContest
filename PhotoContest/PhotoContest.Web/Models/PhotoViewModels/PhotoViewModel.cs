@@ -27,6 +27,7 @@ namespace PhotoContest.Web.Models.PhotoViewModels
         public string PhotoUrl { get; set; }
         public string User { get; set; }
         public string Contest { get; set; }
+        public string ContestStatus { get; set; }
         public string Category { get; set; }
         public double Points { get; set; }
     }

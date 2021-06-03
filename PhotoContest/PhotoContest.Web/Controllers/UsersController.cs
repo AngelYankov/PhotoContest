@@ -17,12 +17,10 @@ namespace PhotoContest.Web.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly PhotoContestContext _context;
         private readonly IUserService userService;
 
-        public UsersController(PhotoContestContext context, IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _context = context;
             this.userService = userService;
         }
 

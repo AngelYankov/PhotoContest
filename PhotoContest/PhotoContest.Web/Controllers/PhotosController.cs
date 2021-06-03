@@ -21,13 +21,11 @@ namespace PhotoContest.Web.Controllers
 {
     public class PhotosController : Controller
     {
-        private readonly PhotoContestContext _context;
         private readonly IPhotoService photoService;
         private readonly IWebHostEnvironment webHostEnvironment;
 
-        public PhotosController(PhotoContestContext context, IPhotoService photoService, IWebHostEnvironment webHostEnvironment)
+        public PhotosController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment)
         {
-            _context = context;
             this.photoService = photoService;
             this.webHostEnvironment = webHostEnvironment;
         }

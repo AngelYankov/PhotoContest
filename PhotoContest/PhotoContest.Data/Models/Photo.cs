@@ -25,5 +25,6 @@ namespace PhotoContest.Data.Models
         public Contest Contest { get; set; }
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public double AllPoints { get; set; }
+        public bool IsInWrongCategory { get; set; }
     }
 }
