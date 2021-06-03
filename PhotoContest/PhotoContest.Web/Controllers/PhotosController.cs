@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using PhotoContest.Services.Models.Update;
 using Microsoft.AspNetCore.Authorization;
+using PhotoContest.Services.Services;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -23,11 +24,13 @@ namespace PhotoContest.Web.Controllers
     {
         private readonly IPhotoService photoService;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IContestService contestService;
 
-        public PhotosController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment)
+        public PhotosController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment, IContestService contestService)
         {
             this.photoService = photoService;
             this.webHostEnvironment = webHostEnvironment;
+            this.contestService = contestService;
         }
         [Authorize(Roles ="Admin,Organizer")]
         public async Task<IActionResult> Index()
@@ -80,11 +83,20 @@ namespace PhotoContest.Web.Controllers
             }
             return View(model);
         }
+
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetPhotosForUser()
+        {
+            var photos = await this.photoService.GetPhotosForUserAsync();
+            return View(photos.Select(p=> new PhotoViewModel(p) { ContestStatus = p.ContestStatus }));
+        }
+
         [Authorize(Roles = "Admin,Organizer,User")]
         public async Task<IActionResult> GetContestsPhotos(string contestName)
         {
             var photos = await this.photoService.GetPhotosForContestAsync(contestName);
-            return View(photos.Select(p=>new PhotoViewModel(p)));
+            var contest = await this.contestService.FindContestByNameAsync(contestName);
+            return View(photos.Select(p=>new PhotoViewModel(p) { ContestStatus = contest.Status.Name }));
         }
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(Guid id)
@@ -116,13 +128,13 @@ namespace PhotoContest.Web.Controllers
             }
             return View(model);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var photo = await this.photoService.GetAsync(id);
             return View(new PhotoViewModel(photo));
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

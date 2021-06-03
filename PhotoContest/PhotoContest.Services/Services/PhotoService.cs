@@ -147,6 +147,20 @@ namespace PhotoContest.Services.Services
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
+        public async Task<List<PhotoDTO>> GetPhotosForUserAsync()
+        {
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            return await this.dbContext.Photos
+                                       .Include(p => p.User)
+                                       .Include(p => p.Contest)
+                                          .ThenInclude(c => c.Category)
+                                       .Include(p=>p.Contest)
+                                          .ThenInclude(c=>c.Status)
+                                       .Where(p => p.IsDeleted == false && p.UserId == user.Id)
+                                       .Select(p => new PhotoDTO(p))
+                                       .ToListAsync();
+        }
         /// <summary>
         /// Get all photos with detailed info.
         /// </summary>
@@ -186,7 +200,6 @@ namespace PhotoContest.Services.Services
                                         .ThenInclude(p => p.Category)
                                  .Include(p => p.Contest)
                                         .ThenInclude(c => c.Status)
-                                 .Include(p => p.Reviews)
                                  .Where(p => p.IsDeleted == false)
                                  .FirstOrDefaultAsync(p => p.Id == id)
                                  ?? throw new ArgumentException(Exceptions.InvalidPhotoID);

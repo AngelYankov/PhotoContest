@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
+using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
+using PhotoContest.Web.Models;
 using PhotoContest.Web.Models.ReviewViewModels;
 
 namespace PhotoContest.Web.Controllers
@@ -19,30 +21,15 @@ namespace PhotoContest.Web.Controllers
         private readonly IReviewService reviewService;
         private readonly IPhotoService photoService;
 
-        public ReviewsController(PhotoContestContext context, IReviewService reviewService, IPhotoService photoService)
+        public ReviewsController(IReviewService reviewService, IPhotoService photoService)
         {
-            _context = context;
             this.reviewService = reviewService;
             this.photoService = photoService;
         }
         // GET: Reviews/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Reviews
-                .Include(r => r.Evaluator)
-                .Include(r => r.Photo)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            return View(review);
+            return BadRequest();
         }
 
         public async Task<IActionResult> Create(Guid photoId)
@@ -68,7 +55,7 @@ namespace PhotoContest.Web.Controllers
                         WrongCategory=model.WrongCategory
                     };
                     await this.reviewService.CreateAsync(createDTO);
-                    return RedirectToAction("Index", "Contest");
+                    return RedirectToAction("Index", "Contests");
                 }
                 catch (Exception e)
                 {
@@ -77,41 +64,37 @@ namespace PhotoContest.Web.Controllers
             }
             return View(model);
         }
-
-        // GET: Reviews/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> GetPhotoReviews(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Reviews
-                .Include(r => r.Evaluator)
-                .Include(r => r.Photo)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            return View(review);
+            var reviews = await this.reviewService.GetForPhotoAsync(id);
+            return View(reviews.Select(r => new ReviewViewModel(r)));
         }
 
-        // POST: Reviews/Delete/5
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var review = await this.reviewService.FindReviewAsync(id);
+            var reviewDTO = new ReviewDTO(review);
+            var viewModel = new ReviewViewModel(reviewDTO);
+            return View(viewModel);
+        }
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(ReviewViewModel model)
         {
-            var review = await _context.Reviews.FindAsync(id);
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ReviewExists(Guid id)
-        {
-            return _context.Reviews.Any(e => e.Id == id);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await this.reviewService.DeleteAsync(model.Id);
+                    return RedirectToAction("Index", "Contests");
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return View(model);
         }
     }
 }

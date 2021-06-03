@@ -24,6 +24,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidParticipant = "User cannot be chosen as a contest participant.";
         public const string InvalidContestPhase = "Contest is not in evaluation phase.";
         public const string InvalidComment = "The comment is not valid.";
+        public const string InvalidReviewId = "There is no review with such ID.";
         public const string DeletedCategory = "Category is deleted.";
         public const string RequiredContestName = "Contest name is required.";
         public const string RequiredPhotoName = "Photo name is required.";

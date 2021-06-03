@@ -1,4 +1,5 @@
-﻿using PhotoContest.Services.Models;
+﻿using PhotoContest.Data.Models;
+using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,7 @@ namespace PhotoContest.Services.Contracts
         Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO);
         Task<List<ReviewDTO>> GetForPhotoAsync(Guid id);
         Task<List<ReviewDTO>> GetForUserAsync(string username);
+        Task<bool> DeleteAsync(Guid reviewId);
+        Task<Review> FindReviewAsync(Guid reviewId);
     }
 }

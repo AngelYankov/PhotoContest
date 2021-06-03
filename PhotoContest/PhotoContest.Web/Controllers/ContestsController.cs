@@ -286,7 +286,7 @@ namespace PhotoContest.Web.Controllers
         {
             var users = await this.userService.GetAllAsync();
             ViewData["Users"] = new SelectList(users.Where(u => u.Rank == "Master" || u.Rank == "Wise and Benevolent Photo Dictator"),
-                                                                                                                            "UserName", "UserName");
+                                                                                                                            "Username", "Username");
             var inviteViewModel = new InviteViewModel();
             inviteViewModel.Name = name;
             return View(inviteViewModel);

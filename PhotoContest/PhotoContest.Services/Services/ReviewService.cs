@@ -80,6 +80,15 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new ReviewDTO(review);
         }
+        public async Task<bool> DeleteAsync(Guid reviewId)
+        {
+            var review = await FindReviewAsync(reviewId);
+            review.IsDeleted = true;
+            review.DeletedOn = DateTime.UtcNow;
+            await this.dbContext.SaveChangesAsync();
+            return review.IsDeleted;
+        }
+        
         /// <summary>
         /// Get all reviews for certain photo.
         /// </summary>
@@ -91,7 +100,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Reviews
                                        .Include(r => r.Photo)
                                        .Include(r => r.Evaluator)
-                                       .Where(r => r.PhotoId == photoId)
+                                       .Where(r => r.PhotoId == photoId && r.IsDeleted==false)
                                        .Select(r => new ReviewDTO(r)).ToListAsync();
         }
         /// <summary>
@@ -109,6 +118,15 @@ namespace PhotoContest.Services.Services
                                        .OrderByDescending(r => r.CreatedOn)
                                        .Select(r => new ReviewDTO(r))
                                        .ToListAsync();
+        }
+
+        public async Task<Review> FindReviewAsync(Guid reviewId)
+        {
+            return await this.dbContext.Reviews
+                                        .Include(r => r.Photo)
+                                        .Include(r => r.Evaluator)
+                                        .FirstOrDefaultAsync(r => r.Id == reviewId && r.IsDeleted == false)
+                                        ?? throw new ArgumentException(Exceptions.InvalidReviewId);
         }
     }
 }
