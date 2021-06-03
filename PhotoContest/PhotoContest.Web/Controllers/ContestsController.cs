@@ -99,8 +99,8 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Create()
         {
-            var categories = await this.categoryService.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllBaseAsync();
+            ViewData["Categories"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
@@ -133,8 +133,8 @@ namespace PhotoContest.Web.Controllers
                 }
 
             }
-            var categories = await this.categoryService.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllBaseAsync();
+            ViewData["Categories"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
@@ -153,8 +153,8 @@ namespace PhotoContest.Web.Controllers
             updateContestDTO.Phase2 = contest.Phase2.ToString("dd.MM.yy HH:mm");
             updateContestDTO.Finished = contest.Finished.ToString("dd.MM.yy HH:mm");
 
-            var categories = await this.categoryService.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllBaseAsync();
+            ViewData["Categories"] = new SelectList(categories, "Name", "Name");
             return View(updateContestDTO);
         }
 
@@ -183,8 +183,8 @@ namespace PhotoContest.Web.Controllers
                     return BadRequest(e.Message);
                 }
             }
-            var categories = await this.categoryService.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllBaseAsync();
+            ViewData["Categories"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
