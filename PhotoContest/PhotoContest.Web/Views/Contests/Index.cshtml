@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ViewModel>
+﻿@model IEnumerable<ContetsViewModel>
 
 @inject UserManager<User> UserManager
 
@@ -78,7 +78,7 @@
                     {
                         <a class="btn btn-outline-dark" asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a>
                     }
-                    @if (item.OpenOrInvitational == "Contest is invitational." && item.Status == "Phase 1")
+                    @if (item.OpenOrInvitational == "Invitational" && item.Status == "Phase 1")
                     {
                         <a class="btn btn-outline-dark" asp-action="Invite" asp-route-name="@item.Name">Invite</a>
                     }

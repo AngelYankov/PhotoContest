@@ -15,5 +15,6 @@ namespace PhotoContest.Data.Models
         public Contest Contest { get; set; }
         public int Points { get; set; }
         public bool IsAdded { get; set; }
+        public bool IsInvited { get; set; }
     }
 }

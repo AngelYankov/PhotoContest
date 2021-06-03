@@ -27,13 +27,15 @@ namespace PhotoContest.Web.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly IUserContestService userContestService;
         private readonly IPhotoService photoService;
+        private readonly IUserService userService;
 
         public ContestsController(PhotoContestContext context,
                                   IContestService contestService,
-                                  ICategoryService categoryService, 
+                                  ICategoryService categoryService,
                                   SignInManager<User> signInManager,
                                   IUserContestService userContestService,
-                                  IPhotoService photoService)
+                                  IPhotoService photoService,
+                                  IUserService userService)
         {
             _context = context;
             this.contestService = contestService;
@@ -41,28 +43,27 @@ namespace PhotoContest.Web.Controllers
             this.signInManager = signInManager;
             this.userContestService = userContestService;
             this.photoService = photoService;
+            this.userService = userService;
         }
 
         // GET: Contests
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             if (User.IsInRole("User"))
             {
-                ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
                 return View("GetOpen");
             }
             var contests = await this.contestService.GetAllAsync();
-            return View(contests.Select(c => new ViewModel(c)));
+            return View(contests.Select(c => new ContetsViewModel(c)));
         }
 
-        // GET: Open Contests
         public async Task<IActionResult> GetOpen()
         {
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Name", "Name");
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> GetOpenFiltered(string status)
         {
@@ -73,7 +74,7 @@ namespace PhotoContest.Web.Controllers
                     var contests = await this.contestService.GetAllOpenAsync(status);
                     var userContests = await this.userContestService.GetAllUserContestsAsync();
                     var photos = await this.photoService.GetAllAsync();
-                    return View(contests.Select(c => new ViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList()}));
+                    return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
                 }
                 catch (Exception e)
                 {
@@ -86,24 +87,28 @@ namespace PhotoContest.Web.Controllers
 
 
         // GET: Contests/Details/5
+        [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Details(string name)
         {
             var contest = await this.contestService.FindContestByNameAsync(name);
             var contestDTO = new ContestDTO(contest);
-            return View(new ViewModel(contestDTO));
+            return View(new ContetsViewModel(contestDTO));
         }
 
         // GET: Contests/Create
-        public IActionResult Create()
+        [Authorize(Roles = "Admin, Organizer")]
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
         // POST: Contests/Create
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateViewModel createViewModel)
+        public async Task<IActionResult> Create(CreateContestViewModel createViewModel)
         {
             var newContestDTO = new NewContestDTO()
             {
@@ -128,16 +133,18 @@ namespace PhotoContest.Web.Controllers
                 }
 
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
         // GET: Contests/Edit/5
+        [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Edit(string name)
         {
 
             var contest = await this.contestService.FindContestByNameAsync(name);
-            var updateContestDTO = new EditViewModel();
+            var updateContestDTO = new EditContestViewModel();
 
             updateContestDTO.Name = contest.Name;
             updateContestDTO.Category = contest.Category.Name;
@@ -146,14 +153,16 @@ namespace PhotoContest.Web.Controllers
             updateContestDTO.Phase2 = contest.Phase2.ToString("dd.MM.yy HH:mm");
             updateContestDTO.Finished = contest.Finished.ToString("dd.MM.yy HH:mm");
 
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
             return View(updateContestDTO);
         }
 
         // POST: Contests/Edit/5
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string name, EditViewModel editViewModel)
+        public async Task<IActionResult> Edit(string name, EditContestViewModel editViewModel)
         {
             var updateContestDTO = new UpdateContestDTO();
             updateContestDTO.CategoryName = editViewModel.Category;
@@ -174,19 +183,22 @@ namespace PhotoContest.Web.Controllers
                     return BadRequest(e.Message);
                 }
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Name", "Name");
+            var categories = await this.categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
         // GET: Contests/Delete/5
+        [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Delete(string name)
         {
             var contest = await this.contestService.FindContestByNameAsync(name);
             var contestDTO = new ContestDTO(contest);
-            return View(new ViewModel(contestDTO));
+            return View(new ContetsViewModel(contestDTO));
         }
 
         // POST: Contests/Delete/5
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string name)
@@ -206,16 +218,18 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = "User")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Enroll(string name)
         {
-            ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == true), "Name", "Name");
+            var contests = await this.contestService.GetAllAsync();
+            ViewData["Contests"] = new SelectList(contests.Where(c => c.OpenOrInvitational == "Open"), "Name", "Name");
             var contest = await this.contestService.FindContestByNameAsync(name);
-            var enrolView = new ViewModel(new ContestDTO(contest));
+            var enrolView = new ContetsViewModel(new ContestDTO(contest));
             enrolView.Name = name;
             return View(enrolView);
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost, ActionName("EnrollSubmit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnrollSubmit(string name)
@@ -236,15 +250,17 @@ namespace PhotoContest.Web.Controllers
         }
 
         // Get contest to enroll
+        [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Invite(string name)
         {
-            ViewData["Contests"] = new SelectList(_context.Contests.Where(c => c.IsOpen == false), "Name", "Name");
-            ViewData["Users"] = new SelectList(_context.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer"), "UserName", "UserName");
+            var users = await userService.GetAllAsync();
+            ViewData["Users"] = new SelectList(users.Where(u => u.Rank != "Admin" && u.Rank != "Organizer"), "Username", "Username");
             var inviteViewModel = new InviteViewModel();
             inviteViewModel.Name = name;
             return View(inviteViewModel);
         }
 
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("Invite")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Invite(InviteViewModel inviteViewModel)
@@ -265,16 +281,18 @@ namespace PhotoContest.Web.Controllers
         }
 
         // Get contest to choose jury
+        [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> ChooseJury(string name)
         {
-            ViewData["Users"] = new SelectList(_context.Users
-                                                       .Where(u => u.Rank.Name == "Master" || u.Rank.Name == "Wise and Benevolent Photo Dictator"),
-                                                                                                                           "UserName", "UserName");
+            var users = await this.userService.GetAllAsync();
+            ViewData["Users"] = new SelectList(users.Where(u => u.Rank == "Master" || u.Rank == "Wise and Benevolent Photo Dictator"),
+                                                                                                                            "UserName", "UserName");
             var inviteViewModel = new InviteViewModel();
             inviteViewModel.Name = name;
             return View(inviteViewModel);
         }
 
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("ChooseJury")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChooseJury(InviteViewModel inviteViewModel)
@@ -294,11 +312,13 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetByUser()
         {
             return View();
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost, ActionName("GetByUserFiltered")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetByUserFiltered(string filter)
@@ -310,7 +330,7 @@ namespace PhotoContest.Web.Controllers
                     var contests = await this.contestService.GetByUserAsync(filter);
                     var userContests = await this.userContestService.GetAllUserContestsAsync();
                     var photos = await this.photoService.GetAllAsync();
-                    return View(contests.Select(c => new ViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList(), Filter = filter }));
+                    return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList(), Filter = filter }));
 
                 }
                 catch (Exception e)
@@ -321,11 +341,13 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> GetByPhase()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("GetByPhaseFiltered")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetByPhaseFiltered(string phase, string sortBy, string orderBy)
@@ -335,7 +357,7 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     var contests = await this.contestService.GetByPhaseAsync(phase, sortBy, orderBy);
-                    return View(contests.Select(c => new ViewModel(c)));
+                    return View(contests.Select(c => new ContetsViewModel(c)));
                 }
                 catch (Exception e)
                 {

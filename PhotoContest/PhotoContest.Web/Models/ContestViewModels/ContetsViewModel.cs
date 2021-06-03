@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace PhotoContest.Web.Models.ContestViewModels
 {
-    public class ViewModel
+    public class ContetsViewModel
     {
-        public ViewModel(ContestDTO contestDTO)
+        public ContetsViewModel(ContestDTO contestDTO)
         {
             this.Name = contestDTO.Name;
             this.Category = contestDTO.Category;

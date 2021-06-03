@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ViewModel>
+﻿@model IEnumerable<ContetsViewModel>
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
@@ -86,7 +86,8 @@ else
 }
 
 <div>
-    <a class="btn btn-outline-dark" asp-action="GetByUser">Back to filtering</a> <a class="btn btn-outline-dark" asp-action="GetOpen">All Contests</a>
+    <a class="btn btn-outline-dark" asp-action="GetByUser">Back to filtering</a> 
+    <a class="btn btn-outline-dark" asp-action="GetOpen">All Contests</a>
 </div>
 
 @section Scripts {
