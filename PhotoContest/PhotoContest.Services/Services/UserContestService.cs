@@ -21,6 +21,10 @@ namespace PhotoContest.Services.Services
             this.contestService = contestService;
         }
 
+        public async Task<List<UserContest>> GetAllUserContestsAsync()
+        {
+            return await this.dbContext.UserContests.Include(uc=>uc.User).Include(uc=>uc.Contest).ToListAsync();
+        }
         public async Task CalculatePointsAsync()
         {
             //var contests = await this.dbContext.Contests.Where(c => c.Status.Name == "Finished").ToListAsync();

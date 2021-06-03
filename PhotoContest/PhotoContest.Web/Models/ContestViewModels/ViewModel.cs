@@ -48,6 +48,7 @@ namespace PhotoContest.Web.Models.ContestViewModels
 
         [Display(Name = "Open or invitational")]
         public string OpenOrInvitational { get; set; }
+        public List<UserContest> AllUserContests { get; set; } = new List<UserContest>();
     }
 }
 
