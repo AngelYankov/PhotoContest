@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace PhotoContest.Web.Models.PhotoViewModels
 {
@@ -12,9 +15,11 @@ namespace PhotoContest.Web.Models.PhotoViewModels
         public string Title { get; set; }
         [Required, StringLength(30, MinimumLength = 5, ErrorMessage = "Value for photo {0} should be between {2} and {1} characters.")]
         public string Description { get; set; }
-        [Required]
-        public string PhotoUrl { get; set; }
+       /* [Required]
+        public string PhotoUrl { get; set; }*/
         [Display(Name ="Contest:")]
         public string ContestName { get; set; }
+        [Display(Name ="Upload file")]
+        public IFormFile File { get; set; }
     }
 }

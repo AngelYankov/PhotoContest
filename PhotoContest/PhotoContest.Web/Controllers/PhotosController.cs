@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,8 @@ using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Web.Models.PhotoViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -18,11 +21,13 @@ namespace PhotoContest.Web.Controllers
     {
         private readonly PhotoContestContext _context;
         private readonly IPhotoService photoService;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public PhotosController(PhotoContestContext context, IPhotoService photoService)
+        public PhotosController(PhotoContestContext context, IPhotoService photoService, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             this.photoService = photoService;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -68,15 +73,24 @@ namespace PhotoContest.Web.Controllers
             {
                 try
                 {
+                    var newFileName = $"{Guid.NewGuid()}_{model.File.FileName}";
+                    var fileDbPath = $"/Images/{newFileName}";
+                    var saveFile = Path.Combine(webHostEnvironment.WebRootPath, "Images", newFileName);
+                    using (var fileSelected = new FileStream(saveFile, FileMode.Create)) 
+                    {
+                        await model.File.CopyToAsync(fileSelected);
+                    }
+
                     var newPhotoDTO = new NewPhotoDTO()
                     {
                         Title = model.Title,
                         Description = model.Description,
-                        PhotoUrl = model.PhotoUrl,
+                        PhotoUrl = fileDbPath,
                         ContestName = model.ContestName
                     };
+                    
                     await this.photoService.CreateAsync(newPhotoDTO);
-                    return View(nameof(Index));
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception e)
                 {
@@ -157,6 +171,12 @@ namespace PhotoContest.Web.Controllers
         {
             try
             {
+                /*var photo = await this.photoService.GetAsync(id);
+                var imagePath = Path.Combine(webHostEnvironment.WebRootPath, photo.PhotoUrl);
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }*/
                 await this.photoService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
             }
