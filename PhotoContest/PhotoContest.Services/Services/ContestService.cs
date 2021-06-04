@@ -151,7 +151,7 @@ namespace PhotoContest.Services.Services
             }
         }
 
-        public async Task<IEnumerable<ContestDTO>> AllOpenView()
+        public async Task<IEnumerable<ContestDTO>> AllOpenViewAsync()
         {
             return await this.dbContext
                              .Contests
@@ -159,6 +159,15 @@ namespace PhotoContest.Services.Services
                              .Include(a => a.Status)
                              .Where(c => c.IsDeleted == false && c.IsOpen == true)
                              .Select(c => new ContestDTO(c))
+                             .ToListAsync();
+        }
+
+        public async Task<IEnumerable<JuryMember>> AllJuriesAsync()
+        {
+            return await this.dbContext
+                             .Juries
+                             .Include(j => j.Contest)
+                             .Include(j => j.User)
                              .ToListAsync();
         }
 
