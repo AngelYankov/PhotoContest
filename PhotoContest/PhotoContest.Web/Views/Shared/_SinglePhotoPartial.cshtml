@@ -1,6 +1,5 @@
 ﻿@model PhotoViewModel
 @inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
 
 @section Styles{
 }
@@ -8,42 +7,34 @@
 }
 
 <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="@Model.PhotoUrl" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">@Model.Title</h5>
-        <p class="card-subtitle">@Model.Description</p>
-        <p class="card-subtitle">Points: @Model.Points</p>
-        <p class="card-subtitle">Owner: @Model.User</p>
-        <p class="card-subtitle">Contest: @Model.Contest</p>
-        <p class="card-subtitle">Category: @Model.Category</p>
-        @if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
-        {
-            if (Model.ContestStatus == "Finished")
+        <img class="card-img-top" src="@Model.PhotoUrl" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-subtitle">@Model.Description</p>
+            <p class="card-subtitle">Points: @Model.Points</p>
+            <p class="card-subtitle">Owner: @Model.User</p>
+            <p class="card-subtitle">Contest: @Model.Contest</p>
+            <p class="card-subtitle">Category: @Model.Category</p>
+            @if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
             {
                 <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-outline-dark" asp-route-id="@Model.Id">Reviews</a>
-
             }
-            else if (Model.ContestStatus == "Phase 2" && Model.Juries.Any(j => j.Contest.Name == Model.Contest && j.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
+            else if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
-               <a class="btn btn-outline-dark" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                @if (Model.ContestStatus == "Phase 2")
+                {
+                    <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                }
+                <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
             }
-        }
-        else if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-        {
-            @if (Model.ContestStatus == "Phase 2")
+            else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
             {
-                <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                @if (Model.ContestStatus == "Phase 2")
+                {
+                    <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                }
+                <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
             }
-            <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-        }
-        else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
-        {
-            @if (Model.ContestStatus == "Phase 2")
-            {
-                <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
-            }
-            <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        }
+        </div>
     </div>
-</div>

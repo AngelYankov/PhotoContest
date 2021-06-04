@@ -54,7 +54,6 @@ namespace PhotoContest.Web.Models.ContestViewModels
         public string OpenOrInvitational { get; set; }
         public List<UserContest> AllUserContests { get; set; } = new List<UserContest>();
         public List<PhotoDTO> AllPhotos { get; set; } = new List<PhotoDTO>();
-        public List<JuryMember> Juries { get; set; } = new List<JuryMember>();
         public string Filter { get; set; }
         public string SortBy { get; set; }
         public string OrderBy { get; set; }
