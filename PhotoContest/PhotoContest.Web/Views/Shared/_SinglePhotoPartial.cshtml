@@ -8,12 +8,14 @@
 <div class="card" style="width: 18rem;">
     <img class="card-img-top" src="@Model.PhotoUrl" alt="Card image cap">
     <div class="card-body">
-        <h5 class="card-title">@Model.Title  Points: @Model.Points</h5>
+        <h5 class="card-title">@Model.Title</h5>
+        <h6 class="card-title">Points: @Model.Points</h6>
         <p class="card-subtitle">@Model.Description</p>
-        <p class="card-subtitle">Points: @Model.Points</p>
-        <p class="card-subtitle">Owner: @Model.User</p>
-        <p class="card-subtitle">Contest: @Model.Contest</p>
-        <p class="card-subtitle">Category: @Model.Category</p>
+        <ul>
+            <p class="card-subtitle">Owner: @Model.User</p>
+            <p class="card-subtitle">Contest: @Model.Contest</p>
+            <p class="card-subtitle">Category: @Model.Category</p>
+        </ul>
         @if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
         {
             <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-outline-dark" asp-route-id="@Model.Id">Reviews</a>

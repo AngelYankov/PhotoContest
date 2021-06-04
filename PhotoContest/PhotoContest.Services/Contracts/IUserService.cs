@@ -18,6 +18,7 @@ namespace PhotoContest.Services.Contracts
         Task<UserDTO> UpdateAsync(UpdateUserDTO updateUserDTO, string username);
         Task<bool> DeleteAsync(string username);
         Task<User> GetUserByUsernameAsync(string username);
+        Task<UserDTO> ShowMyAccountInfo();
         Task<string> AddRoleAsync(AddRoleModel model);
         Task<IEnumerable<UserDTO>> GetAllParticipantsAsync();
         Task ChangeRank();

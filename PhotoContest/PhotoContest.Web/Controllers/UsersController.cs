@@ -181,7 +181,7 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin,Organizer")]
+        [Authorize(Roles = "Admin,Organizer,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowUserInfo(UserViewModel model)
@@ -201,6 +201,24 @@ namespace PhotoContest.Web.Controllers
                 }
             }
             return View();
+        }
+        [Authorize]
+        public async Task<IActionResult> ShowMyAccountInfo()
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var userDTO = await this.userService.ShowMyAccountInfo();
+                    var userViewModel = new UserViewModel(userDTO);
+                    return View(userViewModel);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return RedirectToAction("Home","Home");
         }
     }
 }
