@@ -27,10 +27,13 @@ namespace PhotoContest.Services.Services
     {
         private readonly PhotoContestContext dbContext;
         private readonly UserManager<User> userManager;
-        public UserService(PhotoContestContext dbContext, UserManager<User> userManager)
+        private readonly SignInManager<User> signInManager;
+
+        public UserService(PhotoContestContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         /// <summary>
         /// Create new user.
@@ -168,6 +171,17 @@ namespace PhotoContest.Services.Services
                              .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
         }
+        /// <summary>
+        /// Show info of the logged user
+        /// </summary>
+        /// <returns>Returns all user's info</returns>
+        public async Task<UserDTO> ShowMyAccountInfo()
+        {
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await GetUserByUsernameAsync(username);
+            return new UserDTO(user);
+        }
+
         /// <summary>
         /// Add role to user.
         /// </summary>

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 using Microsoft.AspNetCore.Http;
 
 namespace PhotoContest.Web.Models.PhotoViewModels
@@ -18,7 +17,9 @@ namespace PhotoContest.Web.Models.PhotoViewModels
 
         [Display(Name ="Contest:")]
         public string ContestName { get; set; }
+
         [Display(Name ="Upload file")]
+        [Required,DataType(DataType.Upload)]
         public IFormFile File { get; set; }
     }
 }
