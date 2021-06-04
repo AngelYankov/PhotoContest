@@ -26,9 +26,10 @@
                 <input asp-for="Score" class="form-control" />
                 <span asp-validation-for="Score" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            @Html.DisplayNameFor(model => model.WrongCategory)
+            <div class="form-check form-switch">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="WrongCategory" /> @Html.DisplayNameFor(model => model.WrongCategory)
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked asp-for="WrongCategory" />
                 </label>
             </div>
             <div class="form-group">
