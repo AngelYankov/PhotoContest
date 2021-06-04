@@ -18,7 +18,9 @@ namespace PhotoContest.Web.Models.PhotoViewModels
 
         [Display(Name ="Contest:")]
         public string ContestName { get; set; }
+
         [Display(Name ="Upload file")]
+        [Required,DataType(DataType.Upload)]
         public IFormFile File { get; set; }
     }
 }
