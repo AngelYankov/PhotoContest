@@ -162,6 +162,15 @@ namespace PhotoContest.Services.Services
                              .ToListAsync();
         }
 
+        public async Task<IEnumerable<JuryMember>> AllJuriesAsync()
+        {
+            return await this.dbContext
+                             .Juries
+                             .Include(j=>j.Contest)
+                             .Include(j=>j.User)
+                             .ToListAsync();
+        }
+
         /// <summary>
         /// Enroll user to contest.
         /// </summary>

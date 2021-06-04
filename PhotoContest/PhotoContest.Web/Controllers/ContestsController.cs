@@ -52,7 +52,7 @@ namespace PhotoContest.Web.Controllers
         {
             if (User.IsInRole("User"))
             {
-                return View("GetOpen");
+                return View("AllOpen");
             }
             var contests = await this.contestService.GetAllAsync();
             return View(contests.Select(c => new ContetsViewModel(c)));
@@ -63,13 +63,11 @@ namespace PhotoContest.Web.Controllers
             var contests = await this.contestService.AllOpenView();
             var userContests = await this.userContestService.GetAllUserContestsAsync();
             var photos = await this.photoService.GetAllAsync();
-            return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
+            var juries = await this.contestService.AllJuriesAsync();
+            return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests,
+                                                                       AllPhotos = photos.ToList(),
+                                                                       Juries = juries.ToList() }));
         }
-
-        /*public async Task<IActionResult> GetOpen()
-        {
-            return View();
-        }*/
 
         [Authorize]
         [HttpPost]
@@ -82,7 +80,10 @@ namespace PhotoContest.Web.Controllers
                     var contests = await this.contestService.GetAllOpenAsync(status);
                     var userContests = await this.userContestService.GetAllUserContestsAsync();
                     var photos = await this.photoService.GetAllAsync();
-                    return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
+                    var juries = await this.contestService.AllJuriesAsync();
+                    return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, 
+                                                                               AllPhotos = photos.ToList(), 
+                                                                               Juries = juries.ToList() }));
                 }
                 catch (Exception e)
                 {

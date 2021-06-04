@@ -1,4 +1,5 @@
-﻿using PhotoContest.Services.Models;
+﻿using PhotoContest.Data.Models;
+using PhotoContest.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,5 +31,6 @@ namespace PhotoContest.Web.Models.PhotoViewModels
         public string ContestStatus { get; set; }
         public string Category { get; set; }
         public double Points { get; set; }
+        public List<JuryMember> Juries { get; set; } = new List<JuryMember>();
     }
 }
