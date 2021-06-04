@@ -52,7 +52,7 @@ namespace PhotoContest.Web.Controllers
         {
             if (User.IsInRole("User"))
             {
-                return View("GetOpen");
+                return View("AllOpen");
             }
             var contests = await this.contestService.GetAllAsync();
             return View(contests.Select(c => new ContetsViewModel(c)));
