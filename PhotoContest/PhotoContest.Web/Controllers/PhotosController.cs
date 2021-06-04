@@ -74,7 +74,7 @@ namespace PhotoContest.Web.Controllers
                     };
                     
                     await this.photoService.CreateAsync(newPhotoDTO);
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("GetUserContests","Contests");
                 }
                 catch (Exception e)
                 {
