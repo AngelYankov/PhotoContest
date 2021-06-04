@@ -26,13 +26,15 @@ namespace PhotoContest.Services.Services
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IUserContestService userContestService;
 
         public PhotoService(PhotoContestContext dbContext, 
             /*IHttpContextAccessor contextAccessor,*/ 
             IContestService contestService, 
             IUserService userService,
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            IUserContestService userContestService)
         {
             this.dbContext = dbContext;
            /* this.contextAccessor = contextAccessor;*/
@@ -40,6 +42,7 @@ namespace PhotoContest.Services.Services
             this.userService = userService;
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.userContestService = userContestService;
         }
         /// <summary>
         /// Create a photo.
@@ -64,6 +67,13 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
+            var userContests = await this.userContestService.GetAllUserContestsAsync();
+            var userContest = userContests.FirstOrDefault(uc => uc.UserId == user.Id && uc.ContestId == contest.Id)
+                ?? throw new ArgumentException("You have not enrolled in this contest.");
+            if (userContest.HasUploadedPhoto)
+            {
+                throw new ArgumentException("You have already uploaded a photo.");
+            }
             var photo = new Photo()
             {
                 Title = newphotoDTO.Title,
@@ -73,6 +83,7 @@ namespace PhotoContest.Services.Services
                 UserId = user.Id,
                 CreatedOn = DateTime.UtcNow,
             };
+            userContest.HasUploadedPhoto = true;
             await this.dbContext.Photos.AddAsync(photo);
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
