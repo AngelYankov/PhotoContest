@@ -20,6 +20,22 @@ namespace PhotoContest.Web.Models.UserViewModels
             this.Username = user.Username;
             this.Points = user.Points;
             this.Rank = user.Rank;
+            if (user.Rank == "Junkie")
+            {
+                this.PointsUntilNextRank = "You need " + (51 - this.Points).ToString() + " points to reach the next rank.";
+            }
+            else if (user.Rank == "Enthusiast")
+            {
+                this.PointsUntilNextRank = "You need " + (151 - this.Points).ToString() + " points to reach the next rank.";
+            }
+            else if(user.Rank == "Master")
+            {
+                this.PointsUntilNextRank = "You need " + (1001 - this.Points).ToString() + " points to reach the next rank.";
+            }
+            else
+            {
+                this.PointsUntilNextRank = "You have reached the highest rank!";
+            }
         }
         [Display(Name = "First name")]
         public string FirstName { get; set; }
@@ -28,5 +44,7 @@ namespace PhotoContest.Web.Models.UserViewModels
         public string Username { get; set; }
         public string Rank { get; set; }
         public double Points { get; set; }
+        [Display(Name ="Points until next rank")]
+        public string PointsUntilNextRank { get; set; }
     }
 }
