@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,6 @@ namespace PhotoContest.Web.Controllers
 {
     public class ReviewsController : Controller
     {
-        private readonly PhotoContestContext _context;
         private readonly IReviewService reviewService;
         private readonly IPhotoService photoService;
 
@@ -26,12 +26,8 @@ namespace PhotoContest.Web.Controllers
             this.reviewService = reviewService;
             this.photoService = photoService;
         }
-        // GET: Reviews/Details/5
-        public async Task<IActionResult> Details(Guid id)
-        {
-            return BadRequest();
-        }
 
+        [Authorize(Roles ="Admin,Organizer")]
         public async Task<IActionResult> Create(Guid photoId)
         {
             var photo = await this.photoService.GetAsync(photoId);
@@ -39,6 +35,7 @@ namespace PhotoContest.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateReviewViewModel model)
@@ -64,20 +61,38 @@ namespace PhotoContest.Web.Controllers
             }
             return View(model);
         }
+
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetPhotoReviews(Guid id)
         {
-            var reviews = await this.reviewService.GetForPhotoAsync(id);
-            return View(reviews.Select(r => new ReviewViewModel(r)));
+            try
+            {
+                var reviews = await this.reviewService.GetForPhotoAsync(id);
+                return View(reviews.Select(r => new ReviewViewModel(r)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var review = await this.reviewService.FindReviewAsync(id);
-            var reviewDTO = new ReviewDTO(review);
-            var viewModel = new ReviewViewModel(reviewDTO);
-            return View(viewModel);
+            try
+            {
+                var review = await this.reviewService.FindReviewAsync(id);
+                var reviewDTO = new ReviewDTO(review);
+                var viewModel = new ReviewViewModel(reviewDTO);
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
+        [Authorize(Roles = "Admin,Organizer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(ReviewViewModel model)
