@@ -11,9 +11,51 @@
 
 <p>
     <a class="btn btn-outline-dark" asp-action="Create">Create new contest</a>
-    <a class="btn btn-outline-dark" asp-action="GetByPhase">Filter contests</a>
 </p>
 
+<form asp-action="GetByPhaseFiltered">
+    <table>
+        <tr>
+            <th>
+                <p>Filter by</p>
+            </th>
+            <th>
+                <p>Sort by</p>
+            </th>
+            <th>
+                <p>Order by</p>
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>
+                <select asp-for="@Model.First().Filter" class="form-select" style="width: 150px;">
+                    <option value="phase 1">Phase 1</option>
+                    <option value="phase 2">Phase 2</option>
+                    <option value="finished">Finished</option>
+                </select>
+            </td>
+            <td>
+                <select asp-for="@Model.First().SortBy" class="form-select" style="width: 150px;">
+                    <option value="name">Name</option>
+                    <option value="category">Category</option>
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                </select>
+            </td>
+            <td>
+                <select asp-for="@Model.First().OrderBy" class="form-select" style="width: 150px;">
+                    <option value="asc">Asc</option>
+                    <option value="desc">Desc</option>
+                </select>
+            </td>
+            <td>
+                <input type="submit" value="Filter" class="btn btn-success" />
+            </td>
+        </tr>
+    </table>
+</form>
+<br />
 <table class="table">
     <thead class="table-dark">
         <tr>
