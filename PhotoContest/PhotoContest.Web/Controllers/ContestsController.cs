@@ -52,7 +52,7 @@ namespace PhotoContest.Web.Controllers
         {
             if (User.IsInRole("User"))
             {
-                return View("AllOpen");
+                return RedirectToAction("AllOpen");
             }
             var contests = await this.contestService.GetAllAsync();
             return View(contests.Select(c => new ContetsViewModel(c)));
@@ -60,7 +60,7 @@ namespace PhotoContest.Web.Controllers
 
         public async Task<IActionResult> AllOpen()
         {
-            var contests = await this.contestService.AllOpenView();
+            var contests = await this.contestService.AllOpenViewAsync();
             var userContests = await this.userContestService.GetAllUserContestsAsync();
             var photos = await this.photoService.GetAllAsync();
             return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
