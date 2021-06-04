@@ -259,9 +259,13 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.InvalidJuryUser);
             }
-            if (await this.dbContext.Juries.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
+            if (await this.dbContext.Juries.AnyAsync(j => j.UserId == user.Id && j.ContestId == contest.Id))
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
+            }
+            if(await this.dbContext.UserContests.AnyAsync(uc=>uc.UserId == user.Id && uc.ContestId == contest.Id))
+            {
+                throw new ArgumentException(Exceptions.InvalidJury);
             }
 
             var juryMember = new JuryMember();

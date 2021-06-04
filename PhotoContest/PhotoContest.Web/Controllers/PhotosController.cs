@@ -96,7 +96,8 @@ namespace PhotoContest.Web.Controllers
         {
             var photos = await this.photoService.GetPhotosForContestAsync(contestName);
             var contest = await this.contestService.FindContestByNameAsync(contestName);
-            return View(photos.Select(p=>new PhotoViewModel(p) { ContestStatus = contest.Status.Name }));
+            var juries = await this.contestService.AllJuriesAsync();
+            return View(photos.Select(p=>new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries.ToList() }));
         }
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(Guid id)
