@@ -9,8 +9,6 @@
     <title>@ViewData["Title"] - PhotoContest.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @RenderSection("Styles", false)
-
 </head>
 <body>
     <header>
@@ -48,13 +46,10 @@
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Contests" asp-action="Index">Contests</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Contests" asp-action="AllOpen">Contests</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Contests" asp-action="GetByUser">My contests</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Photos" asp-action="GetPhotosForUser">My photos</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Contests" asp-action="GetUserContests">My Contests</a>
                             </li>
                         }
                     </ul>

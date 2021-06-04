@@ -11,6 +11,10 @@ namespace PhotoContest.Web.Models.ContestViewModels
 {
     public class ContetsViewModel
     {
+        public ContetsViewModel()
+        {
+
+        }
         public ContetsViewModel(ContestDTO contestDTO)
         {
             this.Name = contestDTO.Name;
@@ -51,6 +55,8 @@ namespace PhotoContest.Web.Models.ContestViewModels
         public List<UserContest> AllUserContests { get; set; } = new List<UserContest>();
         public List<PhotoDTO> AllPhotos { get; set; } = new List<PhotoDTO>();
         public string Filter { get; set; }
+        public string SortBy { get; set; }
+        public string OrderBy { get; set; }
     }
 }
 

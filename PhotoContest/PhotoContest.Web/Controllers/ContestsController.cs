@@ -58,10 +58,18 @@ namespace PhotoContest.Web.Controllers
             return View(contests.Select(c => new ContetsViewModel(c)));
         }
 
-        public async Task<IActionResult> GetOpen()
+        public async Task<IActionResult> AllOpen()
+        {
+            var contests = await this.contestService.AllOpenView();
+            var userContests = await this.userContestService.GetAllUserContestsAsync();
+            var photos = await this.photoService.GetAllAsync();
+            return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
+        }
+
+        /*public async Task<IActionResult> GetOpen()
         {
             return View();
-        }
+        }*/
 
         [Authorize]
         [HttpPost]
@@ -312,10 +320,19 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "User")]
+        /*[Authorize(Roles = "User")]
         public async Task<IActionResult> GetByUser()
         {
             return View();
+        }*/
+
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetUserContests()
+        {
+            var contests = await this.contestService.GetUserContestsAsync();
+            var userContests = await this.userContestService.GetAllUserContestsAsync();
+            var photos = await this.photoService.GetAllAsync();
+            return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
         }
 
         [Authorize(Roles = "User")]
@@ -350,12 +367,15 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("GetByPhaseFiltered")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GetByPhaseFiltered(string phase, string sortBy, string orderBy)
+        public async Task<IActionResult> GetByPhaseFiltered(ContetsViewModel contetsViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var phase = contetsViewModel.Filter;
+                    var sortBy = contetsViewModel.SortBy;
+                    var orderBy = contetsViewModel.OrderBy;
                     var contests = await this.contestService.GetByPhaseAsync(phase, sortBy, orderBy);
                     return View(contests.Select(c => new ContetsViewModel(c)));
                 }
@@ -366,5 +386,7 @@ namespace PhotoContest.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+
     }
 }

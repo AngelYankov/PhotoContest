@@ -151,6 +151,17 @@ namespace PhotoContest.Services.Services
             }
         }
 
+        public async Task<IEnumerable<ContestDTO>> AllOpenView()
+        {
+            return await this.dbContext
+                             .Contests
+                             .Include(c => c.Category)
+                             .Include(a => a.Status)
+                             .Where(c => c.IsDeleted == false && c.IsOpen == true)
+                             .Select(c => new ContestDTO(c))
+                             .ToListAsync();
+        }
+
         /// <summary>
         /// Enroll user to contest.
         /// </summary>
@@ -297,13 +308,35 @@ namespace PhotoContest.Services.Services
             return new ContestDTO(contest);
         }
 
-        /// <summary>
-        /// Filter and/or sort contests by username.
-        /// </summary>
-        /// <param name="username">Username for which we are filtering the contests.</param>
-        /// <param name="filter">Value of the filter.</param>
-        /// <returns>Returns the contests that correspond to the filter.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
+        public async Task<IEnumerable<ContestDTO>> GetUserContestsAsync()
+        {
+            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+
+            var allUserContests = await this.dbContext.UserContests
+                                                .Include(uc => uc.User)
+                                                .Include(uc => uc.Contest)
+                                                .Where(uc => uc.UserId == user.Id).ToListAsync();
+            var allUserContestsDTO = new List<ContestDTO>();
+            foreach (var userContest in allUserContests)
+            {
+                var contest = await this.dbContext.Contests
+                                  .Include(c => c.Category)
+                                  .Include(c => c.Status)
+                                  .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
+                allUserContestsDTO.Add(new ContestDTO(contest));
+            }
+            return allUserContestsDTO;
+        }
+
+            /// <summary>
+            /// Filter and/or sort contests by username.
+            /// </summary>
+            /// <param name="username">Username for which we are filtering the contests.</param>
+            /// <param name="filter">Value of the filter.</param>
+            /// <returns>Returns the contests that correspond to the filter.</returns>
+            public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
