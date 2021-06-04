@@ -100,6 +100,8 @@ namespace PhotoContest.Services.Services
                                        .Include(p => p.User)
                                        .Include(p => p.Contest)
                                             .ThenInclude(c => c.Category)
+                                       .Include(p => p.Contest)
+                                            .ThenInclude(c=>c.Status)
                                        .Where(p => p.IsDeleted == false)
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();

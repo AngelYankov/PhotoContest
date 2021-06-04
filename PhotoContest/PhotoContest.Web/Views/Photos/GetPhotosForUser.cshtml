@@ -5,68 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>All photos</h1>
-
-<table class="table">
-    <thead class="table-dark">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhotoUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contest)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Points)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+<h1>My photos</h1>
+<div class="container">
+    <div class="row">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <img src="@item.PhotoUrl" width="200" height="200" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contest)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Points)
-                </td>
-                <td>
-                    @if (item.ContestStatus == "Finished")
-                    {
-                        <a class="btn btn-outline-dark" asp-action="GetPhotoReviews" asp-controller="Reviews" asp-route-id="@item.Id">Reviews</a>
-                    }
-                </td>
-            </tr>
+            <partial name="_SinglePhotoPartial" model="item" />
         }
-    </tbody>
-</table>
+    </div>
+</div>
+<br />
 <a class="btn btn-outline-dark" onclick="history.go(-1);">Back</a>
