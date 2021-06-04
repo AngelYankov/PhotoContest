@@ -74,6 +74,10 @@ else
                             <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">View photos</a>
                         </td>
                     }
+                    else
+                    {
+                        <td></td>
+                    }
                 </tr>
             }
         </tbody>
@@ -81,7 +85,7 @@ else
 }
 
 <div>
-    <a class="btn btn-outline-dark" asp-action="GetOpen">Back to filtering</a>
+    <a class="btn btn-outline-dark" asp-action="AllOpen">Back to list</a>
 </div>
 
 

@@ -18,10 +18,36 @@
 }
 else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
 {
-    <p>
-        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="ViewAllParticipants">View all participants</a>
-        <a class="btn btn-outline-dark" asp-controller="Users" asp-action="SearchByUsername">Search by username</a>
-    </p>
+    <form asp-action="ShowUserInfo">
+
+        <table>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    Search by username:
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>
+                    <a class="btn btn-outline-dark" asp-controller="Users" asp-action="ViewAllParticipants">View all participants</a>
+                </td>
+                <td>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input asp-for="@Model.First().Username" class="form-control btn-outline-dark" style="width:250px;" />
+                        <span asp-validation-for="@Model.First().Username" class="text-danger"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Search" class="btn btn-outline-success" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
 }
 
 

@@ -8,14 +8,39 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>My contests</h2>
 
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="GetByUserFiltered">
+            <table>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <select asp-for="@Model.First().Filter" class="form-select" style="width: 150px;">
+                            <option value="current">Current</option>
+                            <option value="past">Past</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="submit" value="Filter" class="btn btn-success" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<br />
 @if (Model.Count() == 0)
 {
     <h3>You are not participating in any contests in this stage.</h3>
 }
 else
 {
-    <h1>My @Model.First().Filter contests</h1>
     <table class="table">
         <thead class="table-dark">
             <tr>
@@ -57,15 +82,15 @@ else
                         @Html.DisplayFor(modelItem => item.TimeUntilNextPhase)
                     </td>
                     @if (item.Status == "Phase 1" && item.AllUserContests.Any(uc => uc.Contest.Name == item.Name
-                                                  && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)
-                                                  && !item.AllPhotos.Any(p => p.Contest == item.Name 
-                                                  && p.Username == UserManager.GetUserName(this.SignInManager.Context.User))))
+                                                && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)
+                                                && !item.AllPhotos.Any(p => p.Contest == item.Name
+                                                && p.Username == UserManager.GetUserName(this.SignInManager.Context.User))))
                     {
                         <td>
                             <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="Create" asp-route-contestName="@item.Name">Add photo</a>
                         </td>
                     }
-                    else if ((item.Status == "Phase 1" )
+                    else if ((item.Status == "Phase 1")
                            && item.AllPhotos.Any(p => p.Contest == item.Name
                            && p.Username == UserManager.GetUserName(this.SignInManager.Context.User)))
                     {
@@ -79,6 +104,10 @@ else
                             <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">View photos</a>
                         </td>
                     }
+                    else
+                    {
+                        <td></td>
+                    }
                 </tr>
             }
         </tbody>
@@ -86,8 +115,7 @@ else
 }
 
 <div>
-    <a class="btn btn-outline-dark" asp-action="GetUserContests">Back</a> 
-    <a class="btn btn-outline-dark" asp-action="GetOpen">All Contests</a>
+    <a class="btn btn-outline-dark" asp-action="AllOpen">All Contests</a>
 </div>
 
 @section Scripts {
