@@ -26,7 +26,7 @@
             }
             else if (Model.ContestStatus == "Phase 2" && Model.Reviews.Any(r => r.Evaluator.UserName == UserManager.GetUserName(this.SignInManager.Context.User) && r.PhotoId == Model.Id))
             {
-                <p>You have already rated this photo.</p>
+                <p class="text-danger">You have already rated this photo.</p>
             }
         }
         else if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
@@ -44,7 +44,7 @@
             {
                 if (Model.Reviews.Any(r => r.Evaluator.UserName == UserManager.GetUserName(this.SignInManager.Context.User) && r.PhotoId == Model.Id))
                 {
-                    <p>You have already rated this photo.</p>
+                    <p class="text-danger">You have already rated this photo.</p>
                 }
                 else
                 {

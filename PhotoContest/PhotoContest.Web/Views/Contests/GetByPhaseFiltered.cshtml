@@ -44,35 +44,44 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OpenOrInvitational)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phase1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phase2)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Finished)
-                    </td>
-                    @if (item.Status == "Phase 1")
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OpenOrInvitational)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phase1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phase2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Finished)
+                </td>
+                <td>
+                    <a class="btn btn-outline-dark" asp-action="Details" asp-route-name="@item.Name">Details</a>
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@item.Name">Edit</a>
+                    <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@item.Name">Photos</a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-name="@item.Name">Delete</a>
+                    @if (item.Status == "Phase 1" || item.Status == "Phase 2")
                     {
-                        <td>
-                            <a class="btn btn-outline-dark" asp-controller="Contests" asp-action="Invite" asp-route-contestName="@item.Name">Invite</a>
-                        </td>
+                        <a class="btn btn-outline-dark" asp-action="ChooseJury" asp-route-name="@item.Name">Choose jury</a>
                     }
-                </tr>
+                    @if (item.OpenOrInvitational == "Invitational" && item.Status == "Phase 1")
+                    {
+                        <a class="btn btn-outline-dark" asp-action="Invite" asp-route-name="@item.Name">Invite</a>
+                    }
+                </td>
+
+            </tr>
             }
         </tbody>
     </table>
