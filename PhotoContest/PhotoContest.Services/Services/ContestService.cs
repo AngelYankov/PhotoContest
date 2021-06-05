@@ -112,6 +112,7 @@ namespace PhotoContest.Services.Services
                              .Include(c => c.Status)
                              .Include(c => c.Photos)
                              .Where(c => c.IsDeleted == false)
+                             .OrderByDescending(c => c.CreatedOn)
                              .Select(c => new ContestDTO(c))
                              .ToListAsync();
         }

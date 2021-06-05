@@ -6,17 +6,14 @@
     <link href="~/css/site.css" rel="stylesheet" />
 }
 
-<div class="card" style="width: 18rem;">
+<div class="card" style="width: 300px; margin: auto;">
     <img class="img-fluid" src="@Model.PhotoUrl" alt="Card image cap">
     <div class="card-body">
         <h5 class="card-title">@Model.Title</h5>
         <h6 class="card-title">Points: @Model.Points</h6>
-        <p class="card-subtitle">@Model.Description</p>
-        <ul>
-            <p class="card-subtitle">Owner: @Model.User</p>
-            <p class="card-subtitle">Contest: @Model.Contest</p>
-            <p class="card-subtitle">Category: @Model.Category</p>
-        </ul>
+        <p class="card-subtitle">Owner: @Model.User</p>
+        <p class="card-subtitle">Contest: @Model.Contest</p>
+        <p class="card-subtitle">Category: @Model.Category</p>
         @if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
         {
             if (Model.ContestStatus == "Finished")
