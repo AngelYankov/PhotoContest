@@ -5,14 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using PhotoContest.Services.ExceptionMessages;
 
 namespace PhotoContest.Web.Models.PhotoViewModels
 {
     public class CreatePhotoViewModel
     {
-        [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "Value for photo {0} should be between {2} and {1} characters.")]
+        [Required, StringLength(15, MinimumLength = 3, ErrorMessage = Exceptions.InvalidPhotoInfo)]
         public string Title { get; set; }
-        [Required, StringLength(30, MinimumLength = 5, ErrorMessage = "Value for photo {0} should be between {2} and {1} characters.")]
+        [Required, StringLength(30, MinimumLength = 5, ErrorMessage = Exceptions.InvalidPhotoInfo)]
         public string Description { get; set; }
 
         [Display(Name ="Contest:")]
