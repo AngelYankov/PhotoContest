@@ -22,18 +22,30 @@ namespace PhotoContest.Web.Controllers
             this._context = context;
             this.categoryService = categoryService;
         }
+
+        /// <summary>
+        /// Get all categories
+        /// </summary>
+        /// <returns>Returns a list with all categories</returns>
         public async Task<IActionResult> Index()
         {
             var categories = await this.categoryService.GetAllAsync();
             return View(categories);
         }
 
+        /// <summary>
+        /// Shows a form to create new category
+        /// </summary>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Contests/Create
+        /// <summary>
+        /// Create a new category
+        /// </summary>
+        /// <param name="name">Name of the new category</param>
+        /// <returns>Goes to the list of categories if successful or an error page if BadRequest</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string name)
@@ -49,11 +61,14 @@ namespace PhotoContest.Web.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-
             }
             return View();
         }
 
+        /// <summary>
+        /// Get a category and show a form to edit it
+        /// </summary>
+        /// <param name="name">Name of the category to edit</param>
         public async Task<IActionResult> Edit(string name)
         {
             var category = await this.categoryService.FindCategoryByNameAsync(name);
@@ -62,7 +77,12 @@ namespace PhotoContest.Web.Controllers
             return View(categoryView);
         }
 
-        // POST: Contests/Edit
+        /// <summary>
+        /// Edit a category
+        /// </summary>
+        /// <param name="name">Name of the category to update</param>
+        /// <param name="update">New name of the category</param>
+        /// <returns>Goes to the list of categories if successful or an error page if BadRequest</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string name, CategoriesViewModel update)
@@ -83,7 +103,10 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
-        // GET: Contests/Delete/5
+        /// <summary>
+        /// Get a category to delete
+        /// </summary>
+        /// <param name="name">Name of the category to delete</param>
         public async Task<IActionResult> Delete(string name)
         {
             var category = await this.categoryService.FindCategoryByNameAsync(name);
@@ -92,7 +115,11 @@ namespace PhotoContest.Web.Controllers
             return View(categoryView);
         }
 
-        // POST: Contests/Delete/5
+        /// <summary>
+        /// Delete a category
+        /// </summary>
+        /// <param name="name">Name of the category to delete</param>
+        /// <returns>Goes to the list of categories if successful or an error page if BadRequest</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string name)
