@@ -1,5 +1,8 @@
 ﻿@model ContetsViewModel
 
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,55 +10,108 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Contest</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OpenOrInvitational)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OpenOrInvitational)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phase1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phase1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phase2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phase2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Finished)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Finished)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@Model.Name">Edit</a>
-    <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
-</div>
+@if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
+{
+    <div>
+        <h4>Contest @Model.Name</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Category)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Category)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OpenOrInvitational)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OpenOrInvitational)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Phase1)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Phase1)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Phase2)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Phase2)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Finished)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Finished)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@Model.Name">Edit</a>
+        <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
+    </div>
+}
+else
+{
+    <div>
+        <h4>Contest @Model.Name</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Category)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Category)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TimeUntilNextPhase)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TimeUntilNextPhase)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        @if (Model.Status == "Phase 1" && !Model.AllUserContests.Any(uc => uc.Contest.Name == Model.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
+        {
+            <a class="btn btn-outline-dark" asp-action="Enroll" asp-route-name="@Model.Name">Enroll</a>
+        }
+        else if (Model.Status == "Phase 1" && Model.AllUserContests.Any(uc => uc.Contest.Name == Model.Name
+                                         && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)
+                                         && !Model.AllPhotos.Any(p => p.Contest == Model.Name && p.Username == UserManager.GetUserName(this.SignInManager.Context.User))))
+        {
+            <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="Create" asp-route-contestName="@Model.Name">Add photo</a>
+        }
+        else if (Model.Status == "Phase 2" && Model.Juries.Any(j => j.Contest.Name == Model.Name && j.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
+        {
+            <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@Model.Name">Rate photos</a>
+        }
+        <a class="btn btn-outline-dark" asp-action="Index" asp-controller="Home">Back</a>
+    </div>
+}

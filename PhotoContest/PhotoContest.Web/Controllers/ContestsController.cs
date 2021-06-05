@@ -92,12 +92,15 @@ namespace PhotoContest.Web.Controllers
 
 
         // GET: Contests/Details/5
-        [Authorize(Roles = "Admin, Organizer")]
+        [Authorize]
         public async Task<IActionResult> Details(string name)
         {
             var contest = await this.contestService.FindContestByNameAsync(name);
+            var userContests = await this.userContestService.GetAllUserContestsAsync();
+            var photos = await this.photoService.GetAllAsync();
+            var juries = await this.contestService.AllJuriesAsync();
             var contestDTO = new ContestDTO(contest);
-            return View(new ContetsViewModel(contestDTO));
+            return View(new ContetsViewModel(contestDTO) { AllUserContests = userContests, AllPhotos = photos.ToList(), Juries = juries.ToList() });
         }
 
         // GET: Contests/Create
@@ -244,7 +247,7 @@ namespace PhotoContest.Web.Controllers
                 try
                 {
                     await this.contestService.EnrollAsync(name);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("GetUserContests");
                 }
                 catch (Exception e)
                 {

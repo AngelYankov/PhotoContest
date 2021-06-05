@@ -117,6 +117,19 @@ namespace PhotoContest.Services.Services
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
+
+        public async Task<IEnumerable<Photo>> GetAllBaseAsync()
+        {
+            return await this.dbContext.Photos
+                                       .Include(p => p.User)
+                                       .Include(p => p.Contest)
+                                            .ThenInclude(c => c.Category)
+                                       .Include(p => p.Contest)
+                                            .ThenInclude(c => c.Status)
+                                       .Where(p => p.IsDeleted == false)
+                                       .ToListAsync();
+        }
+
         /// <summary>
         /// Get a photo by Id.
         /// </summary>
