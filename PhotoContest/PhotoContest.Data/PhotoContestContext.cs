@@ -618,7 +618,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("8a20e519-66ad-46b8-b6c3-18c36fa50a1d"), //georgi
                     Title = "Erasmusbrug",
                     Description = "Man made beauty",
-                    PhotoUrl = $"/Images/b364f4aa-a6af-4570-966f-f1980c6eb636_bridges1.jpg",//get picture
+                    PhotoUrl = $"/Images/b364f4aa-a6af-4570-966f-f1980c6eb636_bridges1.jpeg",//get picture
                     CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
@@ -628,7 +628,7 @@ namespace PhotoContest.Data
                     UserId = Guid.Parse("c463712b-e235-4fe5-840e-a99736c3fb76"), //kyle
                     Title = "Goldengate",
                     Description = "Engineering genius",
-                    PhotoUrl = $"/Images/52dc2b1e-112c-4914-98b9-13137abd989a_bridges2.jpg",//get picture
+                    PhotoUrl = $"/Images/52dc2b1e-112c-4914-98b9-13137abd989a_bridges2.jpeg",//get picture
                     CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
