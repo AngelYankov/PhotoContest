@@ -20,7 +20,7 @@ a {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #1b6ec2;
+  background-color: brown;
   border-color: #1861ac;
 }
 
@@ -60,17 +60,14 @@ html {
 
 body {
     Margin bottom by footer height margin-bottom: 60px;
-    background-image: url('../Images/photo-contest-tips-banner.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
+    background-color:lightgrey;
 }
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+  line-height: 30px; /* Vertically center the text there */
 }
 /*////////////////*/
 

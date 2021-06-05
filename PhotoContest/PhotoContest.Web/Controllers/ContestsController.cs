@@ -46,7 +46,9 @@ namespace PhotoContest.Web.Controllers
             this.userService = userService;
         }
 
-        // GET: Contests
+        /// <summary>
+        /// Get all contests
+        /// </summary>
         [Authorize]
         public async Task<IActionResult> Index()
         {
@@ -58,6 +60,11 @@ namespace PhotoContest.Web.Controllers
             return View(contests.Select(c => new ContetsViewModel(c)));
         }
 
+        /// <summary>
+        /// Get all open contests
+        /// </summary>
+        /// <returns>Return a list with all open contests</returns>
+        [Authorize]
         public async Task<IActionResult> AllOpen()
         {
             var contests = await this.contestService.AllOpenViewAsync();
@@ -67,6 +74,11 @@ namespace PhotoContest.Web.Controllers
             return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList(), Juries = juries.ToList() }));
         }
 
+        /// <summary>
+        /// Filter all open contests
+        /// </summary>
+        /// <param name="status">Phase of the contests to filter by</param>
+        /// <returns>A list of all open contests after filtering</returns>
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> GetOpenFiltered(string status)
@@ -85,13 +97,15 @@ namespace PhotoContest.Web.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-
             }
             return View();
         }
 
 
-        // GET: Contests/Details/5
+        /// <summary>
+        /// Get details of a contest
+        /// </summary>
+        /// <param name="name">Name of the contest</param>
         [Authorize]
         public async Task<IActionResult> Details(string name)
         {
@@ -103,7 +117,9 @@ namespace PhotoContest.Web.Controllers
             return View(new ContetsViewModel(contestDTO) { AllUserContests = userContests, AllPhotos = photos.ToList(), Juries = juries.ToList() });
         }
 
-        // GET: Contests/Create
+        /// <summary>
+        /// Show a for to create a contest
+        /// </summary>
         [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Create()
         {
@@ -112,7 +128,11 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
-        // POST: Contests/Create
+        /// <summary>
+        /// Create a contest
+        /// </summary>
+        /// <param name="createViewModel">Details of the contest to create</param>
+        /// <returns>To list of all contests if successful or go to error page for bad request</returns>
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -139,18 +159,19 @@ namespace PhotoContest.Web.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-
             }
             var categories = await this.categoryService.GetAllBaseAsync();
             ViewData["Categories"] = new SelectList(categories, "Name", "Name");
             return View();
         }
 
-        // GET: Contests/Edit/5
+        /// <summary>
+        /// Show for to edit a contest
+        /// </summary>
+        /// <param name="name">Name of the contest to edit</param>
         [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Edit(string name)
         {
-
             var contest = await this.contestService.FindContestByNameAsync(name);
             var updateContestDTO = new EditContestViewModel();
 
@@ -166,7 +187,12 @@ namespace PhotoContest.Web.Controllers
             return View(updateContestDTO);
         }
 
-        // POST: Contests/Edit/5
+        /// <summary>
+        /// Edit a contest
+        /// </summary>
+        /// <param name="name">Name of the contest to edit</param>
+        /// <param name="editViewModel">Details to edit</param>
+        /// <returns>To list of all contests if successful or go to error page for bad request</returns>
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -182,7 +208,6 @@ namespace PhotoContest.Web.Controllers
             {
                 try
                 {
-
                     await this.contestService.UpdateAsync(name, updateContestDTO);
                     return RedirectToAction(nameof(Index));
                 }
@@ -196,7 +221,10 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
-        // GET: Contests/Delete/5
+        /// <summary>
+        /// Get a contest to delete
+        /// </summary>
+        /// <param name="name">Name of the contest to delete</param>
         [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Delete(string name)
         {
@@ -205,7 +233,11 @@ namespace PhotoContest.Web.Controllers
             return View(new ContetsViewModel(contestDTO));
         }
 
-        // POST: Contests/Delete/5
+        /// <summary>
+        /// Delete a contest
+        /// </summary>
+        /// <param name="name">Name of the contest to delete</param>
+        /// <returns>To list of all contests if successful or go to error page for bad request</returns>
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -226,6 +258,11 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Get contest for user to enroll
+        /// </summary>
+        /// <param name="name">Name of the contest to enroll in</param>
+        /// <returns>A view asking for confirmation</returns>
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Enroll(string name)
         {
@@ -237,6 +274,11 @@ namespace PhotoContest.Web.Controllers
             return View(enrolView);
         }
 
+        /// <summary>
+        /// Submit the enrollment
+        /// </summary>
+        /// <param name="name">Name of the contest to enroll in</param>
+        /// <returns>To a list of user's contests or to an error page if bad request</returns>
         [Authorize(Roles = "User")]
         [HttpPost, ActionName("EnrollSubmit")]
         [ValidateAntiForgeryToken]
@@ -257,7 +299,11 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // Get contest to enroll
+        /// <summary>
+        /// Get contest to invite user to
+        /// </summary>
+        /// <param name="name">Name of the contest to ivite to</param>
+        /// <returns>Shows a dropdown of all available users</returns>
         [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> Invite(string name)
         {
@@ -268,6 +314,11 @@ namespace PhotoContest.Web.Controllers
             return View(inviteViewModel);
         }
 
+        /// <summary>
+        /// Submit Invite request
+        /// </summary>
+        /// <param name="inviteViewModel">Details of the user invited and the contest name</param>
+        /// <returns>List of all contests or error page for bad request</returns>
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("Invite")]
         [ValidateAntiForgeryToken]
@@ -288,7 +339,11 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // Get contest to choose jury
+        /// <summary>
+        /// Get contest to choose jury for
+        /// </summary>
+        /// <param name="name">Name of the contest to choose for</param>
+        /// <returns>Shows a list of available users to choose from</returns>
         [Authorize(Roles = "Admin, Organizer")]
         public async Task<IActionResult> ChooseJury(string name)
         {
@@ -300,6 +355,11 @@ namespace PhotoContest.Web.Controllers
             return View(inviteViewModel);
         }
 
+        /// <summary>
+        /// Submit chosen jury for contest
+        /// </summary>
+        /// <param name="inviteViewModel">Name of user chosen and name of contest</param>
+        /// <returns>List of all contets or error page for bad request</returns>
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("ChooseJury")]
         [ValidateAntiForgeryToken]
@@ -320,12 +380,10 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        /*[Authorize(Roles = "User")]
-        public async Task<IActionResult> GetByUser()
-        {
-            return View();
-        }*/
-
+        /// <summary>
+        /// Get contests for signed in user
+        /// </summary>
+        /// <returns>List of signed in user's contests</returns>
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetUserContests()
         {
@@ -335,6 +393,11 @@ namespace PhotoContest.Web.Controllers
             return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList() }));
         }
 
+        /// <summary>
+        /// Filter signed in user's contests
+        /// </summary>
+        /// <param name="filter">Phase to filter by</param>
+        /// <returns>List of filtered signed in user's contests</returns>
         [Authorize(Roles = "User")]
         [HttpPost, ActionName("GetByUserFiltered")]
         [ValidateAntiForgeryToken]
@@ -358,12 +421,11 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin, Organizer")]
-        public async Task<IActionResult> GetByPhase()
-        {
-            return View();
-        }
-
+        /// <summary>
+        /// Get filtered contests
+        /// </summary>
+        /// <param name="contetsViewModel">Filters chosen</param>
+        /// <returns>List of filtered contests or error page for bad request</returns>
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost, ActionName("GetByPhaseFiltered")]
         [ValidateAntiForgeryToken]
@@ -386,7 +448,5 @@ namespace PhotoContest.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-
-
     }
 }

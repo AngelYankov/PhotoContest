@@ -400,7 +400,7 @@ namespace PhotoContest.Data
                 new Contest()
                 {
                     Id = Guid.Parse("17578ed3-fdfc-4616-9cdb-55a5ff762caf"),
-                    Name = "Babies",
+                    Name = "Couples",
                     CategoryId = Guid.Parse("a8c71a51-79f2-46ef-8a88-7983cbb7259a"), //people
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"), //phase1
                     IsOpen = true,
