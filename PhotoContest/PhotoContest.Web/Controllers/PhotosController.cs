@@ -17,6 +17,11 @@ using Microsoft.AspNetCore.Http;
 using PhotoContest.Services.Models.Update;
 using Microsoft.AspNetCore.Authorization;
 using PhotoContest.Services.Services;
+using System.Web.Helpers;
+using Simple.ImageResizer;
+using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -63,6 +68,11 @@ namespace PhotoContest.Web.Controllers
                     using (var fileSelected = new FileStream(saveFile, FileMode.Create)) 
                     {
                         await model.File.CopyToAsync(fileSelected);
+                    }
+                    using (var img = Image.Load(model.File.OpenReadStream()))
+                    {
+                        img.Mutate(x => x.Resize(400, 400));
+                        //img.Save(fileDbPath);
                     }
 
                     var newPhotoDTO = new NewPhotoDTO()
