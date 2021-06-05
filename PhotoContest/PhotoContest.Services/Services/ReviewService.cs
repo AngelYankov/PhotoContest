@@ -133,5 +133,12 @@ namespace PhotoContest.Services.Services
                                         .FirstOrDefaultAsync(r => r.Id == reviewId && r.IsDeleted == false)
                                         ?? throw new ArgumentException(Exceptions.InvalidReviewId);
         }
+        public async Task<List<Review>> GetAllReviewsAsync()
+        {
+            return await this.dbContext.Reviews
+                                       .Include(r => r.Photo)
+                                       .Include(r => r.Evaluator)
+                                       .ToListAsync();
+        }
     }
 }

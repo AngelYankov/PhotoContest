@@ -163,7 +163,7 @@ namespace PhotoContest.Services.Services
                              .ToListAsync();
         }
 
-        public async Task<IEnumerable<JuryMember>> AllJuriesAsync()
+        public async Task<List<JuryMember>> AllJuriesAsync()
         {
             return await this.dbContext
                              .Juries

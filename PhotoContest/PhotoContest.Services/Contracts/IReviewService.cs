@@ -15,5 +15,6 @@ namespace PhotoContest.Services.Contracts
         Task<List<ReviewDTO>> GetForUserAsync(string username);
         Task<bool> DeleteAsync(Guid reviewId);
         Task<Review> FindReviewAsync(Guid reviewId);
+        Task<List<Review>> GetAllReviewsAsync();
     }
 }

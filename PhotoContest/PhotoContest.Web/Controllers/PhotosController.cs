@@ -32,8 +32,8 @@ namespace PhotoContest.Web.Controllers
         private readonly IContestService contestService;
         private readonly IReviewService reviewService;
 
-        public PhotosController(IPhotoService photoService, 
-            IWebHostEnvironment webHostEnvironment, 
+        public PhotosController(IPhotoService photoService,
+            IWebHostEnvironment webHostEnvironment,
             IContestService contestService,
             IReviewService reviewService)
         {
@@ -42,11 +42,11 @@ namespace PhotoContest.Web.Controllers
             this.contestService = contestService;
             this.reviewService = reviewService;
         }
-        [Authorize(Roles ="Admin,Organizer")]
+        [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Index()
         {
             var photos = await this.photoService.GetAllAsync();
-            return View(photos.Select(p=>new PhotoViewModel(p)));
+            return View(photos.Select(p => new PhotoViewModel(p)));
         }
         [Authorize(Roles = "Admin,User")]
         public IActionResult Create(string contestName)
@@ -57,7 +57,7 @@ namespace PhotoContest.Web.Controllers
             };
             return View(createPhotoVM);
         }
-        
+
         [Authorize(Roles = "Admin,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -70,7 +70,7 @@ namespace PhotoContest.Web.Controllers
                     var newFileName = $"{Guid.NewGuid()}_{model.File.FileName}";
                     var fileDbPath = $"/Images/{newFileName}";
                     var saveFile = Path.Combine(webHostEnvironment.WebRootPath, "Images", newFileName);
-                    using (var fileSelected = new FileStream(saveFile, FileMode.Create)) 
+                    using (var fileSelected = new FileStream(saveFile, FileMode.Create))
                     {
                         await model.File.CopyToAsync(fileSelected);
                     }
@@ -87,9 +87,9 @@ namespace PhotoContest.Web.Controllers
                         PhotoUrl = fileDbPath,
                         ContestName = model.ContestName
                     };
-                    
+
                     await this.photoService.CreateAsync(newPhotoDTO);
-                    return RedirectToAction("GetUserContests","Contests");
+                    return RedirectToAction("GetUserContests", "Contests");
                 }
                 catch (Exception e)
                 {
@@ -103,16 +103,17 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> GetPhotosForUser()
         {
             var photos = await this.photoService.GetPhotosForUserAsync();
-            return View(photos.Select(p=> new PhotoViewModel(p) { ContestStatus = p.ContestStatus }));
+            return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = p.ContestStatus }));
         }
 
         [Authorize(Roles = "Admin,Organizer,User")]
         public async Task<IActionResult> GetContestsPhotos(string contestName)
         {
+            var reviews = await this.reviewService.GetAllReviewsAsync();
             var photos = await this.photoService.GetPhotosForContestAsync(contestName);
             var contest = await this.contestService.FindContestByNameAsync(contestName);
             var juries = await this.contestService.AllJuriesAsync();
-            return View(photos.Select(p=>new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries.ToList() }));
+            return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries, Reviews = reviews }));
         }
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(Guid id)

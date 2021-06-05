@@ -231,5 +231,6 @@ namespace PhotoContest.Services.Services
             }
             await this.dbContext.SaveChangesAsync();
         }
+
     }
 }
