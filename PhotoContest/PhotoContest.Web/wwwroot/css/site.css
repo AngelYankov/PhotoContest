@@ -59,8 +59,11 @@ html {
 }
 
 body {
-   Margin bottom by footer height 
-  margin-bottom: 60px;
+    Margin bottom by footer height margin-bottom: 60px;
+    background-image: url('../Images/photo-contest-tips-banner.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 .footer {
   position: absolute;
