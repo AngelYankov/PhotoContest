@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoContest.Services.ExceptionMessages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -8,7 +9,7 @@ namespace PhotoContest.Services.Models.Create
 {
     public class NewContestDTO
     {
-        [Required, StringLength(50, MinimumLength = 5, ErrorMessage = "Value for contest {0} should be between {2} and {1} characters.")]
+        [Required, StringLength(50, MinimumLength = 5, ErrorMessage = Exceptions.InvalidContestInfo)]
         public string Name { get; set; }
         [Required]
         public string CategoryName { get; set; }

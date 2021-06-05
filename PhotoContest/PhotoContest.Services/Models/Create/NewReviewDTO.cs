@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoContest.Services.ExceptionMessages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -9,9 +10,9 @@ namespace PhotoContest.Services.Models.Create
     {
         [Required]
         public Guid PhotoId { get; set; }
-        [Required, StringLength(50, MinimumLength = 2, ErrorMessage = "Value for {0} should be between {1} and {2} characters.")]
+        [Required, StringLength(50, MinimumLength = 2, ErrorMessage = Exceptions.InvalidReviewInfo)]
         public string Comment { get; set; }
-        [Required, Range(1, 10, ErrorMessage = "Value for {0} should be between {1} and {2}.")]
+        [Required, Range(1, 10, ErrorMessage = Exceptions.InvalidReviewInfo)]
         public double Score { get; set; }
         public bool WrongCategory { get; set; }
     }

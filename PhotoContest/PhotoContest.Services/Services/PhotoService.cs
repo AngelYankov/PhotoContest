@@ -118,6 +118,10 @@ namespace PhotoContest.Services.Services
                                        .ToListAsync();
         }
 
+        /// <summary>
+        /// Get all photos.
+        /// </summary>
+        /// <returns>Return all photos.</returns>
         public async Task<IEnumerable<Photo>> GetAllBaseAsync()
         {
             return await this.dbContext.Photos
@@ -173,6 +177,11 @@ namespace PhotoContest.Services.Services
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
+
+        /// <summary>
+        /// Get all photos for user who is logged in.
+        /// </summary>
+        /// <returns>Returns all photos.</returns>
         public async Task<List<PhotoDTO>> GetPhotosForUserAsync()
         {
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
