@@ -80,6 +80,12 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new ReviewDTO(review);
         }
+
+        /// <summary>
+        /// Delete a review by ID.
+        /// </summary>
+        /// <param name="reviewId">Review ID to search for.</param>
+        /// <returns>Returns if is delete succesfully.</returns>
         public async Task<bool> DeleteAsync(Guid reviewId)
         {
             var review = await FindReviewAsync(reviewId);
@@ -114,7 +120,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Reviews
                                        .Include(r => r.Photo)
                                        .Include(r => r.Evaluator)
-                                       .Where(r => r.Photo.UserId == user.Id)
+                                       .Where(r => r.Photo.UserId == user.Id && r.IsDeleted==false)
                                        .OrderByDescending(r => r.CreatedOn)
                                        .Select(r => new ReviewDTO(r))
                                        .ToListAsync();
@@ -130,14 +136,21 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Reviews
                                         .Include(r => r.Photo)
                                         .Include(r => r.Evaluator)
+                                        .Where(r => r.IsDeleted == false)
                                         .FirstOrDefaultAsync(r => r.Id == reviewId && r.IsDeleted == false)
                                         ?? throw new ArgumentException(Exceptions.InvalidReviewId);
         }
+
+        /// <summary>
+        /// Get all reviews.
+        /// </summary>
+        /// <returns>Return all reviews.</returns>
         public async Task<List<Review>> GetAllReviewsAsync()
         {
             return await this.dbContext.Reviews
                                        .Include(r => r.Photo)
                                        .Include(r => r.Evaluator)
+                                       .Where(r=>r.IsDeleted == false)
                                        .ToListAsync();
         }
     }

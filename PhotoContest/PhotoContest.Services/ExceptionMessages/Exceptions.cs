@@ -54,5 +54,9 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string UserNotJury = "User is not in the jury for this contest.";
         public const string InvalidUserAccessToPhotos = "User does not have access to the contest's photos.";
         public const string RestoreUserAccount = "Registration is not completed, but your account has been recovered. You can login to your account.";
+        public const string InvalidUserInfo = "Value for user {0} should be between {2} and {1} characters.";
+        public const string InvalidPhotoInfo = "Value for photo {0} should be between {2} and {1} characters.";
+        public const string InvalidContestInfo = "Value for contest {0} should be between {2} and {1} characters.";
+        public const string InvalidReviewInfo = "Value for review {0} should be between {2} and {1} characters.";
     }
 }

@@ -20,11 +20,18 @@ namespace PhotoContest.Services.Services
             this.dbContext = dbContext;
             this.contestService = contestService;
         }
-
+        /// <summary>
+        /// Get all user contests.
+        /// </summary>
+        /// <returns>Returns all user contests.</returns>
         public async Task<List<UserContest>> GetAllUserContestsAsync()
         {
             return await this.dbContext.UserContests.Include(uc=>uc.User).Include(uc=>uc.Contest).ToListAsync();
         }
+        /// <summary>
+        /// Calculate points for each user by their photo points calculated by reviews' points.
+        /// </summary>
+        /// <returns>Calculate all points.</returns>
         public async Task CalculatePointsAsync()
         {
             //var contests = await this.dbContext.Contests.Where(c => c.Status.Name == "Finished").ToListAsync();
@@ -85,6 +92,11 @@ namespace PhotoContest.Services.Services
             }
             await this.dbContext.SaveChangesAsync();
         }
+        /// <summary>
+        /// Calculate points for a photo.
+        /// </summary>
+        /// <param name="photo">Photo for which points will be calculated.</param>
+        /// <returns>Calculate points.</returns>
         private async Task CalculatePhotoPoints(Photo photo)
         {
             var reviews = await this.dbContext.Reviews.Include(r => r.Photo).Include(r => r.Evaluator).Where(r => r.PhotoId == photo.Id).ToListAsync();
@@ -100,6 +112,15 @@ namespace PhotoContest.Services.Services
             photo.AllPoints = photo.AllPoints / reviews.Count();   
             // await this.dbContext.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Calculate points for users on first place.
+        /// </summary>
+        /// <param name="countFirstPlacePhotos">Count of how many users on first place.</param>
+        /// <param name="contest">Contest of the first place photos.</param>
+        /// <param name="FirstPlacePhotos">First place photos.</param>
+        /// <param name="SecondPlacePhotos">Second place photos.</param>
+        /// <returns>Calculate points.</returns>
         private async Task CalculatePointsForUsersFirstPlaceAsync(int countFirstPlacePhotos, Contest contest, List<Photo> FirstPlacePhotos, List<Photo> SecondPlacePhotos)
         {
             if (countFirstPlacePhotos > 1)
@@ -133,6 +154,14 @@ namespace PhotoContest.Services.Services
             }
             //await this.dbContext.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Calculate points for users on second place.
+        /// </summary>
+        /// <param name="countSecondPlacePhotos">Count of the second place users.</param>
+        /// <param name="contest">Contest of the second place photos.</param>
+        /// <param name="SecondPlacePhotos">Second place photos.</param>
+        /// <returns>Calculate points.</returns>
         private async Task CalculatePointsForUsersSecondPlaceAsync(int countSecondPlacePhotos, Contest contest, List<Photo> SecondPlacePhotos)
         {
             if (countSecondPlacePhotos > 1)
@@ -151,6 +180,14 @@ namespace PhotoContest.Services.Services
             }
             //await this.dbContext.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Calculate points for users on third place.
+        /// </summary>
+        /// <param name="countThirdPlacePhotos">Count of third place photos.</param>
+        /// <param name="contest">Contest of the third place photos.</param>
+        /// <param name="ThirdPlacePhotos">Third place photos.</param>
+        /// <returns>Calculate points.</returns>
         private async Task CalculatePointsForUsersThirdPlaceAsync(int countThirdPlacePhotos, Contest contest, List<Photo> ThirdPlacePhotos)
         {
             if (countThirdPlacePhotos > 1)

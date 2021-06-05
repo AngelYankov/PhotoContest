@@ -152,6 +152,10 @@ namespace PhotoContest.Services.Services
             }
         }
 
+        /// <summary>
+        /// Get all contests which are open.
+        /// </summary>
+        /// <returns>Returns all contests.</returns>
         public async Task<IEnumerable<ContestDTO>> AllOpenViewAsync()
         {
             return await this.dbContext
@@ -163,6 +167,10 @@ namespace PhotoContest.Services.Services
                              .ToListAsync();
         }
 
+        /// <summary>
+        /// Get all juries.
+        /// </summary>
+        /// <returns>Return all juries.</returns>
         public async Task<List<JuryMember>> AllJuriesAsync()
         {
             return await this.dbContext
@@ -264,7 +272,7 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ExistingJury);
             }
-            if(await this.dbContext.UserContests.AnyAsync(uc=>uc.UserId == user.Id && uc.ContestId == contest.Id))
+            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
                 throw new ArgumentException(Exceptions.InvalidJury);
             }
@@ -322,6 +330,10 @@ namespace PhotoContest.Services.Services
             return new ContestDTO(contest);
         }
 
+        /// <summary>
+        /// Get contests for user who is logged in.
+        /// </summary>
+        /// <returns>Returns all contests.</returns>
         public async Task<IEnumerable<ContestDTO>> GetUserContestsAsync()
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
@@ -344,13 +356,13 @@ namespace PhotoContest.Services.Services
             return allUserContestsDTO;
         }
 
-            /// <summary>
-            /// Filter and/or sort contests by username.
-            /// </summary>
-            /// <param name="username">Username for which we are filtering the contests.</param>
-            /// <param name="filter">Value of the filter.</param>
-            /// <returns>Returns the contests that correspond to the filter.</returns>
-            public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
+        /// <summary>
+        /// Filter and/or sort contests by username.
+        /// </summary>
+        /// <param name="username">Username for which we are filtering the contests.</param>
+        /// <param name="filter">Value of the filter.</param>
+        /// <returns>Returns the contests that correspond to the filter.</returns>
+        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
@@ -387,6 +399,11 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.InvalidFilter);
             }
         }
+
+        /// <summary>
+        /// Get all finished contests.
+        /// </summary>
+        /// <returns>Returns all finished contests.</returns>
         public async Task<List<Contest>> GetAllFinishedContestsAsync()
         {
             return await this.dbContext.Contests
