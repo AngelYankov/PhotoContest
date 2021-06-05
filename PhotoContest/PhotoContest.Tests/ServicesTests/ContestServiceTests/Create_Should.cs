@@ -33,9 +33,13 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>();
             var userService = new Mock<IUserService>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
-            var userManager = new Mock<UserManager<User>>();
-            var signInManager = new Mock<SignInManager<User>>();
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
+
             var category = new Category();
             category.Name = "Cars";
             categoryService.Setup(c => c.FindCategoryByNameAsync(newContestDTO.CategoryName)).Returns(Task.FromResult(category));
@@ -48,7 +52,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService.Object, categoryService.Object, userManager.Object, signInManager.Object);
+                var sut = new ContestService(actContext, userService.Object, categoryService.Object, userManager, signManager);
                 var result = await sut.CreateAsync(newContestDTO);
 
                 Assert.AreEqual(newContestDTO.Name, result.Name);
@@ -61,7 +65,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
         [TestMethod]
         public async Task ThrowsWhen_Phase1_NotCorrect()
         {
-            /*var options = Utils.GetOptions(nameof(ThrowsWhen_Phase1_NotCorrect));
+            var options = Utils.GetOptions(nameof(ThrowsWhen_Phase1_NotCorrect));
             var newContestDTO = new Mock<NewContestDTO>().Object;
             newContestDTO.Name = "NewestTest";
             newContestDTO.CategoryName = "Cars";
@@ -71,8 +75,14 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Finished = DateTime.Now.AddHours(32).ToString("dd.MM.yy HH:mm");
 
             var categoryService = new Mock<ICategoryService>();
-            var userService = new Mock<IUserService>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
+
             var category = new Category();
             category.Name = "Cars";
             categoryService.Setup(c => c.FindCategoryByNameAsync(newContestDTO.CategoryName)).Returns(Task.FromResult(category));
@@ -85,15 +95,15 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService.Object);
+                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newContestDTO));
-            }*/
+            }
         }
 
         [TestMethod]
         public async Task ThrowsWhen_Phase2_NotCorrect()
         {
-            /*var options = Utils.GetOptions(nameof(ThrowsWhen_Phase2_NotCorrect));
+            var options = Utils.GetOptions(nameof(ThrowsWhen_Phase2_NotCorrect));
             var newContestDTO = new Mock<NewContestDTO>().Object;
             newContestDTO.Name = "NewestTest";
             newContestDTO.CategoryName = "Cars";
@@ -102,9 +112,16 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Phase2 = "02.06.21 20:00";
             newContestDTO.Finished = DateTime.Now.AddHours(32).ToString("dd.MM.yy HH:mm");
 
+          
             var categoryService = new Mock<ICategoryService>();
-            var userService = new Mock<IUserService>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
+
             var category = new Category();
             category.Name = "Cars";
             categoryService.Setup(c => c.FindCategoryByNameAsync(newContestDTO.CategoryName)).Returns(Task.FromResult(category));
@@ -117,15 +134,15 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService.Object);
+                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newContestDTO));
-            }*/
+            }
         }
 
         [TestMethod]
         public async Task ThrowsWhen_Finished_NotCorrect()
         {
-           /* var options = Utils.GetOptions(nameof(ThrowsWhen_Finished_NotCorrect));
+            var options = Utils.GetOptions(nameof(ThrowsWhen_Finished_NotCorrect));
             var newContestDTO = new Mock<NewContestDTO>().Object;
             newContestDTO.Name = "NewestTest";
             newContestDTO.CategoryName = "Cars";
@@ -135,8 +152,13 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Finished = "01.06.21 10:00";
 
             var categoryService = new Mock<ICategoryService>();
-            var userService = new Mock<IUserService>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
             var category = new Category();
             category.Name = "Cars";
             categoryService.Setup(c => c.FindCategoryByNameAsync(newContestDTO.CategoryName)).Returns(Task.FromResult(category));
@@ -149,9 +171,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService.Object);
+                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newContestDTO));
-            }*/
+            }
         }
     }
 }

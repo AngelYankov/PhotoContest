@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -20,9 +21,14 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
         {
             var options = Utils.GetOptions(nameof(Return_Correct_Contest));
 
-            var categoryService = new Mock<ICategoryService>();
-            var userService = new Mock<IUserService>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var categoryService = new Mock<ICategoryService>().Object;
+            var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -33,7 +39,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService.Object);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.FindContestByNameAsync(actContext.Contests.First().Name);
                 Assert.AreEqual(result.Id, actContext.Contests.First().Id);
                 Assert.AreEqual(result.Name, actContext.Contests.First().Name);
@@ -46,13 +52,18 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
         {
             var options = Utils.GetOptions(nameof(ThrowsWhen_Contest_NotFound));
 
-            var categoryService = new Mock<ICategoryService>();
-            var userService = new Mock<IUserService>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var categoryService = new Mock<ICategoryService>().Object;
+            var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService.Object);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.FindContestByNameAsync("wrong"));
             }
         }

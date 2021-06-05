@@ -25,7 +25,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
-            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -53,7 +53,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
-            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {

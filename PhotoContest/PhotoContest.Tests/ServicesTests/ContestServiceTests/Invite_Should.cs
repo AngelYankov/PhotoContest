@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -23,7 +24,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>();
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -44,8 +50,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(4).First().UserName;
-                var contestService = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
+                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
                 var result = await sut.InviteAsync(actContext.Contests.First().Name, userToInvite);
 
                 Assert.IsTrue(result);
@@ -59,7 +65,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>();
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -80,8 +91,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(2).First().UserName;
-                var contestService = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
+                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                         sut.InviteAsync(actContext.Contests.First().Name, userToInvite));
@@ -92,9 +103,15 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
         public async Task ThrowWhen_User_IsOrganizer()
         {
             var options = Utils.GetOptions(nameof(ThrowWhen_User_IsOrganizer));
+
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>();
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -115,8 +132,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(1).First().UserName;
-                var contestService = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
+                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                         sut.InviteAsync(actContext.Contests.First().Name, userToInvite));
@@ -130,7 +147,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>();
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -152,8 +174,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(8).First().UserName;
-                var contestService = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
+                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                         sut.InviteAsync(actContext.Contests.Last().Name, userToInvite));
@@ -167,7 +189,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>();
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -186,8 +213,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(4).First().UserName;
-                var contestService = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService);
+                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                                         sut.InviteAsync(actContext.Contests.First().Name, userToInvite));

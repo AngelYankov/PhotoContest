@@ -27,7 +27,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
-            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             var updateDTO = new UpdateUserDTO()
             {
@@ -61,7 +61,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
-            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             var updateDTO = new UpdateUserDTO() {LastName="Smith"};
 
@@ -91,7 +91,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
-            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
             var updateDTO = new UpdateUserDTO() { FirstName="John"};
 
             using (var arrContext = new PhotoContestContext(options))

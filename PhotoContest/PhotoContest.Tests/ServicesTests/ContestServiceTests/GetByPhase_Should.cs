@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -23,7 +24,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -35,8 +41,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", null, null);
 
                 Assert.AreEqual(actContext.Contests.Where(c=>c.Status.Name=="Phase 1").Count(), result.Count());
@@ -53,7 +59,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -65,8 +76,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", "name", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 1").Count(), result.Count());
@@ -85,7 +96,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -97,8 +113,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", "name", "desc");
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 1").Count(), result.Count());
@@ -117,7 +133,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -129,8 +150,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", "category", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 1").Count(), result.Count());
@@ -149,7 +170,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -161,8 +187,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", "category", "desc");
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 1").Count(), result.Count());
@@ -181,7 +207,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -193,8 +224,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", "newest", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 1").Count(), result.Count());
@@ -213,7 +244,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -225,8 +261,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 1", "oldest", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 1").Count(), result.Count());
@@ -250,7 +286,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -262,8 +303,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", null, null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -280,7 +321,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -292,8 +338,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", "name", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -312,7 +358,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -324,8 +375,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", "name", "desc");
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -344,7 +395,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -356,8 +412,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", "category", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -376,7 +432,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -388,8 +449,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", "category", "desc");
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -408,7 +469,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -420,8 +486,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", "newest", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -440,7 +506,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -452,8 +523,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Phase 2", "oldest", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Phase 2").Count(), result.Count());
@@ -475,7 +546,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -487,8 +563,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", null, null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -505,7 +581,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -517,8 +598,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", "name", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -537,7 +618,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -549,8 +635,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", "name", "desc");
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -569,7 +655,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -581,8 +672,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", "category", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -601,7 +692,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -613,8 +709,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", "category", "desc");
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -633,7 +729,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -645,8 +746,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", "newest", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -665,7 +766,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -677,8 +783,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
                 var result = await sut.GetByPhaseAsync("Finished", "oldest", null);
 
                 Assert.AreEqual(actContext.Contests.Where(c => c.Status.Name == "Finished").Count(), result.Count());
@@ -697,7 +803,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -709,8 +820,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetByPhaseAsync("Wrong", null, null));
             }
@@ -723,7 +834,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -735,8 +851,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetByPhaseAsync("Phase 1", "wrong", null));
             }
@@ -749,7 +865,12 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             var categoryService = new Mock<ICategoryService>().Object;
             var userService = new Mock<IUserService>().Object;
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
+                null, null, null, null, null).Object;
             var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
             using (var arrContext = new PhotoContestContext(options))
             {
@@ -761,8 +882,8 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, contextAccessor, userService, categoryService);
-                var sut = new ContestService(actContext, contextAccessor, userService, categoryService);
+                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetByPhaseAsync("Phase 1", "asc", "wrong"));
             }
