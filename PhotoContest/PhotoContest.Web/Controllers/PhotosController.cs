@@ -42,12 +42,22 @@ namespace PhotoContest.Web.Controllers
             this.contestService = contestService;
             this.reviewService = reviewService;
         }
+
+        /// <summary>
+        /// Get all photos
+        /// </summary>
+        /// <returns>List of all photos</returns>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Index()
         {
             var photos = await this.photoService.GetAllAsync();
             return View(photos.Select(p => new PhotoViewModel(p)));
         }
+
+        /// <summary>
+        /// Get contest to upload a photo to
+        /// </summary>
+        /// <param name="contestName">Contest in which the photo will be uploaded</param>
         [Authorize(Roles = "Admin,User")]
         public IActionResult Create(string contestName)
         {
@@ -58,6 +68,11 @@ namespace PhotoContest.Web.Controllers
             return View(createPhotoVM);
         }
 
+        /// <summary>
+        /// Upload a photo in a contest
+        /// </summary>
+        /// <param name="model">Details of the photo to upload</param>
+        /// <returns>List of all user's contests or error page if bad request</returns>
         [Authorize(Roles = "Admin,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -99,6 +114,9 @@ namespace PhotoContest.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Show photos for signed in user
+        /// </summary>
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetPhotosForUser()
         {
@@ -106,6 +124,11 @@ namespace PhotoContest.Web.Controllers
             return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = p.ContestStatus }));
         }
 
+        /// <summary>
+        /// Get photos for a contets
+        /// </summary>
+        /// <param name="contestName">name of the contest</param>
+        /// <returns>List of all photos for a contest</returns>
         [Authorize(Roles = "Admin,Organizer,User")]
         public async Task<IActionResult> GetContestsPhotos(string contestName)
         {
@@ -115,12 +138,24 @@ namespace PhotoContest.Web.Controllers
             var juries = await this.contestService.AllJuriesAsync();
             return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries, Reviews = reviews }));
         }
+
+        /// <summary>
+        /// Get a photo to edit
+        /// </summary>
+        /// <param name="id">Id of the photo</param>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var photo = await this.photoService.GetAsync(id);
             return View(new EditPhotoViewModel(photo));
         }
+
+        /// <summary>
+        /// Edit a photo
+        /// </summary>
+        /// <param name="id">Id of the photo to edit</param>
+        /// <param name="model">Details of the photo to edit</param>
+        /// <returns>Returns list of all photos or error page if bad request</returns>
         [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -145,12 +180,23 @@ namespace PhotoContest.Web.Controllers
             }
             return View(model);
         }
+
+        /// <summary>
+        /// Get photo to delete
+        /// </summary>
+        /// <param name="id">Id of the photo</param>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var photo = await this.photoService.GetAsync(id);
             return View(new PhotoViewModel(photo));
         }
+
+        /// <summary>
+        /// Delete a photo
+        /// </summary>
+        /// <param name="id">Id of the photo</param>
+        /// <returns>List of all photos or error page if bad request</returns>
         [Authorize(Roles = "Admin,Organizer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

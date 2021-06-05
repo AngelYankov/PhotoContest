@@ -26,6 +26,9 @@ namespace PhotoContest.Web.Controllers
             this.userService = userService;
         }
 
+		/// <summary>
+		/// Show form for login details
+		/// </summary>
 		[HttpGet]
 		public IActionResult Login()
 		{
@@ -33,6 +36,11 @@ namespace PhotoContest.Web.Controllers
 			return View(model);
 		}
 
+		/// <summary>
+		/// Sign in to account
+		/// </summary>
+		/// <param name="model">Login details put in the form</param>
+		/// <returns>Redirects to home page if successful or to an error page if bad request</returns>
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginViewModel model)
 		{
@@ -44,17 +52,24 @@ namespace PhotoContest.Web.Controllers
 					return RedirectToAction("Index", "Home");
 				}
 			}
-
 			return RedirectToAction("Error", "Home");
 		}
 
-		[HttpGet]
+		/// <summary>
+		/// Show form to put in details to register
+		/// </summary>
+		/*[HttpGet]
 		public IActionResult Register()
 		{
 			var model = new RegisterViewModel();
 			return View(model);
 		}
 
+		/// <summary>
+		/// Confirm registration
+		/// </summary>
+		/// <param name="model">Details put in form to register</param>
+		/// <returns></returns>
 		[HttpPost]
 		public async Task<IActionResult> Register(RegisterViewModel model)
 		{
@@ -68,13 +83,13 @@ namespace PhotoContest.Web.Controllers
 				user.Password = model.Password;
 
 				var result = await this.userService.CreateAsync(user);
-                /*if (result.Succeeded)
+                *//*if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
-                }*/
+                }*//*
             }
 
 			return RedirectToAction("Error", "Home");
-		}
+		}*/
 	}
 }

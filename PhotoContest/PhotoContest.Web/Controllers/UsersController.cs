@@ -24,6 +24,10 @@ namespace PhotoContest.Web.Controllers
             this.userService = userService;
         }
 
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <returns>List of those users</returns>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Index()
         {
@@ -31,6 +35,10 @@ namespace PhotoContest.Web.Controllers
             return View(users.Select(u=>new UserViewModel(u)));
         }
 
+        /// <summary>
+        /// Get all users participating i na contest
+        /// </summary>
+        /// <returns>List of those users</returns>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> ViewAllParticipants()
         {
@@ -38,6 +46,10 @@ namespace PhotoContest.Web.Controllers
             return View(users.Select(u => new UserViewModel(u)));
         }
 
+        /// <summary>
+        /// Get details for a user
+        /// </summary>
+        /// <param name="username">Username of the user</param>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Details(string username)
         {
@@ -79,12 +91,20 @@ namespace PhotoContest.Web.Controllers
             return View();
         }*/
 
+        /// <summary>
+        /// Show form to create organizer
+        /// </summary>
         [Authorize(Roles = "Admin")]
         public IActionResult CreateOrganizer()
         {
             return View();
         }
 
+        /// <summary>
+        /// Create organizer
+        /// </summary>
+        /// <param name="model">Details of the organizer</param>
+        /// <returns>List of users or error page if bad request</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -113,6 +133,10 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Get user to edit
+        /// </summary>
+        /// <param name="username">Username of the user</param>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(string username)
         {
@@ -121,6 +145,12 @@ namespace PhotoContest.Web.Controllers
             return View(new EditUserViewModel(userDTO));
         }
 
+        /// <summary>
+        /// Edit user
+        /// </summary>
+        /// <param name="username">Username of the user</param>
+        /// <param name="model">Details to update</param>
+        /// <returns>List of all users or error page if bad request</returns>
         [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -147,6 +177,10 @@ namespace PhotoContest.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Get user to delete
+        /// </summary>
+        /// <param name="username">Username of the user</param>
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string username)
         {
@@ -155,6 +189,11 @@ namespace PhotoContest.Web.Controllers
             return View(new UserViewModel(userDTO));
         }
 
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        /// <param name="username">Username of the user</param>
+        /// <returns>List of all users or error page if bad request</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -175,12 +214,20 @@ namespace PhotoContest.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Get user by username
+        /// </summary>
         [Authorize(Roles = "Admin,Organizer")]
         public IActionResult SearchByUsername()
         {
             return View();
         }
 
+        /// <summary>
+        /// Show details about user
+        /// </summary>
+        /// <param name="model">Username of the user</param>
+        /// <returns>Details of the user or error page if bad request</returns>
         [Authorize(Roles = "Admin,Organizer,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -202,6 +249,10 @@ namespace PhotoContest.Web.Controllers
             }
             return View();
         }
+
+        /// <summary>
+        /// Get details for signed in user
+        /// </summary>
         [Authorize]
         public async Task<IActionResult> ShowMyAccountInfo()
         {

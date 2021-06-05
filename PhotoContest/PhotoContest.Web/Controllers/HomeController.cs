@@ -26,6 +26,10 @@ namespace PhotoContest.Web.Controllers
             this.photoService = photoService;
         }
 
+        /// <summary>
+        /// Home page of the website
+        /// </summary>
+        /// <returns>List of latest winning photos and list of newest contests</returns>
         public async Task<IActionResult> Index()
         {
             var allContests = await this.contestService.GetAllAsync();
@@ -48,10 +52,17 @@ namespace PhotoContest.Web.Controllers
                                                       Phase1Contests = phase1Contests.ToList() });
         }
 
+        /// <summary>
+        /// Shows the privacy page of the website
+        /// </summary>
         public IActionResult Privacy()
         {
             return View();
         }
+
+        /// <summary>
+        /// Error page of the website 404 Not found
+        /// </summary>
         public IActionResult PageNotFound()
         {
             return View();

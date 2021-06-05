@@ -27,6 +27,10 @@ namespace PhotoContest.Web.Controllers
             this.photoService = photoService;
         }
 
+        /// <summary>
+        /// Get photo to review
+        /// </summary>
+        /// <param name="photoId">Id of photo</param>
         [Authorize(Roles ="Admin,Organizer")]
         public async Task<IActionResult> Create(Guid photoId)
         {
@@ -35,6 +39,11 @@ namespace PhotoContest.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Review photo
+        /// </summary>
+        /// <param name="model">Details of the review</param>
+        /// <returns>List of all contests or error page of bad request</returns>
         [Authorize(Roles = "Admin,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -62,6 +71,11 @@ namespace PhotoContest.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Get all reviews for a photo
+        /// </summary>
+        /// <param name="id">Id of the photo</param>
+        /// <returns>List of all photo reviews or error page if bad request</returns>
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetPhotoReviews(Guid id)
         {
@@ -76,6 +90,11 @@ namespace PhotoContest.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Get review to delete
+        /// </summary>
+        /// <param name="id">Id of reviews</param>
+        /// <returns>Show for to confirm deletion</returns>
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -92,6 +111,11 @@ namespace PhotoContest.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete review
+        /// </summary>
+        /// <param name="model">Id of the review</param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin,Organizer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
