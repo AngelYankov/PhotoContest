@@ -8,40 +8,44 @@
 }
 
 <div class="text-center">
-    </h1> class="display-4">Welcome to the world of photography</h1>
+    <h1>Welcome to the world of photography</h1>
 </div>
 
 <div class="text-center">
     <h4>Latest winning photos</h4>
 </div>
-@foreach (var item in Model.FinishedContests)
-{
-    if (item.Photos.Count() != 0)
+<div class="row">
+    @foreach (var item in Model.FinishedContests)
     {
-        <div class="card" style="width: 16rem;">
-            <img class="card-img-top" src="@item.Photos.First().PhotoUrl" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-text">Contest: @item.Name</h5>
-                <h6 class="card-text">Category: @item.Category.Name</h6>
+        if (item.Photos.Count() != 0)
+        {
+            <div class="card" style="width: 16rem;">
+                <img class="card-img-top" src="@item.Photos.First().PhotoUrl" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-text">Contest: @item.Name</h5>
+                    <h6 class="card-text">Category: @item.Category.Name</h6>
+                </div>
             </div>
-        </div>
+        }
     }
-}
+</div>
 
 <div class="text-center">
     <h4>Future contests</h4>
 </div>
 
-@foreach (var item in Model.Phase1Contests)
-{
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-text">Contest: @item.Name</h5>
-            <h6 class="card-text">Category: @item.Category</h6>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <a class="btn btn-outline-dark" asp-action="Details" asp-controller="Contests" asp-route-name="@item.Name">Details</a>
-            }
+<div class="row">
+    @foreach (var item in Model.Phase1Contests)
+    {
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-text">Contest: @item.Name</h5>
+                <h6 class="card-text">Category: @item.Category</h6>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a class="btn btn-outline-dark" asp-action="Details" asp-controller="Contests" asp-route-name="@item.Name">Details</a>
+                }
+            </div>
         </div>
-    </div>
-}
+    }
+</div>
