@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoContest.Services.ExceptionMessages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace PhotoContest.Web.Models.UserViewModels
 {
     public class CreateUserViewModel
     {
-        [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for user {0} should be between {2} and {1} characters.")]
+        [Required, StringLength(20, MinimumLength = 2, ErrorMessage = Exceptions.InvalidUserInfo)]
         public string FirstName { get; set; }
 
-        [Required, StringLength(20, MinimumLength = 2, ErrorMessage = "Value for user {0} should be between {2} and {1} characters.")]
+        [Required, StringLength(20, MinimumLength = 2, ErrorMessage = Exceptions.InvalidUserInfo)]
         public string LastName { get; set; }
 
         [Required, EmailAddress, Display(Name = "Email address")]
@@ -19,7 +20,7 @@ namespace PhotoContest.Web.Models.UserViewModels
 
         [Required, EmailAddress]
         [Display(Name = "Confirm email address")]
-        [Compare(nameof(Email), ErrorMessage = "The email does not match.")]
+        [Compare(nameof(Email), ErrorMessage = Exceptions.NotMatchingEmail)]
         public string EmailConfirmed { get; set; }
 
         [Required, MinLength(8), DataType(DataType.Password)]

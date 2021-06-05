@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoContest.Services.ExceptionMessages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace PhotoContest.Web.Models.ContestViewModels
 {
     public class CreateContestViewModel
     {
-        [Required, StringLength(50, MinimumLength = 5, ErrorMessage = "Contest name should be between {1} and {2} characters.")]
+        [Required, StringLength(50, MinimumLength = 5, ErrorMessage = Exceptions.InvalidContestInfo)]
         public string Name { get; set; }
         [Required]
         [Display(Name = "Category")]

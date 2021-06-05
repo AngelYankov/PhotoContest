@@ -58,5 +58,8 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidPhotoInfo = "Value for photo {0} should be between {2} and {1} characters.";
         public const string InvalidContestInfo = "Value for contest {0} should be between {2} and {1} characters.";
         public const string InvalidReviewInfo = "Value for review {0} should be between {2} and {1} characters.";
+        public const string NotMatchingEmail = "The email does not match.";
+        public const string InvalidPassword = "Value for {0} must be between {2} and {1} characters long.";
+        public const string NotMatchingPassword = "The password and confirm password fields must match.";
     }
 }
