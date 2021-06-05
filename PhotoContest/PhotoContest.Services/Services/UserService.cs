@@ -209,25 +209,27 @@ namespace PhotoContest.Services.Services
             var contestants = await this.dbContext.Users.Where(u => u.Rank.Name != "Admin" && u.Rank.Name != "Organizer").ToListAsync();
             foreach (var contestant in contestants)
             {
-                /*if (contestant.OverallPoints <= 50)
-                {
-                    contestant.RankId = Guid.Parse("acca215b-d737-406c-b87c-696fb22ce001");
-                }*/
                 if (contestant.OverallPoints > 50 && contestant.OverallPoints <= 150)
                 {
+                    var rankEnthusiast = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Id == Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1"));
                     contestant.RankId = Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1");
+                    contestant.Rank = rankEnthusiast;
                     //CHANGE ONLY RANKID NOT RANK
                 }
                 if (contestant.OverallPoints > 150 && contestant.OverallPoints <= 1000)
                 {
+                    var rankMaster = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Id == Guid.Parse("a9576301-3157-454f-86ce-85bb5eb2dfc9"));
                     contestant.RankId = Guid.Parse("a9576301-3157-454f-86ce-85bb5eb2dfc9");
+                    contestant.Rank = rankMaster;
                 }
                 if (contestant.OverallPoints > 1000)
                 {
+                    var rankDictator = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Id == Guid.Parse("0b1728c7-5582-4958-9e97-52c9b1d44cdb"));
                     contestant.RankId = Guid.Parse("0b1728c7-5582-4958-9e97-52c9b1d44cdb");
+                    contestant.Rank = rankDictator;
                 }
             }
+            await this.dbContext.SaveChangesAsync();
         }
-
     }
 }

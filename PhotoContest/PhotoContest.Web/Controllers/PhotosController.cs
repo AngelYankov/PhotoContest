@@ -93,7 +93,7 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return NotFound();
+                    return NotFound(e.Message);
                 }
             }
             return View(model);

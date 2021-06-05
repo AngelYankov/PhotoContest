@@ -18,6 +18,7 @@ using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Services;
 using PhotoContest.Services.Services.BackgroundTask;
 using PhotoContest.Services.Services.SecurityService;
+using PhotoContest.Web.Middlewares;
 using System;
 using System.IO;
 using System.Reflection;
@@ -153,6 +154,7 @@ namespace PhotoContest.Web
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<PageNotFoundMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
