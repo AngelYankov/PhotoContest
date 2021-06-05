@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -24,7 +25,11 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
-            using(var arrContext = new PhotoContestContext(options))
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+
+            using (var arrContext = new PhotoContestContext(options))
             {
                 await arrContext.Ranks.AddRangeAsync(Utils.SeedRanks());
                 await arrContext.Roles.AddRangeAsync(Utils.SeedRoles());
@@ -34,7 +39,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 var result = await sut.GetAllParticipantsAsync();
                 var role = await actContext.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == "user");
                 var userRoles = await actContext.UserRoles.Where(ur => ur.RoleId == role.Id).ToListAsync();

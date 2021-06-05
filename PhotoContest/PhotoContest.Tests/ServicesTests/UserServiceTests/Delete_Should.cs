@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -23,6 +24,10 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+
             using (var arrContext = new PhotoContestContext(options))
             {
                 await arrContext.Users.AddRangeAsync(Utils.SeedUsers());
@@ -31,7 +36,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 var result = await sut.DeleteAsync(actContext.Users.First().UserName);
                 Assert.IsTrue(result);
                 Assert.IsTrue(actContext.Users.First().IsDeleted);

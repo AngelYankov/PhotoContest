@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -14,6 +15,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
 {
     [TestClass]
     public class CreateOrganizer_Should
+
     {
         [TestMethod]
         public async Task CreateNewOrganizer()
@@ -25,6 +27,9 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null);
             userManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
@@ -37,7 +42,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 var result = await sut.CreateOrganizerAsync(newUserDTO);
                 Assert.AreEqual(result.FirstName, newUserDTO.FirstName);
                 Assert.AreEqual(result.LastName, newUserDTO.LastName);
@@ -56,13 +61,16 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null);
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.LastName = "Smith";
             newUserDTO.Email = "John@mail.com";
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
@@ -74,13 +82,16 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null);
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
             newUserDTO.Email = "John@mail.com";
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
@@ -92,13 +103,16 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null);
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
             newUserDTO.LastName = "Smith";
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
@@ -110,6 +124,9 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null);
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
@@ -131,18 +148,21 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
         [TestMethod] //TODO
         public async Task Throw_When_IncorrectPasswordForOrganizer()
         {
-            /*var options = Utils.GetOptions(nameof(Throw_When_IncorrectPasswordForOrganizer));
+            var options = Utils.GetOptions(nameof(Throw_When_IncorrectPasswordForOrganizer));
 
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null);
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
@@ -159,10 +179,10 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
 
-            }*/
+            }
         }
 
         [TestMethod]
@@ -175,6 +195,9 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 null, null, null, null, null);
             userManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
 
             var newUserDTO = new Mock<NewUserDTO>().Object;
             newUserDTO.FirstName = "John";
@@ -195,7 +218,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager.Object);
+                var sut = new UserService(actContext, userManager.Object,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }

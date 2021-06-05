@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -24,6 +25,10 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+
             var updateDTO = new UpdateUserDTO()
             {
                 FirstName = "John",
@@ -38,7 +43,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 var userToUpdate = actContext.Users.Last();
                 var result = await sut.UpdateAsync(updateDTO,userToUpdate.UserName);
                 Assert.AreEqual(updateDTO.FirstName, result.FirstName);
@@ -54,6 +59,10 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+
             var updateDTO = new UpdateUserDTO() {LastName="Smith"};
 
             using (var arrContext = new PhotoContestContext(options))
@@ -64,7 +73,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 var userToUpdate = actContext.Users.Last();
                 var result = await sut.UpdateAsync(updateDTO, userToUpdate.UserName);
                 var firstNameChecker = userToUpdate.FirstName;
@@ -80,6 +89,9 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
             var updateDTO = new UpdateUserDTO() { FirstName="John"};
 
             using (var arrContext = new PhotoContestContext(options))
@@ -90,7 +102,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 var userToUpdate = actContext.Users.Last();
                 var result = await sut.UpdateAsync(updateDTO, userToUpdate.UserName);
                 var lastNameChecker = userToUpdate.LastName;

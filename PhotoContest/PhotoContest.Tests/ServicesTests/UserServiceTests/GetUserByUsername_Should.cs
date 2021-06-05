@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
@@ -22,6 +23,10 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+
             using (var arrContext = new PhotoContestContext(options))
             {
                 await arrContext.Ranks.AddRangeAsync(Utils.SeedRanks());
@@ -30,7 +35,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 var userToGet = actContext.Users.Last();
                 var result = await sut.GetUserByUsernameAsync(userToGet.UserName);
                 Assert.AreEqual(userToGet, result);
@@ -46,6 +51,10 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             var userStore = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
                 null, null, null, null, null).Object;
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null).Object;
+
             using (var arrContext = new PhotoContestContext(options))
             {
                 await arrContext.Ranks.AddRangeAsync(Utils.SeedRanks());
@@ -54,7 +63,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new UserService(actContext, userManager);
+                var sut = new UserService(actContext, userManager,signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetUserByUsernameAsync(""));
             }
         }
