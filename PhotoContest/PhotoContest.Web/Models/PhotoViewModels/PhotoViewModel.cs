@@ -32,5 +32,6 @@ namespace PhotoContest.Web.Models.PhotoViewModels
         public string Category { get; set; }
         public double Points { get; set; }
         public List<JuryMember> Juries { get; set; } = new List<JuryMember>();
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

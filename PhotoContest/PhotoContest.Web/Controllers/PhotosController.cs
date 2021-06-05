@@ -30,12 +30,17 @@ namespace PhotoContest.Web.Controllers
         private readonly IPhotoService photoService;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IContestService contestService;
+        private readonly IReviewService reviewService;
 
-        public PhotosController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment, IContestService contestService)
+        public PhotosController(IPhotoService photoService, 
+            IWebHostEnvironment webHostEnvironment, 
+            IContestService contestService,
+            IReviewService reviewService)
         {
             this.photoService = photoService;
             this.webHostEnvironment = webHostEnvironment;
             this.contestService = contestService;
+            this.reviewService = reviewService;
         }
         [Authorize(Roles ="Admin,Organizer")]
         public async Task<IActionResult> Index()
@@ -88,7 +93,7 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    return NotFound();
                 }
             }
             return View(model);

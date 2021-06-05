@@ -120,6 +120,11 @@ namespace PhotoContest.Services.Services
                                        .ToListAsync();
         }
 
+        /// <summary>
+        /// Find review by Id.
+        /// </summary>
+        /// <param name="reviewId">Id of review to search for.</param>
+        /// <returns>Return a review with that id.</returns>
         public async Task<Review> FindReviewAsync(Guid reviewId)
         {
             return await this.dbContext.Reviews
