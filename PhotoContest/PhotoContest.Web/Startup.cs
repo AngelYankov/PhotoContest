@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -22,7 +20,7 @@ using PhotoContest.Web.Middlewares;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
+using NToastNotify;
 
 namespace PhotoContest.Web
 {
@@ -108,6 +106,13 @@ namespace PhotoContest.Web
 
             services.AddRazorPages();
             services.AddSingleton<IEmailSender, EmailSender>();
+            //services.AddMvc().AddNToastNotifyToastr();
+            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+            {
+                ProgressBar = false,
+                PositionClass = ToastPositions.BottomCenter
+            });
+
             /*services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -154,6 +159,7 @@ namespace PhotoContest.Web
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<PageNotFoundMiddleware>();
+            app.UseNToastNotify();
 
             app.UseEndpoints(endpoints =>
             {

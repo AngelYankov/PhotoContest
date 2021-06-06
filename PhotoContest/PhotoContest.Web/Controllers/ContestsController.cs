@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
@@ -28,6 +29,7 @@ namespace PhotoContest.Web.Controllers
         private readonly IUserContestService userContestService;
         private readonly IPhotoService photoService;
         private readonly IUserService userService;
+        private readonly IToastNotification toastNotification;
 
         public ContestsController(PhotoContestContext context,
                                   IContestService contestService,
@@ -35,7 +37,8 @@ namespace PhotoContest.Web.Controllers
                                   SignInManager<User> signInManager,
                                   IUserContestService userContestService,
                                   IPhotoService photoService,
-                                  IUserService userService)
+                                  IUserService userService,
+                                  IToastNotification toastNotification)
         {
             _context = context;
             this.contestService = contestService;
@@ -44,6 +47,7 @@ namespace PhotoContest.Web.Controllers
             this.userContestService = userContestService;
             this.photoService = photoService;
             this.userService = userService;
+            this.toastNotification = toastNotification;
         }
 
         /// <summary>
@@ -334,7 +338,11 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions()
+                    {
+                        Timeout = 100
+                    });
+                    //return RedirectToAction("Invite");
                 }
             }
             return RedirectToAction("Index");
