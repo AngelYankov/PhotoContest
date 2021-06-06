@@ -61,5 +61,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string NotMatchingEmail = "The email does not match.";
         public const string InvalidPassword = "Value for {0} must be between {2} and {1} characters long.";
         public const string NotMatchingPassword = "The password and confirm password fields must match.";
+        public const string NotEnrolledInContest = "You have not enrolled in this contest.";
+        public const string AlreadyUploadedAPhoto = "You have already uploaded a photo.";
     }
 }

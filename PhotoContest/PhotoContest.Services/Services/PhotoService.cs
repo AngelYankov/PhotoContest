@@ -69,10 +69,10 @@ namespace PhotoContest.Services.Services
             }
             var userContests = await this.userContestService.GetAllUserContestsAsync();
             var userContest = userContests.FirstOrDefault(uc => uc.UserId == user.Id && uc.ContestId == contest.Id)
-                ?? throw new ArgumentException("You have not enrolled in this contest.");
+                ?? throw new ArgumentException(Exceptions.NotEnrolledInContest);
             if (userContest.HasUploadedPhoto)
             {
-                throw new ArgumentException("You have already uploaded a photo.");
+                throw new ArgumentException(Exceptions.AlreadyUploadedAPhoto);
             }
             var photo = new Photo()
             {
@@ -172,7 +172,8 @@ namespace PhotoContest.Services.Services
                                        .Include(p => p.User)
                                        .Include(p => p.Contest)
                                           .ThenInclude(c => c.Category)
-                                       .Include(u => u.Reviews)
+                                       .Include(p => p.Contest)
+                                            .ThenInclude(c=>c.Status)
                                        .Where(p => p.IsDeleted == false && p.Contest.Name.ToLower() == contestName.ToLower())
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
@@ -209,7 +210,7 @@ namespace PhotoContest.Services.Services
 
             if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")
             {
-                if (!(contest.Status.Name == "Finished" && await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id)))
+                if (contest.Status.Name != "Finished" && !(await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id)))
                 {
                     throw new ArgumentException(Exceptions.InvalidUserAccessToPhotos);
                 }
@@ -218,7 +219,6 @@ namespace PhotoContest.Services.Services
                                        .Include(p => p.User)
                                        .Include(p => p.Contest)
                                             .ThenInclude(c => c.Category)
-                                       .Include(p => p.Reviews)
                                        .Select(p => new PhotoReviewDTO(p)).ToListAsync();
         }
 
