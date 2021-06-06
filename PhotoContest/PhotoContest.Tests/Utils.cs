@@ -27,9 +27,9 @@ namespace PhotoContest.Tests
                     CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"),
                     StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
                     IsOpen = true,
-                    Phase1 = new DateTime(2021, 05, 10, 9, 0, 0),
+                    Phase1 = DateTime.UtcNow.AddDays(-4),
                     Phase2 = DateTime.UtcNow,
-                    Finished = DateTime.UtcNow.AddMinutes(2)
+                    Finished = DateTime.UtcNow.AddMinutes(90)
                 },
                 new Contest()
                 {
@@ -50,7 +50,7 @@ namespace PhotoContest.Tests
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
                     IsOpen = true,
                     Phase1 = new DateTime(2021, 05, 10, 9, 0, 0),
-                    Phase2 = new DateTime(2021, 05, 20, 12, 0, 0),// DateTime.ParseExact("20-05-2021 12:00","dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = new DateTime(2021, 05, 20, 12, 0, 0),
                     Finished = new DateTime(2021, 05, 20, 9, 0, 0)
                 },
                 new Contest()
@@ -61,8 +61,8 @@ namespace PhotoContest.Tests
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021, 06, 10, 9, 0, 0),
-                    Finished = new DateTime(2021, 06, 10, 19, 0, 0)
+                    Phase2 = DateTime.UtcNow.AddDays(4),
+                    Finished = DateTime.UtcNow.AddHours(102)
                 }
             };
         }

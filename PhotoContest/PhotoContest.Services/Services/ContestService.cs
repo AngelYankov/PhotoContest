@@ -171,7 +171,7 @@ namespace PhotoContest.Services.Services
         /// Get all juries.
         /// </summary>
         /// <returns>Return all juries.</returns>
-        public async Task<List<JuryMember>> AllJuriesAsync()
+        public async Task<List<JuryMember>> GetAllJuriesAsync() 
         {
             return await this.dbContext
                              .Juries
@@ -186,7 +186,7 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username of the user to enroll.</param>
         /// <param name="contestName">Name of the contest to enroll in.</param>
         /// <returns>Return true if successful or an appropriate error message.</returns>
-        public async Task<bool> EnrollAsync(string contestName)
+        public async Task<bool> EnrollAsync(string contestName)  // TO DO
         {
             var contest = await FindContestByNameAsync(contestName);
             if (contest.IsOpen == false)
@@ -194,11 +194,17 @@ namespace PhotoContest.Services.Services
 
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var temp = this.signInManager.Context;
             var user = await this.userService.GetUserByUsernameAsync(username);
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
             {
                 throw new ArgumentException(Exceptions.EnrolledUser);
+            }
+
+            if (await this.dbContext.Juries.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
+            {
+                throw new ArgumentException(Exceptions.ExistingJury);
             }
 
             var userContest = new UserContest()
@@ -334,7 +340,7 @@ namespace PhotoContest.Services.Services
         /// Get contests for user who is logged in.
         /// </summary>
         /// <returns>Returns all contests.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetUserContestsAsync()
+        public async Task<IEnumerable<ContestDTO>> GetUserContestsAsync() //TO DO
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
@@ -362,7 +368,7 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username for which we are filtering the contests.</param>
         /// <param name="filter">Value of the filter.</param>
         /// <returns>Returns the contests that correspond to the filter.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter)
+        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter) //TO DO
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
@@ -412,6 +418,7 @@ namespace PhotoContest.Services.Services
                                        .Where(c => c.Status.Name == "Finished" && c.IsDeleted == false)
                                        .ToListAsync();
         }
+
         /// <summary>
         /// Filter and/or sort contests by phase.
         /// </summary>
@@ -582,15 +589,21 @@ namespace PhotoContest.Services.Services
             {
                 if (DateTime.UtcNow < contest.Phase2)
                 {
+                    var phase1 = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"));
                     contest.StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186");
+                    contest.Status = phase1;
                 }
                 if (DateTime.UtcNow >= contest.Phase2 && DateTime.UtcNow < contest.Finished)
                 {
+                    var phase2 = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"));
                     contest.StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc");
+                    contest.Status = phase2;
                 }
                 if (DateTime.UtcNow >= contest.Finished)
                 {
+                    var finished = await this.dbContext.Statuses.FirstOrDefaultAsync(s => s.Id == Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"));
                     contest.StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6");
+                    contest.Status = finished;
                 }
                 await this.dbContext.SaveChangesAsync();
             }
