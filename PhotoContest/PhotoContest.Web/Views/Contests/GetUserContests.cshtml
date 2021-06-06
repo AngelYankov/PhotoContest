@@ -13,7 +13,7 @@
 
 @if (Model.Count() == 0)
 {
-    <h3>You are not participating in any contests in this stage.</h3>
+    <h3>You are not participating in any contests in this stage</h3>
 }
 else
 {
@@ -91,12 +91,12 @@ else
                             <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="Create" asp-route-contestName="@item.Name">Add photo</a>
                         </td>
                     }
-                    else if ((item.Status == "Phase 1")
+                    else if ((item.Status == "Phase 1" || item.Status == "Phase 2")
                            && item.AllPhotos.Any(p => p.Contest == item.Name
                            && p.Username == UserManager.GetUserName(this.SignInManager.Context.User)))
                     {
                         <td>
-                            <p>Photo waiting evaluation.</p>
+                            <p>Photo waiting evaluation</p>
                         </td>
                     }
                     else if (item.Status == "Finished" && item.AllUserContests.Any(uc => uc.Contest.Name == item.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))

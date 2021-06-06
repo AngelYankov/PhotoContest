@@ -5,9 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h2>Update contest</h2>
 
-<h4>Contest</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,9 +21,11 @@
                 <select asp-for="Category" class="form-control" asp-items="ViewBag.Categories"></select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <div class="form-check">
-                <label asp-for="IsContestOpen" class="form-check-label"></label>
-                <input class="form-check-input" type="checkbox" asp-for="IsContestOpen" /> 
+            @Html.DisplayNameFor(model => model.IsContestOpen)
+            <div class="form-check form-switch">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked asp-for="IsContestOpen" />
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="Phase1" class="control-label"></label>
@@ -42,15 +43,13 @@
                 <span asp-validation-for="Phase1" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="hidden" asp-for="Name"/>
+                <input type="hidden" asp-for="Name" />
                 <input type="submit" value="Save" class="btn btn-success" />
+                <a class="btn btn-dark" onclick="history.go(-1);">Back</a>
+                <a class="btn btn-dark" asp-action="Index">All contests</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

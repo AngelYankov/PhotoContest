@@ -33,23 +33,26 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var allContests = await this.contestService.GetAllAsync();
-            var phase1Contests = allContests.Where(c => c.Status == "Phase 1");
+            var phase1Contests = allContests.Where(c => c.Status == "Phase 1" && c.OpenOrInvitational == "Open");
             var photos = await this.photoService.GetAllBaseAsync();
             var finishedContests = await this.contestService.GetAllFinishedContestsAsync();
-            
+
             foreach (var contest in finishedContests)
             {
                 foreach (var photo in photos)
                 {
-                    if(photo.Contest.Name == contest.Name)
+                    if (photo.Contest.Name == contest.Name)
                     {
                         contest.Photos.Add(photo);
                     }
                 }
                 contest.Photos = contest.Photos.OrderByDescending(p => p.AllPoints).ToList();
             }
-            return View(new HomeContestsViewModel() { FinishedContests = finishedContests.ToList(), 
-                                                      Phase1Contests = phase1Contests.ToList() });
+            return View(new HomeContestsViewModel()
+            {
+                FinishedContests = finishedContests.ToList(),
+                Phase1Contests = phase1Contests.ToList()
+            });
         }
 
         /// <summary>

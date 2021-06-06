@@ -110,6 +110,10 @@
                                             {
                                                 <a class="btn btn-outline-dark" asp-action="Details" asp-controller="Contests" asp-route-name="@item.Name">Details</a>
                                             }
+                                            else
+                                            {
+                                                <a class="btn btn-outline-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Details</a>
+                                            }
                                         </div>
                                     </div>
                                 }

@@ -107,7 +107,6 @@ namespace PhotoContest.Web
             services.AddHostedService<TimedHostedService>();
 
             services.AddRazorPages();
-            services.AddAutoMapper(typeof(Startup));
             services.AddSingleton<IEmailSender, EmailSender>();
             /*services.AddAuthentication(options =>
             {

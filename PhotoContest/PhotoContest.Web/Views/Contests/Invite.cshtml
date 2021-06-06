@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Invite user to "@Model.Name" contest</h1>
+<h2>Invite user to "@Model.Name" contest</h2>
 
 <hr />
 <div class="row">
@@ -13,22 +13,17 @@
         <form asp-action="Invite">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Name" />
+            
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Contest name:</label> @Html.DisplayFor(model => model.Name)
-            </div>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <select asp-for="Username" class="form-control" asp-items="ViewBag.UserContests"></select>
+                <label asp-for="Username" class="control-label">User to invite:</label>
+                <select asp-for="Username" class="form-control" asp-items="ViewBag.Users"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Invite" class="btn btn-success" />
+                <a class="btn btn-dark" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -40,18 +40,17 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
             var signManager = new Mock<SignInManager<User>>(userManager, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
 
-            var category = new Category();
-            category.Name = "Cars";
-            categoryService.Setup(c => c.FindCategoryByNameAsync(newContestDTO.CategoryName)).Returns(Task.FromResult(category));
-
             using (var arrContext = new PhotoContestContext(options))
             {
-                await arrContext.Categories.AddAsync(category);
+                await arrContext.Categories.AddRangeAsync(Utils.SeedCategories());
                 await arrContext.Statuses.AddRangeAsync(Utils.SeedStatuses());
+                await arrContext.Contests.AddRangeAsync(Utils.SeedContests());
                 await arrContext.SaveChangesAsync();
             }
             using (var actContext = new PhotoContestContext(options))
             {
+                var category = await actContext.Categories.FirstAsync();
+                categoryService.Setup(c => c.FindCategoryByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(category));
                 var sut = new ContestService(actContext, userService.Object, categoryService.Object, userManager, signManager);
                 var result = await sut.CreateAsync(newContestDTO);
 
@@ -112,7 +111,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             newContestDTO.Phase2 = "02.06.21 20:00";
             newContestDTO.Finished = DateTime.Now.AddHours(32).ToString("dd.MM.yy HH:mm");
 
-          
+
             var categoryService = new Mock<ICategoryService>();
             var userService = new Mock<IUserService>().Object;
             var userStore = new Mock<IUserStore<User>>();
