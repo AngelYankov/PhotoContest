@@ -39,9 +39,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
                 var contest = actContext.Contests.Include(c=>c.Status).First();
-                contest.Phase1 = new DateTime(2021, 06, 05, 9, 0, 0);
-                contest.Phase2 = new DateTime(2021, 06, 12, 9, 0, 0);
-                contest.Finished = new DateTime(2021, 06, 12, 19, 0, 0);
+                contest.Phase1 = DateTime.UtcNow;
+                contest.Phase2 = DateTime.UtcNow.AddDays(2);
+                contest.Finished = DateTime.UtcNow.AddHours(60);
                 await sut.ChangeStatus();
                 Assert.AreEqual(contest.Status.Name, "Phase 1");
             }
@@ -71,9 +71,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
                 var contest = actContext.Contests.Include(c => c.Status).First();
-                contest.Phase1 = new DateTime(2021, 06, 01, 9, 0, 0);
-                contest.Phase2 = new DateTime(2021, 06, 05, 19, 0, 0);
-                contest.Finished = new DateTime(2021, 06, 06, 15, 0, 0);
+                contest.Phase1 = DateTime.UtcNow.AddDays(-2);
+                contest.Phase2 = DateTime.UtcNow;
+                contest.Finished = DateTime.UtcNow.AddHours(5);
                 await sut.ChangeStatus();
                 Assert.AreEqual(contest.Status.Name, "Phase 2");
             }
@@ -103,9 +103,9 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
                 var contest = actContext.Contests.Include(c => c.Status).First();
-                contest.Phase1 = new DateTime(2021, 06, 01, 9, 0, 0);
-                contest.Phase2 = new DateTime(2021, 06, 04, 19, 0, 0);
-                contest.Finished = new DateTime(2021, 06, 05, 15, 0, 0);
+                contest.Phase1 = DateTime.UtcNow.AddDays(-5);
+                contest.Phase2 = DateTime.UtcNow.AddHours(-5);
+                contest.Finished = DateTime.UtcNow;
                 await sut.ChangeStatus();
                 Assert.AreEqual(contest.Status.Name, "Finished");
             }

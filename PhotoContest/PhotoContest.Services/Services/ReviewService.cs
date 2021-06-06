@@ -52,11 +52,11 @@ namespace PhotoContest.Services.Services
             //var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
             var user = await this.userService.GetUserByUsernameAsync(username);
-            if (user.Rank.Name == "User")
+            if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")
             {
                 if (!this.dbContext.Juries.Any(j => j.UserId == user.Id && j.ContestId == photo.ContestId))
                 {
-                    throw new ArgumentException(Exceptions.UserNotJury); //TEST WHEN USER IS IN JURY
+                    throw new ArgumentException(Exceptions.UserNotJury);
                 }
             }
             if (await this.dbContext.Reviews.AnyAsync(r => r.UserId == user.Id && r.PhotoId == photo.Id))
@@ -94,7 +94,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return review.IsDeleted;
         }
-        
+
         /// <summary>
         /// Get all reviews for certain photo.
         /// </summary>
@@ -106,7 +106,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Reviews
                                        .Include(r => r.Photo)
                                        .Include(r => r.Evaluator)
-                                       .Where(r => r.PhotoId == photoId && r.IsDeleted==false)
+                                       .Where(r => r.PhotoId == photoId && r.IsDeleted == false)
                                        .Select(r => new ReviewDTO(r)).ToListAsync();
         }
         /// <summary>
@@ -120,7 +120,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Reviews
                                        .Include(r => r.Photo)
                                        .Include(r => r.Evaluator)
-                                       .Where(r => r.Photo.UserId == user.Id && r.IsDeleted==false)
+                                       .Where(r => r.Photo.UserId == user.Id && r.IsDeleted == false)
                                        .OrderByDescending(r => r.CreatedOn)
                                        .Select(r => new ReviewDTO(r))
                                        .ToListAsync();
@@ -150,7 +150,7 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Reviews
                                        .Include(r => r.Photo)
                                        .Include(r => r.Evaluator)
-                                       .Where(r=>r.IsDeleted == false)
+                                       .Where(r => r.IsDeleted == false)
                                        .ToListAsync();
         }
     }
