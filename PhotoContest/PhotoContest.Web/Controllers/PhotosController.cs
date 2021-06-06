@@ -103,12 +103,13 @@ namespace PhotoContest.Web.Controllers
                         ContestName = model.ContestName
                     };
 
+
                     await this.photoService.CreateAsync(newPhotoDTO);
                     return RedirectToAction("GetUserContests", "Contests");
                 }
                 catch (Exception e)
                 {
-                    return NotFound(e.Message);
+                    return BadRequest(e.Message);
                 }
             }
             return View(model);

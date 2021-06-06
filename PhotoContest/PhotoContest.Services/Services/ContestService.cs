@@ -416,6 +416,7 @@ namespace PhotoContest.Services.Services
                                        .Include(c => c.Status)
                                        .Include(c => c.Category)
                                        .Where(c => c.Status.Name == "Finished" && c.IsDeleted == false)
+                                       .OrderByDescending(c => c.CreatedOn)
                                        .ToListAsync();
         }
 

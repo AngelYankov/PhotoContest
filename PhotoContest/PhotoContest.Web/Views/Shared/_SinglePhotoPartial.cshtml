@@ -8,7 +8,7 @@
 
 <div class="card text-light bg-dark" style="width: 300px; margin: auto;">
     <img class="img-fluid" src="@Model.PhotoUrl" alt="Card image cap">
-    <div class="card-body">
+    <div class="card-body text-center">
         <h5 class="card-title">@Model.Title</h5>
         <h6 class="card-title">Points: @Model.Points</h6>
         <p class="card-subtitle">Owner: @Model.User</p>
@@ -35,8 +35,8 @@
             {
                 <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
             }
-            <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            <a class="btn btn-outline-success" asp-action="Edit" asp-controller="Photos" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Photos" asp-route-id="@Model.Id">Delete</a>
         }
         else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
         {
@@ -51,7 +51,7 @@
                     <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
                 }
             }
-            <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-outline-dark" asp-action="Edit" asp-controller="Photos" asp-route-id="@Model.Id">Edit</a>
         }
     </div>
 </div>
