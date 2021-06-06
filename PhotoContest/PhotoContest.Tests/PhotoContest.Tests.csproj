@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="ServicesTests\UserContestServiceTests\" />
     <Folder Include="ServicesTests\ReviewServiceTests\" />
-    <Folder Include="ServicesTests\PhotoServiceTests\" />
   </ItemGroup>
 
 </Project>

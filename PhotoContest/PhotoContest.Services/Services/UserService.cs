@@ -182,7 +182,7 @@ namespace PhotoContest.Services.Services
             return new UserDTO(user);
         }
 
-        /// <summary>
+      /*  /// <summary>
         /// Add role to user.
         /// </summary>
         /// <param name="model">Email to search for and user role to be added.</param>
@@ -198,7 +198,7 @@ namespace PhotoContest.Services.Services
             await this.userManager.AddToRoleAsync(user, model.Role);
             //DO WE NEED TO CHANGE THE RANK?
             return Exceptions.SuccesfullyAddedRole;   //THIS ONLY ADDS ANOTHER ROLE, DO NOT CHANGE IT
-        }
+        }*/
 
         /// <summary>
         /// Changing the rank of a user in the background.

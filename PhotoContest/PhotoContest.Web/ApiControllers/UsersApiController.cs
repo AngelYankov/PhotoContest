@@ -153,7 +153,7 @@ namespace PhotoContest.Web.ApiControllers
             }
         }
 
-        /// <summary>
+       /* /// <summary>
         /// Add role to user.
         /// </summary>
         /// <param name="model">Details of user and role to be added.</param>
@@ -171,6 +171,6 @@ namespace PhotoContest.Web.ApiControllers
             {
                 return BadRequest(e.Message);
             }
-        }
+        }*/
     }
 }
