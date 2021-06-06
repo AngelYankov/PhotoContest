@@ -135,7 +135,7 @@ namespace PhotoContest.Web.Controllers
             var reviews = await this.reviewService.GetAllReviewsAsync();
             var photos = await this.photoService.GetPhotosForContestAsync(contestName);
             var contest = await this.contestService.FindContestByNameAsync(contestName);
-            var juries = await this.contestService.AllJuriesAsync();
+            var juries = await this.contestService.GetAllJuriesAsync();
             return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries, Reviews = reviews }));
         }
 

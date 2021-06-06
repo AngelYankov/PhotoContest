@@ -19,7 +19,6 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
         [TestMethod]
         public async Task ReturnTrue_IfUser_InvitedSuccessfully()
         {
-
             var options = Utils.GetOptions(nameof(ReturnTrue_IfUser_InvitedSuccessfully));
 
             var categoryService = new Mock<ICategoryService>().Object;

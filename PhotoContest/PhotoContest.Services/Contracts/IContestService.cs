@@ -26,6 +26,6 @@ namespace PhotoContest.Services.Services
         Task ChangeStatus();
         Task<IEnumerable<ContestDTO>> AllOpenViewAsync();
         Task<IEnumerable<ContestDTO>> GetUserContestsAsync();
-        Task<List<JuryMember>> AllJuriesAsync();
+        Task<List<JuryMember>> GetAllJuriesAsync();
     }
 }

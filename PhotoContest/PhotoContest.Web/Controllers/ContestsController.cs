@@ -70,7 +70,7 @@ namespace PhotoContest.Web.Controllers
             var contests = await this.contestService.AllOpenViewAsync();
             var userContests = await this.userContestService.GetAllUserContestsAsync();
             var photos = await this.photoService.GetAllAsync();
-            var juries = await this.contestService.AllJuriesAsync();
+            var juries = await this.contestService.GetAllJuriesAsync();
             return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList(), Juries = juries.ToList() }));
         }
 
@@ -90,7 +90,7 @@ namespace PhotoContest.Web.Controllers
                     var contests = await this.contestService.GetAllOpenAsync(status);
                     var userContests = await this.userContestService.GetAllUserContestsAsync();
                     var photos = await this.photoService.GetAllAsync();
-                    var juries = await this.contestService.AllJuriesAsync();
+                    var juries = await this.contestService.GetAllJuriesAsync();
                     return View(contests.Select(c => new ContetsViewModel(c) { AllUserContests = userContests, AllPhotos = photos.ToList(), Juries = juries.ToList() }));
                 }
                 catch (Exception e)
@@ -112,7 +112,7 @@ namespace PhotoContest.Web.Controllers
             var contest = await this.contestService.FindContestByNameAsync(name);
             var userContests = await this.userContestService.GetAllUserContestsAsync();
             var photos = await this.photoService.GetAllAsync();
-            var juries = await this.contestService.AllJuriesAsync();
+            var juries = await this.contestService.GetAllJuriesAsync();
             var contestDTO = new ContestDTO(contest);
             return View(new ContetsViewModel(contestDTO) { AllUserContests = userContests, AllPhotos = photos.ToList(), Juries = juries.ToList() });
         }
