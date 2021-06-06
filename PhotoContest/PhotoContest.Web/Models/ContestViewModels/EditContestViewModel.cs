@@ -12,10 +12,11 @@ namespace PhotoContest.Web.Models.ContestViewModels
         public string Category { get; set; }
         [Display(Name = "Is the contest Open?")]
         public bool IsContestOpen { get; set; }
-        [Display(Name = "Phase 1")]
+        [Display(Name = "Phase 1 starts on: dd.mm.yy hh:mm")]
         public string Phase1 { get; set; }
-        [Display(Name = "Phase 2")]
+        [Display(Name = "Phase 2 starts on: dd.mm.yy hh:mm")]
         public string Phase2 { get; set; }
+        [Display(Name = "Contest finishes on: dd.mm.yy hh:mm")]
         public string Finished { get; set; }
     }
 }

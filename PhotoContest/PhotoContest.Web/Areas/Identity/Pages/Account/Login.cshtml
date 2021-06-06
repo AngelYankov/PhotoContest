@@ -25,10 +25,10 @@
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Log in</button>
+                    <a class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
                 </div>
                 <div class="form-group">
                     <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
                     </p>
                 </div>
             </form>

@@ -40,7 +40,7 @@
                     <div class="carousel-item">
                         <div class="container">
                             <div class="row">
-                                @foreach (var item in Model.FinishedContests.Skip(3))
+                                @foreach (var item in Model.FinishedContests.Skip(3).Take(3))
                                 {
                                     <partial name="_SinglePhotoPartial" model="new PhotoViewModel(new PhotoDTO(item.Photos.First()))" />
                                 }
@@ -96,7 +96,7 @@
                     <div class="carousel-item">
                         <div class="container">
                             <div class="row">
-                                @foreach (var item in Model.Phase1Contests.Skip(3))
+                                @foreach (var item in Model.Phase1Contests.Skip(3).Take(3))
                                 {
                                     <div class="col-sm-12 col-lg-4">
                                         <div class="card" margin: auto;">
@@ -109,6 +109,10 @@
                                             @if (SignInManager.IsSignedIn(User))
                                             {
                                                 <a class="btn btn-outline-dark" asp-action="Details" asp-controller="Contests" asp-route-name="@item.Name">Details</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-outline-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Details</a>
                                             }
                                         </div>
                                     </div>

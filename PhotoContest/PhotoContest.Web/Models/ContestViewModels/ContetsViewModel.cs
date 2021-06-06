@@ -41,11 +41,11 @@ namespace PhotoContest.Web.Models.ContestViewModels
         public string Category { get; set; }
         [Display(Name = "Current phase")]
         public string Status { get; set; }
-        [Display(Name = "Phase 1")]
+        [Display(Name = "Phase 1 starts on:")]
         public string Phase1 { get; set; }
-        [Display(Name = "Phase 2")]
+        [Display(Name = "Phase 2 starts on:")]
         public string Phase2 { get; set; }
-        [Display(Name = "Finished")]
+        [Display(Name = "Contest finishes on:")]
         public string Finished { get; set; }
         [Display(Name = "Next phase begins on:")]
         public string TimeUntilNextPhase { get; set; }

@@ -8,7 +8,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h2>Details for contest</h2>
 
 @if (User.IsInRole("Admin") || User.IsInRole("Organizer"))
 {
@@ -61,8 +61,8 @@
         </dl>
     </div>
     <div>
-        <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@Model.Name">Edit</a>
-        <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
+        <a class="btn btn-dark" asp-action="Edit" asp-route-name="@Model.Name">Edit</a>
+        <a class="btn btn-dark" asp-action="Index">All contests</a>
     </div>
 }
 else
@@ -100,18 +100,18 @@ else
     <div>
         @if (Model.Status == "Phase 1" && !Model.AllUserContests.Any(uc => uc.Contest.Name == Model.Name && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
         {
-            <a class="btn btn-outline-dark" asp-action="Enroll" asp-route-name="@Model.Name">Enroll</a>
+            <a class="btn btn-dark" asp-action="Enroll" asp-route-name="@Model.Name">Enroll</a>
         }
         else if (Model.Status == "Phase 1" && Model.AllUserContests.Any(uc => uc.Contest.Name == Model.Name
                                          && uc.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)
                                          && !Model.AllPhotos.Any(p => p.Contest == Model.Name && p.Username == UserManager.GetUserName(this.SignInManager.Context.User))))
         {
-            <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="Create" asp-route-contestName="@Model.Name">Add photo</a>
+            <a class="btn btn-dark" asp-controller="Photos" asp-action="Create" asp-route-contestName="@Model.Name">Add photo</a>
         }
         else if (Model.Status == "Phase 2" && Model.Juries.Any(j => j.Contest.Name == Model.Name && j.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
         {
-            <a class="btn btn-outline-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@Model.Name">Rate photos</a>
+            <a class="btn btn-dark" asp-controller="Photos" asp-action="GetContestsPhotos" asp-route-contestName="@Model.Name">Rate photos</a>
         }
-        <a class="btn btn-outline-dark" asp-action="Index" asp-controller="Home">Back</a>
+        <a class="btn btn-dark" onclick="history.go(-1);">Back</a>
     </div>
 }

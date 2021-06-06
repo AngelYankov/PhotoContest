@@ -5,9 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h2>Create new contest</h2>
 
-<h4>Contest</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,10 +21,6 @@
                 <label asp-for="CategoryName" class="control-label"></label>
                 <select asp-for="CategoryName" class="form-control" asp-items="ViewBag.Categories"></select>
             </div>
-           @* <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
-            </div>*@
                     @Html.DisplayNameFor(model => model.IsOpen)
             <div class="form-check form-switch">
                 <label class="form-check-label">

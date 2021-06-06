@@ -52,12 +52,13 @@ namespace PhotoContest.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            var contests = await this.contestService.GetAllAsync();
             if (User.IsInRole("User"))
             {
                 return RedirectToAction("AllOpen");
             }
-            var contests = await this.contestService.GetAllAsync();
-            return View(contests.Select(c => new ContetsViewModel(c)));
+            else
+                return View(contests.Select(c => new ContetsViewModel(c)));
         }
 
         /// <summary>

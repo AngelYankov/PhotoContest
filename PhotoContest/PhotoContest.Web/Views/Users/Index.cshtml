@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>All users</h1>
+<h2>All users</h2>
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <p>
@@ -49,7 +49,6 @@ else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
         </table>
     </form>
 }
-
 
 <table class="table">
     <thead class="table-dark">

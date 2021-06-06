@@ -18,11 +18,11 @@
         {
             if (Model.ContestStatus == "Finished")
             {
-                <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-outline-dark" asp-route-id="@Model.Id">Reviews</a>
+                <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-light" asp-route-id="@Model.Id">Reviews</a>
             }
             else if (Model.ContestStatus == "Phase 2" && Model.Juries.Any(j => j.Contest.Name == Model.Contest && j.User.UserName == UserManager.GetUserName(this.SignInManager.Context.User)))
             {
-                <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                <a class="btn btn-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
             }
             else if (Model.ContestStatus == "Phase 2" && Model.Reviews.Any(r => r.Evaluator.UserName == UserManager.GetUserName(this.SignInManager.Context.User) && r.PhotoId == Model.Id))
             {
@@ -33,10 +33,14 @@
         {
             @if (Model.ContestStatus == "Phase 2")
             {
-                <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                <a class="btn btn-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
             }
-            <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            else if (Model.ContestStatus == "Finished")
+            {
+                <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-light" asp-route-id="@Model.Id">Reviews</a>
+            }
+            <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
         }
         else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
         {
@@ -48,10 +52,14 @@
                 }
                 else
                 {
-                    <a class="btn btn-outline-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
+                    <a class="btn btn-success" asp-controller="Reviews" asp-action="Create" asp-route-photoId="@Model.Id">Rate</a>
                 }
             }
-            <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            else if (Model.ContestStatus == "Finished")
+            {
+                <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-light" asp-route-id="@Model.Id">Reviews</a>
+            }
+            <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
         }
     </div>
 </div>

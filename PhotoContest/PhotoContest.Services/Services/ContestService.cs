@@ -186,7 +186,7 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username of the user to enroll.</param>
         /// <param name="contestName">Name of the contest to enroll in.</param>
         /// <returns>Return true if successful or an appropriate error message.</returns>
-        public async Task<bool> EnrollAsync(string contestName)  // TO DO
+        public async Task<bool> EnrollAsync(string contestName) 
         {
             var contest = await FindContestByNameAsync(contestName);
             if (contest.IsOpen == false)
@@ -340,7 +340,7 @@ namespace PhotoContest.Services.Services
         /// Get contests for user who is logged in.
         /// </summary>
         /// <returns>Returns all contests.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetUserContestsAsync() //TO DO
+        public async Task<IEnumerable<ContestDTO>> GetUserContestsAsync() 
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
@@ -368,7 +368,7 @@ namespace PhotoContest.Services.Services
         /// <param name="username">Username for which we are filtering the contests.</param>
         /// <param name="filter">Value of the filter.</param>
         /// <returns>Returns the contests that correspond to the filter.</returns>
-        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter) //TO DO
+        public async Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter) 
         {
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
@@ -416,6 +416,7 @@ namespace PhotoContest.Services.Services
                                        .Include(c => c.Status)
                                        .Include(c => c.Category)
                                        .Where(c => c.Status.Name == "Finished" && c.IsDeleted == false)
+                                       .OrderByDescending(c=>c.CreatedOn)
                                        .ToListAsync();
         }
 

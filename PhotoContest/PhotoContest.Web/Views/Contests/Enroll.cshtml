@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>Enroll in contest</h2>
 <h3>Are you sure you want to enroll in this contest?</h3>
 
 <hr />
@@ -24,13 +25,10 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Enroll" class="btn btn-success" />
+                <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
