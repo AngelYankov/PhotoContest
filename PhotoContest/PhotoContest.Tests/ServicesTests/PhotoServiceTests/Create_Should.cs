@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PhotoContest.Data;
+using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
@@ -31,9 +33,10 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             var signManager = new Mock<SignInManager<User>>(userManager.Object, contextAccessor.Object, userPrincipalFactory, null, null, null, null).Object;
             var context = new Mock<HttpContext>();
             contextAccessor.Setup(x => x.HttpContext).Returns(context.Object);
-            var contestService = new Mock<IContestService>().Object;
-            var userService = new Mock<IUserService>().Object;
-            var userContestService = new Mock<IUserContestService>().Object;
+            var contestService = new Mock<IContestService>();
+            var userService = new Mock<IUserService>();
+
+            var userContestService = new Mock<IUserContestService>();
 
             var newPhotoDTO = new Mock<NewPhotoDTO>().Object;
             newPhotoDTO.Title = "New photo";
@@ -47,17 +50,30 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await arrContext.Contests.AddRangeAsync(Utils.SeedContests());
                 await arrContext.Categories.AddRangeAsync(Utils.SeedCategories());
                 await arrContext.Statuses.AddRangeAsync(Utils.SeedStatuses());
+                await arrContext.UserContests.AddRangeAsync(Utils.SeedUserContests());
+                await arrContext.Juries.AddRangeAsync(Utils.SeedJuries());
                 await arrContext.Users.AddRangeAsync(Utils.SeedUsers());
                 await arrContext.SaveChangesAsync();
-                var userToGet = arrContext.Users.Skip(2).First();
+                var userToGet = await arrContext.Users.Skip(2).FirstAsync();
                 userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService, userService, userManager.Object, signManager, userContestService);
+                var contest = await actContext.Contests.Include(c => c.Status).Include(c => c.Category).FirstOrDefaultAsync(c => c.Name == newPhotoDTO.ContestName);
+                contestService.Setup(x => x.FindContestByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(contest));
+                var userToGet = await actContext.Users.Skip(2).FirstAsync();
+                var userContest = new UserContest()
+                {
+                    ContestId = contest.Id,
+                    UserId = userToGet.Id
+                };
+                await actContext.UserContests.AddAsync(userContest);
+                await actContext.SaveChangesAsync();
+                userContestService.Setup(x => x.GetAllUserContestsAsync()).Returns(Task.FromResult(actContext.UserContests.ToList()));
+                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.CreateAsync(newPhotoDTO);
-                var userToGet = actContext.Users.Skip(2).First();
-                var contest = actContext.Contests.FirstOrDefault(c => c.Name.ToLower() == newPhotoDTO.ContestName.ToLower());
+
                 Assert.AreEqual(result.Title, newPhotoDTO.Title);
                 Assert.AreEqual(result.Description, newPhotoDTO.Description);
                 Assert.AreEqual(result.PhotoUrl, newPhotoDTO.PhotoUrl);
