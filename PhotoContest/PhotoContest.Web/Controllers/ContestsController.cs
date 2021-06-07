@@ -338,11 +338,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions()
-                    {
-                        Timeout = 100
-                    });
-                    //return RedirectToAction("Invite");
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+
+                    return NoContent();
                 }
             }
             return RedirectToAction("Index");

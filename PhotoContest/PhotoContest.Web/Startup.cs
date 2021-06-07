@@ -106,12 +106,6 @@ namespace PhotoContest.Web
 
             services.AddRazorPages();
             services.AddSingleton<IEmailSender, EmailSender>();
-            //services.AddMvc().AddNToastNotifyToastr();
-            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
-            {
-                ProgressBar = false,
-                PositionClass = ToastPositions.BottomCenter
-            });
 
             /*services.AddAuthentication(options =>
             {
@@ -134,7 +128,11 @@ namespace PhotoContest.Web
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
                     };
                 });*/
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
+            {
+                ProgressBar = true,
+                Timeout = 10000,
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -160,6 +158,7 @@ namespace PhotoContest.Web
             app.UseAuthorization();
             app.UseMiddleware<PageNotFoundMiddleware>();
             app.UseNToastNotify();
+            //app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {
