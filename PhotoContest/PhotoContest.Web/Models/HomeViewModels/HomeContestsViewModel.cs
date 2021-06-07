@@ -9,7 +9,7 @@ namespace PhotoContest.Web.Models.HomeViewModels
 {
     public class HomeContestsViewModel
     {
-        public List<Contest> FinishedContests { get; set; } = new List<Contest>();
+        public List<PhotoDTO> PhotosFirstPlace { get; set; } = new List<PhotoDTO>();
         public List<ContestDTO> Phase1Contests { get; set; } = new List<ContestDTO>();
     }
 }

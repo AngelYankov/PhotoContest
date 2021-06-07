@@ -14,11 +14,7 @@
     <script src="~/js/3js.js"></script>
     <script src="~/js/4js.js"></script>
 }
-@*<div class="text-center">
-    <h1>Welcome to the world of photography</h1>
-    <h3>Show your skills and compete to win</h3>
-</div>
-*@
+
 <div class="text-center">
     <div class="jumbotron">
         <h1 class="display-3">Welcome to the world of photography</h1>
@@ -39,9 +35,9 @@
                     <div class="carousel-item active">
                         <div class="container">
                             <div class="row">
-                                @foreach (var item in Model.FinishedContests.Take(3))
+                                @foreach (var item in Model.PhotosFirstPlace.Take(3))
                                 {
-                                    <partial name="_SinglePhotoPartial" model="new PhotoViewModel(new PhotoDTO(item.Photos.First()))" />
+                                    <partial name="_SinglePhotoPartial" model="new PhotoViewModel(item)" />
                                 }
                             </div>
                         </div>
@@ -49,9 +45,9 @@
                     <div class="carousel-item">
                         <div class="container">
                             <div class="row">
-                                @foreach (var item in Model.FinishedContests.Skip(3).Take(3))
+                                @foreach (var item in Model.PhotosFirstPlace.Skip(3).Take(3))
                                 {
-                                    <partial name="_SinglePhotoPartial" model="new PhotoViewModel(new PhotoDTO(item.Photos.First()))" />
+                                    <partial name="_SinglePhotoPartial" model="new PhotoViewModel(item)" />
                                 }
                             </div>
                         </div>
