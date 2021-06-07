@@ -30,7 +30,7 @@ Web application that allows users to participate in photography contests and get
      ![Alt text](https://gitlab.com/AngelYankov/photocontest/-/blob/master/Images/enroll.png)
      * They can Enroll if a contest is in "Phase 1"
 
-     ![Alt text](https://gitlab.com/AngelYankov/photocontest/-/blob/master/Images/AddPhoto.png)
+     ![Alt text](https://gitlab.com/AngelYankov/photocontest/-/blob/master/Images/AddPhoto1.jpg)
      * They can upload a photo in a contest if they are already enrolled
 
      ![Alt text](https://gitlab.com/AngelYankov/photocontest/-/blob/master/Images/ContestPhotos_UserView.png)
