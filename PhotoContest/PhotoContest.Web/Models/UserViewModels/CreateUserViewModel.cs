@@ -10,9 +10,11 @@ namespace PhotoContest.Web.Models.UserViewModels
     public class CreateUserViewModel
     {
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = Exceptions.InvalidUserInfo)]
+        [Display(Name = "First name")]
         public string FirstName { get; set; }
 
         [Required, StringLength(20, MinimumLength = 2, ErrorMessage = Exceptions.InvalidUserInfo)]
+        [Display(Name = "Last name")]
         public string LastName { get; set; }
 
         [Required, EmailAddress, Display(Name = "Email address")]

@@ -48,17 +48,18 @@
             @if (User.IsInRole("Admin"))
             {
                 <td>
-                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@Model.Username">Edit</a>
                     <a class="btn btn-outline-danger" asp-action="Delete" asp-route-Username="@Model.Username">Delete</a>
                 </td>
             }
             else if (User.IsInRole("Organizer"))
             {
                 <td>
-                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@Model.Username">Edit</a> 
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-Username="@Model.Username">Edit</a>
                 </td>
             }
-
         </tr>
     </tbody>
 </table>
+<a class="btn btn-outline-dark" asp-action="Index">Back</a>
+

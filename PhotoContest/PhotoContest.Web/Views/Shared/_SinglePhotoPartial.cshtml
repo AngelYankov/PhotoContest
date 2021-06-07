@@ -39,8 +39,8 @@
             {
                 <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-light" asp-route-id="@Model.Id">Reviews</a>
             }
-            <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            <a class="btn btn-light" asp-action="Edit" asp-controller="Photos" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-danger" asp-action="Delete" asp-controller="Photos" asp-route-id="@Model.Id">Delete</a>
         }
         else if (SignInManager.IsSignedIn(User) && User.IsInRole("Organizer"))
         {
@@ -59,7 +59,7 @@
             {
                 <a asp-controller="Reviews" asp-action="GetPhotoReviews" class="btn btn-light" asp-route-id="@Model.Id">Reviews</a>
             }
-            <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-light" asp-action="Edit" asp-controller="Photos" asp-route-id="@Model.Id">Edit</a>
         }
     </div>
 </div>
