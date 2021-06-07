@@ -44,7 +44,7 @@ namespace PhotoContest.Tests
                 },
                 new Contest()
                 {
-                    Id = Guid.Parse("42541f52-8d30-4828-bf66-4eda82735edd"),
+                    Id = Guid.Parse("42541f52-8d30-4828-bf66-4eda82735edd"), // Finished
                     Name = "Best building",
                     CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"),
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
@@ -296,7 +296,7 @@ namespace PhotoContest.Tests
                     PhotoUrl = "/Images/kawasaki.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
-                 new Photo()
+                new Photo()
                 {
                     Id = Guid.Parse("507c5f65-497b-4a3c-95f6-cfbc86692ca5"),
                     ContestId = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
@@ -306,7 +306,7 @@ namespace PhotoContest.Tests
                     PhotoUrl = "/Images/honda.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
-                 new Photo()
+                new Photo()
                 {
                     Id = Guid.Parse("59dd9540-a1d8-4360-99d5-ed8302aae5e2"),
                     ContestId = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
@@ -316,7 +316,7 @@ namespace PhotoContest.Tests
                     PhotoUrl = "/Images/colibri.jpg",
                     CreatedOn = DateTime.UtcNow
                 },
-                 new Photo()
+                new Photo()
                 {
                     Id = Guid.Parse("94499cdd-e18c-4743-b0c4-2e1b7564c46c"),
                     ContestId = Guid.Parse("e2450bf8-c019-4442-a2c3-ed0210586eed"),
