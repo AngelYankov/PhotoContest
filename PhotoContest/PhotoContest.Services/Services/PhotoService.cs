@@ -131,6 +131,7 @@ namespace PhotoContest.Services.Services
                                        .Include(p => p.Contest)
                                             .ThenInclude(c => c.Status)
                                        .Where(p => p.IsDeleted == false)
+                                       .OrderByDescending(p=>p.AllPoints)
                                        .ToListAsync();
         }
 

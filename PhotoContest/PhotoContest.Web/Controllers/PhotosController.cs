@@ -212,7 +212,7 @@ namespace PhotoContest.Web.Controllers
                     System.IO.File.Delete(imagePath);
                 }*/
                 await this.photoService.DeleteAsync(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","Home");
             }
             catch (Exception e)
             {

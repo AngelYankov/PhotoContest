@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Services;
@@ -36,6 +37,7 @@ namespace PhotoContest.Web.Controllers
             var phase1Contests = allContests.Where(c => c.Status == "Phase 1" && c.OpenOrInvitational == "Open");
             var photos = await this.photoService.GetAllBaseAsync();
             var finishedContests = await this.contestService.GetAllFinishedContestsAsync();
+            var photosFirstPlaces = new List<PhotoDTO>();
 
             foreach (var contest in finishedContests)
             {
@@ -43,14 +45,14 @@ namespace PhotoContest.Web.Controllers
                 {
                     if (photo.Contest.Name == contest.Name)
                     {
-                        contest.Photos.Add(photo);
+                        photosFirstPlaces.Add(new PhotoDTO(photo));
+                        break;
                     }
                 }
-                contest.Photos = contest.Photos.OrderByDescending(p => p.AllPoints).ToList();
             }
             return View(new HomeContestsViewModel()
             {
-                FinishedContests = finishedContests.ToList(),
+                PhotosFirstPlace = photosFirstPlaces,
                 Phase1Contests = phase1Contests.ToList()
             });
         }
