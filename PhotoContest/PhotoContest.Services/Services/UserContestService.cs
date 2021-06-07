@@ -66,24 +66,24 @@ namespace PhotoContest.Services.Services
                 await CalculatePointsForUsersThirdPlaceAsync(countThirdPlacePhotos, contest, ThirdPlacePhotos);
 
                 //Add points to users depending on open/invitational
+                var userContests = await this.dbContext.UserContests.Include(uc=>uc.User).Where(uc => uc.ContestId == contest.Id && uc.IsAdded == false).ToListAsync();
                 if (contest.IsOpen)
                 {
-                    foreach (var userContest in await this.dbContext.UserContests.Where(uc => uc.ContestId == contest.Id && uc.IsAdded == false).ToListAsync())
+                    foreach (var userContest in userContests)
                     {
                         userContest.Points += 1;
                     }
                 }
                 else
                 {
-                    foreach (var userContest in await this.dbContext.UserContests.Where(uc => uc.ContestId == contest.Id && uc.IsAdded == false).ToListAsync())
+                    foreach (var userContest in userContests)
                     {
                         userContest.Points += 3;
                     }
                 }
                 contest.IsCalculated = true;
                 //calculate points for each user participating in a Contest
-                foreach (var userContest in await this.dbContext.UserContests.Include(uc => uc.User).Where(uc => uc.ContestId == contest.Id 
-                                                                                                              && uc.IsAdded == false).ToListAsync())
+                foreach (var userContest in userContests)
                 {
                     var user = await this.dbContext.Users.FirstOrDefaultAsync(u => u.Id == userContest.UserId);
                     user.OverallPoints += userContest.Points;
