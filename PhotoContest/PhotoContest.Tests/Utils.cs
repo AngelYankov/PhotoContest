@@ -36,7 +36,7 @@ namespace PhotoContest.Tests
                     Id = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
                     Name = "Best look",
                     CategoryId = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"),
-                    StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"),
+                    StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),
                     IsOpen = true,
                     Phase1 = new DateTime(2021, 05, 15, 9, 0, 0),
                     Phase2 = new DateTime(2021, 05, 25, 12, 0, 0),
