@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -162,7 +163,8 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    return Redirect(Request.Path.Value.ToString());
                 }
             }
             var categories = await this.categoryService.GetAllBaseAsync();
@@ -339,8 +341,8 @@ namespace PhotoContest.Web.Controllers
                 catch (Exception e)
                 {
                     toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
-
-                    return NoContent();
+                    var path = Request.Path.Value.ToString()+"?name="+ inviteViewModel.Name; 
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");
