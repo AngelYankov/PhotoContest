@@ -515,7 +515,7 @@ namespace PhotoContest.Data
                     Id = Guid.Parse("fd4b4d23-a4db-4e8b-be63-4af3c4b45757"),
                     ContestId = Guid.Parse("548873db-705b-46e7-b88d-230c5f06fd35"),
                     UserId = Guid.Parse("021fa300-ffd4-48e2-a93f-d40c17d014f3"),
-                    Title = "Kawasaki Ninja",
+                    Title = "Kawasaki",
                     Description = "Parked for the day.",
                     PhotoUrl = $"/Images/16bb1fa0-8f61-4717-bba1-e14f8c47b616_kawasaki1.jpg",
                     CreatedOn = DateTime.UtcNow
@@ -576,7 +576,7 @@ namespace PhotoContest.Data
                     Id = Guid.Parse("7780497c-f5e4-43e2-8e90-5067f91475ce"),
                     ContestId = Guid.Parse("d2acdd9c-9427-4fc2-897e-5f52da2190dc"), //olympics
                     UserId = Guid.Parse("56763358-b113-4f96-9a4a-5190c421f1fb"), //sam
-                    Title = "The best",
+                    Title = "Usain Bolt",
                     Description = "Usain Bolt breaking the record",
                     PhotoUrl = $"/Images/cb2acc2c-2576-4707-86ae-754e983e1f55_olympics1.jpg",//get picture
                     CreatedOn = DateTime.UtcNow
@@ -586,7 +586,7 @@ namespace PhotoContest.Data
                     Id = Guid.Parse("05505a4d-f749-46e9-928c-039dad92c808"),
                     ContestId = Guid.Parse("d2acdd9c-9427-4fc2-897e-5f52da2190dc"), //olympics
                     UserId = Guid.Parse("71cd9097-0c95-4af2-9e43-da7324880583"), // robert
-                    Title = "Winner",
+                    Title = "Michael Phelps",
                     Description = "Michael Phelps winning gold",
                     PhotoUrl = $"/Images/71a3e79d-ee0e-4d4b-9a03-2890c42be96a_olympics2.jpg",//get picture
                     CreatedOn = DateTime.UtcNow
@@ -636,9 +636,9 @@ namespace PhotoContest.Data
                     Id = Guid.Parse("723b8f6d-95de-487f-a4b2-52f8be99ce11"),
                     ContestId = Guid.Parse("42541f52-8d30-4828-bf66-4eda82735edd"), //mansions
                     UserId = Guid.Parse("743f0e66-af28-48b9-8322-61395c10207f"), //steven
-                    Title = "Beach house",
-                    Description = "Greatest place to lose time",
-                    PhotoUrl = $"/Images/d8f9b48e-7743-48fe-8e38-ba06e979716e_mansions1.jpg",//get picture
+                    Title = "Palm house",
+                    Description = "Great looking family house",
+                    PhotoUrl = $"/Images/0eaa5bc4-a7b1-41e2-8fe9-543cf9fa2e46_mansions.jpg",//get picture
                     CreatedOn = DateTime.UtcNow
                 },
                 new Photo()
@@ -873,7 +873,7 @@ namespace PhotoContest.Data
                     Comment = "Great place, would love to be there.",
                     Score = 10,
                     UserId = Guid.Parse("e240edfc-64b9-4358-a869-5aadb719e128"),//eric
-                    PhotoId = Guid.Parse("723b8f6d-95de-487f-a4b2-52f8be99ce11"),//beach house
+                    PhotoId = Guid.Parse("723b8f6d-95de-487f-a4b2-52f8be99ce11"),//palm house
                     WrongCategory = false,
                     CreatedOn = DateTime.UtcNow
                 },
@@ -883,7 +883,7 @@ namespace PhotoContest.Data
                     Comment = "Great shot.",
                     Score = 7,
                     UserId = Guid.Parse("a890fe35-c840-4484-bd80-67dbc94ab581"),//jane
-                    PhotoId = Guid.Parse("723b8f6d-95de-487f-a4b2-52f8be99ce11"),//beach house
+                    PhotoId = Guid.Parse("723b8f6d-95de-487f-a4b2-52f8be99ce11"),//palm house
                     WrongCategory = false,
                     CreatedOn = DateTime.UtcNow
                 },
