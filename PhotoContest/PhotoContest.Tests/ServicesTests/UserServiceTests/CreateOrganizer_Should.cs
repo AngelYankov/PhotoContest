@@ -152,38 +152,6 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
             }
         }
-        [TestMethod] //TODO
-        public async Task Throw_When_IncorrectPasswordForOrganizer()
-        {
-            var options = Utils.GetOptions(nameof(Throw_When_IncorrectPasswordForOrganizer));
-
-            var userStore = new Mock<IUserStore<User>>();
-            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null,
-                null, null, null, null, null);
-            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
-            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
-            var signManager = new Mock<SignInManager<User>>(userManager.Object, contextAccessor, userPrincipalFactory, null, null, null, null).Object;
-
-            var newUserDTO = new Mock<NewUserDTO>().Object;
-            newUserDTO.FirstName = "John";
-            newUserDTO.LastName = "Smith";
-            newUserDTO.Email = "john.smith@mail.com";
-            newUserDTO.Password = "123456";
-            userManager.Setup(x => x.CreateAsync(It.IsAny<User>(), newUserDTO.Password))
-                .Returns(Task.FromResult(IdentityResult.Success)); //CHANGE TO NOT SUCCESS
-
-            using (var arrContext = new PhotoContestContext(options))
-            {
-                await arrContext.Ranks.AddRangeAsync(Utils.SeedRanks());
-                await arrContext.SaveChangesAsync();
-            }
-            using (var actContext = new PhotoContestContext(options))
-            {
-                var sut = new UserService(actContext, userManager.Object,signManager);
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateOrganizerAsync(newUserDTO));
-
-            }
-        }
 
         [TestMethod]
         public async Task Throw_When_ExistingEmailForOrganizer()
