@@ -48,7 +48,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.GetAllBaseAsync();
                 var photos = await actContext.Photos.Where(p => p.IsDeleted == false).ToListAsync();
                 Assert.AreEqual(photos.Count(), result.Count());

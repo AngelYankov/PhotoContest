@@ -34,7 +34,7 @@ namespace PhotoContest.Api.Controllers
         {
             try
             {
-                var result = await this.reviewService.CreateAsync(newReviewDTO);
+                var result = await this.reviewService.CreateApiAsync(newReviewDTO);
                 return Created("post",result);
             }
             catch (Exception e)

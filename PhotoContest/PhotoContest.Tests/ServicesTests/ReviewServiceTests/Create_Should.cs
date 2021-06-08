@@ -65,7 +65,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                             .FirstOrDefaultAsync(p => p.Id == Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 photoService.Setup(x => x.FindPhotoAsync(It.IsAny<Guid>())).Returns(Task.FromResult(photo));
 
-                var sut = new ReviewService(actContext,photoService.Object,userService.Object,userManager.Object,signManager);
+                var sut = new ReviewService(actContext,photoService.Object,userService.Object, contextAccessor.Object, userManager.Object,signManager);
                 var result = await sut.CreateAsync(newReviewDTO);
 
                 Assert.AreEqual(newReviewDTO.Comment, result.Comment);
@@ -123,7 +123,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                             .FirstOrDefaultAsync(p => p.Id == Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 photoService.Setup(x => x.FindPhotoAsync(It.IsAny<Guid>())).Returns(Task.FromResult(photo));
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 var result = await sut.CreateAsync(newReviewDTO);
 
                 Assert.AreEqual("Photo is in a wrong category.", result.Comment);
@@ -180,7 +180,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                             .FirstOrDefaultAsync(p => p.Id == Guid.Parse("94499cdd-e18c-4743-b0c4-2e1b7564c46c"));
                 photoService.Setup(x => x.FindPhotoAsync(It.IsAny<Guid>())).Returns(Task.FromResult(photo));
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newReviewDTO));
             }
         }
@@ -232,7 +232,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                             .FirstOrDefaultAsync(p => p.Id == Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 photoService.Setup(x => x.FindPhotoAsync(It.IsAny<Guid>())).Returns(Task.FromResult(photo));
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newReviewDTO));
 
             }
@@ -285,7 +285,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                             .FirstOrDefaultAsync(p => p.Id == Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 photoService.Setup(x => x.FindPhotoAsync(It.IsAny<Guid>())).Returns(Task.FromResult(photo));
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newReviewDTO));
             }
         }
@@ -337,7 +337,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                             .FirstOrDefaultAsync(p => p.Id == Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 photoService.Setup(x => x.FindPhotoAsync(It.IsAny<Guid>())).Returns(Task.FromResult(photo));
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 await sut.CreateAsync(newReviewDTO);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newReviewDTO));
 

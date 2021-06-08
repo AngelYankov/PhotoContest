@@ -51,7 +51,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Skip(2).FirstAsync();
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.GetPhotosForUserAsync();
                 var photos = await actContext.Photos
                                              .Include(p => p.User)

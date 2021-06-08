@@ -45,7 +45,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                 userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 var result = await sut.GetForUserAsync(userToGet.UserName);
                 var reviews = await actContext.Reviews.Include(r => r.Photo).Include(r => r.Evaluator).Where(r=>r.Photo.UserId == userToGet.Id).ToListAsync();
                 Assert.AreEqual(result.Count(), reviews.Count());

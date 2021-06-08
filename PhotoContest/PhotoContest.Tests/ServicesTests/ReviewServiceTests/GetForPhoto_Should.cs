@@ -53,7 +53,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
                                         .Select(r => new ReviewDTO(r))
                                         .ToListAsync();
 
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 var result = await sut.GetForPhotoAsync(Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
 
                 Assert.AreEqual(result.Count(), reviews.Count());
