@@ -89,7 +89,7 @@ namespace PhotoContest.Api.Controllers
         {
             try
             {
-                var photo = await this.photoService.CreateAsync(newPhotoDTO);
+                var photo = await this.photoService.CreateApiAsync(newPhotoDTO);
                 return Created("post",photo);
             }
             catch (Exception e)
@@ -147,7 +147,7 @@ namespace PhotoContest.Api.Controllers
         {
             try
             {
-                var result = await this.photoService.GetAllWithCommentsAndScoreAsync(contestName);
+                var result = await this.photoService.GetAllWithCommentsAndScoreApiAsync(contestName);
                 return Ok(result);
             }
             catch (Exception e)

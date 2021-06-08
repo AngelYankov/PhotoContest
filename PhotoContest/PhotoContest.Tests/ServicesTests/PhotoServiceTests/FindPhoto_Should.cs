@@ -45,7 +45,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.FindPhotoAsync(Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 var photo = await actContext.Photos.FirstOrDefaultAsync(p => p.Id == Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 Assert.AreEqual(result.Title, photo.Title);
@@ -81,7 +81,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.FindPhotoAsync(Guid.Parse("3abe3a5d-e740-4899-a05e-d72bb57e727e")));
             }
         }

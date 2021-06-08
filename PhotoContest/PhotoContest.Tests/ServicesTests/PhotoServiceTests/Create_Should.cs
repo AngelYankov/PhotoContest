@@ -69,7 +69,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await actContext.UserContests.AddAsync(userContest);
                 await actContext.SaveChangesAsync();
                 userContestService.Setup(x => x.GetAllUserContestsAsync()).Returns(Task.FromResult(actContext.UserContests.ToList()));
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.CreateAsync(newPhotoDTO);
 
                 Assert.AreEqual(result.Title, newPhotoDTO.Title);
@@ -104,7 +104,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
 
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }
@@ -129,7 +129,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
 
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }
@@ -155,7 +155,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
 
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }
@@ -182,7 +182,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
 
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }
@@ -219,7 +219,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             {
                 var contest = await actContext.Contests.Include(c => c.Status).Include(c => c.Category).FirstOrDefaultAsync(c => c.Name == newPhotoDTO.ContestName);
                 contestService.Setup(x => x.FindContestByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(contest));
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }
@@ -265,7 +265,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 var contest = await actContext.Contests.Include(c => c.Status).Include(c => c.Category).FirstOrDefaultAsync(c => c.Name == newPhotoDTO.ContestName);
                 contestService.Setup(x => x.FindContestByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(contest));
                 var userToGet = await actContext.Users.FirstOrDefaultAsync(u => u.UserName == "kyle.sins@mail.com");
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }
@@ -314,7 +314,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 contestService.Setup(x => x.FindContestByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(contest));
                 var userToGet = await actContext.Users.Skip(2).FirstAsync();
                 userContestService.Setup(x => x.GetAllUserContestsAsync()).Returns(Task.FromResult(actContext.UserContests.ToList()));
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
@@ -372,7 +372,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await actContext.UserContests.AddAsync(userContest);
                 await actContext.SaveChangesAsync();
                 userContestService.Setup(x => x.GetAllUserContestsAsync()).Returns(Task.FromResult(actContext.UserContests.ToList()));
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.CreateAsync(newPhotoDTO));
             }
         }

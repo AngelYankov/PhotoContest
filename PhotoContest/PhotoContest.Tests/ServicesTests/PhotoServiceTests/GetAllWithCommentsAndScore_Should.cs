@@ -55,7 +55,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var contest = await actContext.Contests.Include(c => c.Status).Include(c => c.Category).FirstOrDefaultAsync(c => c.Name == "Best look");
                 contestService.Setup(x => x.FindContestByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(contest));
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.GetAllWithCommentsAndScoreAsync("Best look");
                 var photos = await actContext.Photos
                                              .Include(p => p.User)
@@ -103,7 +103,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var contest = await actContext.Contests.Include(c => c.Status).Include(c => c.Category).FirstOrDefaultAsync(c => c.Name == "Wild cats");
                 contestService.Setup(x => x.FindContestByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(contest));
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetAllWithCommentsAndScoreAsync("Wild cats"));
             }
         }

@@ -23,12 +23,12 @@ namespace PhotoContest.Services.Services
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        /*private readonly IHttpContextAccessor contextAccessor;*/
+        private readonly IHttpContextAccessor contextAccessor;
 
         public ReviewService(PhotoContestContext dbContext,
             IPhotoService photoService,
             IUserService userService,
-            /*IHttpContextAccessor contextAccessor,*/
+            IHttpContextAccessor contextAccessor,
             UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
@@ -37,7 +37,7 @@ namespace PhotoContest.Services.Services
             this.userService = userService;
             this.userManager = userManager;
             this.signInManager = signInManager;
-            /*this.contextAccessor = contextAccessor;*/
+            this.contextAccessor = contextAccessor;
         }
         /// <summary>
         /// Create a review.
@@ -51,6 +51,46 @@ namespace PhotoContest.Services.Services
             if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
             //var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")
+            {
+                if (!this.dbContext.Juries.Any(j => j.UserId == user.Id && j.ContestId == photo.ContestId))
+                {
+                    throw new ArgumentException(Exceptions.UserNotJury);
+                }
+            }
+            if (await this.dbContext.Reviews.AnyAsync(r => r.UserId == user.Id && r.PhotoId == photo.Id))
+                throw new ArgumentException(Exceptions.ReviewedPhoto);
+
+            var review = new Review()
+            {
+                PhotoId = photo.Id,
+                Comment = newReviewDTO.Comment,
+                Score = newReviewDTO.Score,
+                UserId = user.Id,
+                CreatedOn = DateTime.UtcNow
+            };
+            if (newReviewDTO.WrongCategory)
+            {
+                review.Comment = Exceptions.WrongCategoryComment;
+                review.Score = 0;
+                photo.IsInWrongCategory = true;
+            }
+            await this.dbContext.Reviews.AddAsync(review);
+            await this.dbContext.SaveChangesAsync();
+            return new ReviewDTO(review);
+        }
+        /// <summary>
+        /// Create a review for API.
+        /// </summary>
+        /// <param name="newReviewDTO">Details of new review.</param>
+        /// <returns>Returns created review.</returns>
+        public async Task<ReviewDTO> CreateApiAsync(NewReviewDTO newReviewDTO)
+        {
+            var photo = await this.photoService.FindPhotoAsync(newReviewDTO.PhotoId);
+            if (photo.Contest.Status.Name != "Phase 2") throw new ArgumentException(Exceptions.InvalidContestPhase);
+            if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
+            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(username);
             if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")
             {

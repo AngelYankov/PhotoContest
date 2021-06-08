@@ -41,7 +41,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 var result = await sut.GetAllReviewsAsync();
                 var reviews = await actContext.Reviews.ToListAsync();
                 Assert.AreEqual(reviews.Count(), result.Count());

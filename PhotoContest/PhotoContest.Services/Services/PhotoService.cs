@@ -21,7 +21,7 @@ namespace PhotoContest.Services.Services
     public class PhotoService : IPhotoService
     {
         private readonly PhotoContestContext dbContext;
-        /*private readonly IHttpContextAccessor contextAccessor;*/
+        private readonly IHttpContextAccessor contextAccessor;
         private readonly IContestService contestService;
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
@@ -29,7 +29,7 @@ namespace PhotoContest.Services.Services
         private readonly IUserContestService userContestService;
 
         public PhotoService(PhotoContestContext dbContext, 
-            /*IHttpContextAccessor contextAccessor,*/ 
+            IHttpContextAccessor contextAccessor,
             IContestService contestService, 
             IUserService userService,
             UserManager<User> userManager,
@@ -37,7 +37,7 @@ namespace PhotoContest.Services.Services
             IUserContestService userContestService)
         {
             this.dbContext = dbContext;
-           /* this.contextAccessor = contextAccessor;*/
+            this.contextAccessor = contextAccessor;
             this.contestService = contestService;
             this.userService = userService;
             this.userManager = userManager;
@@ -61,7 +61,49 @@ namespace PhotoContest.Services.Services
                 throw new ArgumentException(Exceptions.ClosedContest);
             }
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
-            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            if (await this.dbContext.Juries.FirstOrDefaultAsync(j => j.UserId == user.Id && j.ContestId == contest.Id) != null)
+            {
+                throw new ArgumentException(Exceptions.ExistingJury);
+            }
+            var userContests = await this.userContestService.GetAllUserContestsAsync();
+            var userContest = userContests.FirstOrDefault(uc => uc.UserId == user.Id && uc.ContestId == contest.Id)
+                ?? throw new ArgumentException(Exceptions.NotEnrolledInContest);
+            if (userContest.HasUploadedPhoto)
+            {
+                throw new ArgumentException(Exceptions.AlreadyUploadedAPhoto);
+            }
+            var photo = new Photo()
+            {
+                Title = newphotoDTO.Title,
+                Description = newphotoDTO.Description,
+                PhotoUrl = newphotoDTO.PhotoUrl,
+                ContestId = contest.Id,
+                UserId = user.Id,
+                CreatedOn = DateTime.UtcNow,
+            };
+            userContest.HasUploadedPhoto = true;
+            await this.dbContext.Photos.AddAsync(photo);
+            await this.dbContext.SaveChangesAsync();
+            return new PhotoDTO(photo);
+        }
+        /// <summary>
+        /// Create a photo for API.
+        /// </summary>
+        /// <param name="newphotoDTO">Details of photo to be created.</param>
+        /// <returns>Returns created photo or an appropriate error message.</returns>
+        public async Task<PhotoDTO> CreateApiAsync(NewPhotoDTO newphotoDTO)
+        {
+            if (newphotoDTO.Title == null) throw new ArgumentException(Exceptions.RequiredPhotoName);
+            if (newphotoDTO.Description == null) throw new ArgumentException(Exceptions.RequiredPhotoDescription);
+            if (newphotoDTO.PhotoUrl == null) throw new ArgumentException(Exceptions.RequiredPhotoURL);
+            if (newphotoDTO.ContestName == null) throw new ArgumentException(Exceptions.InvalidContestName);
+            var contest = await this.contestService.FindContestByNameAsync(newphotoDTO.ContestName);
+            if (contest.Status.Name != "Phase 1")
+            {
+                throw new ArgumentException(Exceptions.ClosedContest);
+            }
+            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(username);
             if (await this.dbContext.Juries.FirstOrDefaultAsync(j => j.UserId == user.Id && j.ContestId == contest.Id) != null)
             {
@@ -204,8 +246,31 @@ namespace PhotoContest.Services.Services
         /// <returns>Return all photos with score and comments.</returns>
         public async Task<List<PhotoReviewDTO>> GetAllWithCommentsAndScoreAsync(string contestName)
         {
-            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
+            var user = await this.userService.GetUserByUsernameAsync(username);
+            var contest = await this.contestService.FindContestByNameAsync(contestName);
+
+            if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")
+            {
+                if (contest.Status.Name != "Finished" && !(await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id)))
+                {
+                    throw new ArgumentException(Exceptions.InvalidUserAccessToPhotos);
+                }
+            }
+            return await this.dbContext.Photos
+                                       .Include(p => p.User)
+                                       .Include(p => p.Contest)
+                                            .ThenInclude(c => c.Category)
+                                       .Select(p => new PhotoReviewDTO(p)).ToListAsync();
+        }
+
+        /// <summary>
+        /// Get all photos with detailed info for API.
+        /// </summary>
+        /// <returns>Return all photos with score and comments.</returns>
+        public async Task<List<PhotoReviewDTO>> GetAllWithCommentsAndScoreApiAsync(string contestName)
+        {
+            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(username);
             var contest = await this.contestService.FindContestByNameAsync(contestName);
 

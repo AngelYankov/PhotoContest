@@ -44,7 +44,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var photo = await actContext.Photos
                     .Include(p=>p.User)
                     .Include(p => p.Contest)
@@ -88,7 +88,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetAsync(Guid.Parse("3c1996fe-f204-42b7-9ea9-03a7196968e8")));
             }
         }

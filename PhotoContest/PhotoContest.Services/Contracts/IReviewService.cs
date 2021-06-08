@@ -11,6 +11,7 @@ namespace PhotoContest.Services.Contracts
     public interface IReviewService
     {
         Task<ReviewDTO> CreateAsync(NewReviewDTO newReviewDTO);
+        Task<ReviewDTO> CreateApiAsync(NewReviewDTO newReviewDTO);
         Task<List<ReviewDTO>> GetForPhotoAsync(Guid id);
         Task<List<ReviewDTO>> GetForUserAsync(string username);
         Task<bool> DeleteAsync(Guid reviewId);

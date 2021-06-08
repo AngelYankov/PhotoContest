@@ -40,7 +40,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 var result = await sut.FindReviewAsync(Guid.Parse("8198e13a-30cb-4f4b-99f0-acf31a70b02d"));
                 var review = await actContext.Reviews.Include(r => r.Photo).Include(r => r.Evaluator).FirstOrDefaultAsync(r => r.Id == Guid.Parse("8198e13a-30cb-4f4b-99f0-acf31a70b02d"));
                 Assert.AreEqual(result.Comment, review.Comment);
@@ -71,7 +71,7 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ReviewService(actContext, photoService.Object, userService.Object, userManager.Object, signManager);
+                var sut = new ReviewService(actContext, photoService.Object, userService.Object, contextAccessor.Object, userManager.Object, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.FindReviewAsync(Guid.Parse("8198e13a-30cb-4f4b-99f0-acf31a70b02d")));
             }
         }

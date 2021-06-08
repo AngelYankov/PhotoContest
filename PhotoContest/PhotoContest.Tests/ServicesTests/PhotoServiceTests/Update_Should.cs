@@ -52,7 +52,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.UpdateAsync(updatePhotoDTO, Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 Assert.AreEqual(result.Title, updatePhotoDTO.Title);
                 Assert.AreEqual(result.Description, updatePhotoDTO.Description);
@@ -96,7 +96,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.UpdateAsync(updatePhotoDTO, Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 Assert.AreEqual(result.Title, updatePhotoDTO.Title);
                 Assert.AreEqual(result.Description, "Picture of a lion.");
@@ -140,7 +140,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.UpdateAsync(updatePhotoDTO, Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 Assert.AreEqual(result.Title, "Lion King");
                 Assert.AreEqual(result.Description, updatePhotoDTO.Description);
@@ -184,7 +184,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 var result = await sut.UpdateAsync(updatePhotoDTO, Guid.Parse("e165b91f-03bf-414e-88b7-c51b87775683"));
                 Assert.AreEqual(result.Title, "Lion King");
                 Assert.AreEqual(result.Description, "Picture of a lion.");
@@ -226,7 +226,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             };
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new PhotoService(actContext, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
+                var sut = new PhotoService(actContext, contextAccessor.Object, contestService.Object, userService.Object, userManager.Object, signManager, userContestService.Object);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.UpdateAsync(updatePhotoDTO, Guid.Parse("874e0dd0-a2b2-449a-827b-03160c29d427")));
             }
         }
