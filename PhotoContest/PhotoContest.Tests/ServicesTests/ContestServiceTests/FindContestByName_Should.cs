@@ -39,7 +39,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
                 var result = await sut.FindContestByNameAsync(actContext.Contests.First().Name);
                 Assert.AreEqual(result.Id, actContext.Contests.First().Id);
                 Assert.AreEqual(result.Name, actContext.Contests.First().Name);
