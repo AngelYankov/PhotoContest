@@ -84,7 +84,7 @@ Web application that allows users to participate in photography contests and get
 
 ![Alt text](https://gitlab.com/AngelYankov/photocontest/-/raw/master/Images/ChooseJury.png)
 
-* Invite User to a contest if it is "invitational"
+* Invite user to a contest if it is "invitational"
 
 ![Alt text](https://gitlab.com/AngelYankov/photocontest/-/raw/master/Images/Invite.png)
 
