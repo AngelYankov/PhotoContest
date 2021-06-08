@@ -20,17 +20,12 @@ namespace PhotoContest.Tests.ServicesTests.CategoryServiceTests
             var options = Utils.GetOptions(nameof(Return_NameOf_CreatedCategoryAsync));
             var category = new Mock<Category>();
             category.Name = "Test category";
-            using (var arrContext = new PhotoContestContext(options))
-            {
-                arrContext.Categories.Add(category.Object);
-                arrContext.SaveChanges();
-            }
+            
             using (var actContext = new PhotoContestContext(options))
             {
                 var sut = new CategoryService(actContext);
                 var result = await sut.CreateAsync("Test category");
                 Assert.AreEqual(result, category.Name);
-                Assert.AreEqual(actContext.Categories.Count(), 2);
             }
         }
     }
