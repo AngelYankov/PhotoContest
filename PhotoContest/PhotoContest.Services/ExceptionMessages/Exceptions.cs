@@ -17,7 +17,7 @@ namespace PhotoContest.Services.ExceptionMessages
         public const string InvalidPhase = "Phase is not valid.";
         public const string InvalidSorting = "Sorting is not valid.";
         public const string InvalidDateTimePhase1 = "Date for 'Phase 1' should be in the future.";
-        public const string InvalidDateTimePhase2 = "Date for 'Phase 2' should be between 1 and 31 days after 'Phase 1'.";
+        public const string InvalidDateTimePhase2 = "Date for 'Phase 2' should be between 1 and 31 days after 'Phase 1' and before date for 'Finished'.";
         public const string InvalidDateTimeFinished = "Date for 'Finished' phase should be at least 1 hour after 'Phase 2' and not more than 1 day after 'Phase 2'.";
         public const string InvalidPointsValue = "Invalid points value.";
         public const string InvalidJuryUser = "User cannot be chosen as jury.";

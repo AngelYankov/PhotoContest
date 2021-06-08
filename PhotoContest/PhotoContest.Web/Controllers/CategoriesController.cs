@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NToastNotify;
 using PhotoContest.Data;
 using PhotoContest.Services.Services;
 using PhotoContest.Web.Models.CategoryViewModels;
@@ -16,11 +17,13 @@ namespace PhotoContest.Web.Controllers
     {
         private readonly PhotoContestContext _context;
         private readonly ICategoryService categoryService;
+        private readonly IToastNotification toastNotification;
 
-        public CategoriesController(PhotoContestContext context, ICategoryService categoryService)
+        public CategoriesController(PhotoContestContext context, ICategoryService categoryService, IToastNotification toastNotification)
         {
             this._context = context;
             this.categoryService = categoryService;
+            this.toastNotification = toastNotification;
         }
 
         /// <summary>
@@ -57,9 +60,11 @@ namespace PhotoContest.Web.Controllers
                     await this.categoryService.CreateAsync(name);
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage("Name of category should be atleast 3 characters long", new NotyOptions());
+                    var path = Request.Path.Value.ToString();
+                    return Redirect(path);
                 }
             }
             return View();
@@ -96,7 +101,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage("Name of category should be atleast 3 characters long", new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?name=" + update.Name;
+                    return Redirect(path);
                 }
 
             }
@@ -131,9 +138,11 @@ namespace PhotoContest.Web.Controllers
                     await this.categoryService.DeleteAsync(name);
                     return RedirectToAction("Index");
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return RedirectToAction("Error");
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + name;
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");

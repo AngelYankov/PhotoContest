@@ -101,7 +101,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + status;
+                    return Redirect(path);
                 }
             }
             return View();
@@ -220,7 +222,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?name=" + editViewModel.Name;
+                    return Redirect(path);
                 }
             }
             var categories = await this.categoryService.GetAllBaseAsync();
@@ -257,9 +261,11 @@ namespace PhotoContest.Web.Controllers
                     await this.contestService.DeleteAsync(name);
                     return RedirectToAction("Index");
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return RedirectToAction("Error");
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?name=" + name;
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");
@@ -300,7 +306,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?name=" + name;
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");
@@ -341,7 +349,7 @@ namespace PhotoContest.Web.Controllers
                 catch (Exception e)
                 {
                     toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
-                    var path = Request.Path.Value.ToString()+"?name="+ inviteViewModel.Name; 
+                    var path = Request.Path.Value.ToString() + "?name=" + inviteViewModel.Name;
                     return Redirect(path);
                 }
             }
@@ -383,7 +391,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?name=" + inviteViewModel.Name;
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");
@@ -424,7 +434,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString();
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");
@@ -452,7 +464,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString();
+                    return Redirect(path);
                 }
             }
             return RedirectToAction("Index");

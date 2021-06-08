@@ -8,6 +8,7 @@ namespace PhotoContest.Web.Models.CategoryViewModels
 {
     public class CategoriesViewModel
     {
+        [MinLength(3)]
         public string Name { get; set; }
         [Display(Name = "New name"), MinLength(3)]
         public string NewName { get; set; }
