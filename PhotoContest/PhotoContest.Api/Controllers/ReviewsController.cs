@@ -11,15 +11,15 @@ using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models.Create;
 
-namespace PhotoContest.Web.ApiControllers
+namespace PhotoContest.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewsApiController : ControllerBase
+    public class ReviewsController : ControllerBase
     {
         private readonly IReviewService reviewService;
 
-        public ReviewsApiController(IReviewService reviewService)
+        public ReviewsController(IReviewService reviewService)
         {
             this.reviewService = reviewService;
         }

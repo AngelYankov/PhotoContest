@@ -12,15 +12,15 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Models.Update;
 
-namespace PhotoContest.Web.ApiControllers
+namespace PhotoContest.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersApiController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
 
-        public UsersApiController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             this.userService = userService;
         }

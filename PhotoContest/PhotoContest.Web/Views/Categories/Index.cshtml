@@ -1,4 +1,4 @@
-﻿@model IEnumerable<string>
+﻿@model IEnumerable<CategoriesViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -27,11 +27,11 @@
             <tr>
                 <td>@Interlocked.Increment(ref x)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@item">Edit</a>
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-name="@item">Delete</a>
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-name="@item.Name">Edit</a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-name="@item.Name">Delete</a>
                 </td>
             </tr>
         }

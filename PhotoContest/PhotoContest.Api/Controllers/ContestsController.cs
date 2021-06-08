@@ -14,15 +14,15 @@ using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using PhotoContest.Services.Services;
 
-namespace PhotoContest.Web.ApiControllers
+namespace PhotoContest.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContestsApiController : ControllerBase
+    public class ContestsController : ControllerBase
     {
         private readonly IContestService contestService;
 
-        public ContestsApiController(IContestService contestService)
+        public ContestsController(IContestService contestService)
         {
             this.contestService = contestService;
         }
@@ -70,7 +70,7 @@ namespace PhotoContest.Web.ApiControllers
         {
             try
             {
-                var isEnrolled = await this.contestService.EnrollAsync(contestName);
+                var isEnrolled = await this.contestService.EnrollApiAsync(contestName);
                 return Ok(isEnrolled);
             }
             catch (Exception e)

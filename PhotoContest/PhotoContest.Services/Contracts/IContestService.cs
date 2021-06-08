@@ -19,6 +19,7 @@ namespace PhotoContest.Services.Services
         Task<IEnumerable<ContestDTO>> GetByPhaseAsync(string phaseName, string sortBy, string order);
         Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter);
         Task<bool> EnrollAsync(string contestName);
+        Task<bool> EnrollApiAsync(string contestName);
         Task<bool> InviteAsync(string contestName, string username);
         Task<bool> ChooseJuryAsync(string contestName, string username);
         Task<Contest> FindContestByNameAsync(string contestName);

@@ -1,12 +1,16 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
@@ -16,13 +20,15 @@ using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Services;
 using PhotoContest.Services.Services.BackgroundTask;
 using PhotoContest.Services.Services.SecurityService;
-using PhotoContest.Web.Middlewares;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using NToastNotify;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace PhotoContest.Web
+namespace PhotoContest.Api
 {
     public class Startup
     {
@@ -76,23 +82,6 @@ namespace PhotoContest.Web
             {
                 options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
-            /*services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddRoles<Role>()
-                .AddEntityFrameworkStores<PhotoContestContext>();*/
-
-            services
-                .AddIdentity<User, Role>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequireLowercase = false;
-                })
-                .AddRoles<Role>()
-                .AddEntityFrameworkStores<PhotoContestContext>()
-                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
-
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPhotoService, PhotoService>();
@@ -101,13 +90,23 @@ namespace PhotoContest.Web
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IContestService, ContestService>();
             services.AddScoped<IUserContestService, UserContestService>();
-            services.TryAddScoped<SignInManager<User>>();
             services.AddHostedService<TimedHostedService>();
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            // services.AddHttpContextAccessor();
+            services
+                  .AddIdentity<User, Role>(options =>
+                  {
+                      options.SignIn.RequireConfirmedAccount = false;
+                      options.Password.RequireNonAlphanumeric = false;
+                      options.Password.RequireUppercase = false;
+                      options.Password.RequiredLength = 8;
+                      options.Password.RequireLowercase = false;
+                  })
+                  .AddEntityFrameworkStores<PhotoContestContext>()
+                  .AddDefaultTokenProviders();
 
-            services.AddRazorPages();
-            services.AddSingleton<IEmailSender, EmailSender>();
 
-            /*services.AddAuthentication(options =>
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -127,12 +126,8 @@ namespace PhotoContest.Web
                         ValidAudience = Configuration["JWT:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
                     };
-                });*/
-            services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
-            {
-                ProgressBar = true,
-                Timeout = 10000,
-            });
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -147,24 +142,16 @@ namespace PhotoContest.Web
                 });
                 app.UseSwagger();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-            app.UseStaticFiles();
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<PageNotFoundMiddleware>();
-            app.UseNToastNotify();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

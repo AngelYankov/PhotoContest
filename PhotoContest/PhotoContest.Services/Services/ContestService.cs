@@ -30,14 +30,14 @@ namespace PhotoContest.Services.Services
         private readonly SignInManager<User> signInManager;
 
         public ContestService(PhotoContestContext dbContext,
-            /*IHttpContextAccessor contextAccessor, */
+            IHttpContextAccessor contextAccessor,
             IUserService userService,
             ICategoryService categoryService,
             UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
             this.dbContext = dbContext;
-            /* this.contextAccessor = contextAccessor;*/
+            this.contextAccessor = contextAccessor;
             this.userService = userService;
             this.categoryService = categoryService;
             this.userManager = userManager;
@@ -195,6 +195,42 @@ namespace PhotoContest.Services.Services
             //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
             var temp = this.signInManager.Context;
+            var user = await this.userService.GetUserByUsernameAsync(username);
+
+            if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
+            {
+                throw new ArgumentException(Exceptions.EnrolledUser);
+            }
+
+            if (await this.dbContext.Juries.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))
+            {
+                throw new ArgumentException(Exceptions.ExistingJury);
+            }
+
+            var userContest = new UserContest()
+            {
+                ContestId = contest.Id,
+                UserId = user.Id,
+                IsInvited = true
+            };
+            await this.dbContext.UserContests.AddAsync(userContest);
+            await this.dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        /// <summary>
+        /// Enroll user to contest in API.
+        /// </summary>
+        /// <param name="username">Username of the user to enroll.</param>
+        /// <param name="contestName">Name of the contest to enroll in.</param>
+        /// <returns>Return true if successful or an appropriate error message.</returns>
+        public async Task<bool> EnrollApiAsync(string contestName)
+        {
+            var contest = await FindContestByNameAsync(contestName);
+            if (contest.IsOpen == false)
+                throw new ArgumentException(Exceptions.NotAllowedEnrollment);
+
+            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(username);
 
             if (await this.dbContext.UserContests.AnyAsync(uc => uc.UserId == user.Id && uc.ContestId == contest.Id))

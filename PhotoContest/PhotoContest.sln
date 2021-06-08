@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoContest.Web", "PhotoCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoContest.Services", "PhotoContest.Services\PhotoContest.Services.csproj", "{3779C4CC-5EFF-41F7-B197-FAF72D88F15F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoContest.Tests", "PhotoContest.Tests\PhotoContest.Tests.csproj", "{A9C56394-8BF6-4F08-BD94-F1E6A6B5BCD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoContest.Tests", "PhotoContest.Tests\PhotoContest.Tests.csproj", "{A9C56394-8BF6-4F08-BD94-F1E6A6B5BCD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoContest.Api", "PhotoContest.Api\PhotoContest.Api.csproj", "{285E2DEF-FEEE-40E6-A328-ACAA37ABF1A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A9C56394-8BF6-4F08-BD94-F1E6A6B5BCD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C56394-8BF6-4F08-BD94-F1E6A6B5BCD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9C56394-8BF6-4F08-BD94-F1E6A6B5BCD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{285E2DEF-FEEE-40E6-A328-ACAA37ABF1A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{285E2DEF-FEEE-40E6-A328-ACAA37ABF1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{285E2DEF-FEEE-40E6-A328-ACAA37ABF1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{285E2DEF-FEEE-40E6-A328-ACAA37ABF1A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

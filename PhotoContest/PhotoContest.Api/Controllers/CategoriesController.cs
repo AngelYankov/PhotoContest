@@ -12,16 +12,16 @@ using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Services;
 
-namespace PhotoContest.Web.ApiControllers
+namespace PhotoContest.Api.Controllers
 {
     [Authorize(Roles = "Admin,Organizer")]
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesApiController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoryService;
 
-        public CategoriesApiController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             this.categoryService = categoryService;
         }

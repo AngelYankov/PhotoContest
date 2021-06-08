@@ -33,7 +33,9 @@ namespace PhotoContest.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var categories = await this.categoryService.GetAllAsync();
-            return View(categories);
+            var categoryViewModel = categories.Select(c=>new CategoriesViewModel() { Name = c });
+           
+            return View(categoryViewModel);
         }
 
         /// <summary>
@@ -45,27 +47,18 @@ namespace PhotoContest.Web.Controllers
         }
 
         /// <summary>
-        /// Create a new category
+        /// Create category
         /// </summary>
-        /// <param name="name">Name of the new category</param>
-        /// <returns>Goes to the list of categories if successful or an error page if BadRequest</returns>
+        /// <param name="categoriesViewModel">Created category details</param>
+        /// <returns>Goes to the list of categories if successful or a client side validation message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string name)
+        public async Task<IActionResult> Create(CategoriesViewModel categoriesViewModel)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await this.categoryService.CreateAsync(name);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception)
-                {
-                    toastNotification.AddErrorToastMessage("Name of category should be atleast 3 characters long", new NotyOptions());
-                    var path = Request.Path.Value.ToString();
-                    return Redirect(path);
-                }
+                await this.categoryService.CreateAsync(categoriesViewModel.Name);
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
