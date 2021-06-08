@@ -41,8 +41,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
                 var result = await sut.AllOpenViewAsync();
 
                 Assert.AreEqual(actContext.Contests.Where(c=>c.IsOpen==true).Count(), result.Count());                  

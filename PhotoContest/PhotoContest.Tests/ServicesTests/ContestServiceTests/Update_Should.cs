@@ -51,7 +51,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService.Object, userManager, signManager);
                 var result = await sut.UpdateAsync(actContext.Contests.First().Name,updateContestDTO);
 
                 Assert.AreEqual(updateContestDTO.Name, result.Name);
@@ -93,7 +93,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService.Object, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.UpdateAsync(actContext.Contests.First().Name, updateContestDTO));
             }
@@ -131,7 +131,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService.Object, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.UpdateAsync(actContext.Contests.First().Name, updateContestDTO));
             }
@@ -168,7 +168,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService, categoryService.Object, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService.Object, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.UpdateAsync(actContext.Contests.First().Name, updateContestDTO));
             }

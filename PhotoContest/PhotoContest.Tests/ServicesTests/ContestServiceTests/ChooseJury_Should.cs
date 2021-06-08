@@ -48,8 +48,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToChoose = actContext.Users.Skip(8).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
                 var result = await sut.ChooseJuryAsync(actContext.Contests.First().Name, userToChoose);
 
                 Assert.IsTrue(result);
@@ -86,8 +85,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToChoose = actContext.Users.Skip(2).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.ChooseJuryAsync(actContext.Contests.First().Name, userToChoose));
             }
@@ -125,8 +123,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToChoose = actContext.Users.Skip(8).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.ChooseJuryAsync(actContext.Contests.Last().Name, userToChoose));
             }

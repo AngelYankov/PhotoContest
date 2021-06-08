@@ -63,8 +63,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                                       .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
                     allUserContestsDTO.Add(new ContestDTO(contest));
                 }
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
                 var result = await sut.GetByUserAsync(null);
 
                 Assert.AreEqual(result.Count(), allUserContestsDTO.Count());
@@ -117,8 +116,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                                       .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
                     allUserContestsDTO.Add(new ContestDTO(contest));
                 }
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
                 var result = await sut.GetByUserAsync("current");
 
                 Assert.AreEqual(result.Count(), allUserContestsDTO.Where(c => c.Status != "Finished").Count());
@@ -171,8 +169,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                                       .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
                     allUserContestsDTO.Add(new ContestDTO(contest));
                 }
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
                 var result = await sut.GetByUserAsync("past");
 
                 Assert.AreEqual(result.Count(), allUserContestsDTO.Where(c => c.Status == "Finished").Count());
@@ -225,8 +222,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                                       .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
                     allUserContestsDTO.Add(new ContestDTO(contest));
                 }
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetByUserAsync("wrong"));
             }

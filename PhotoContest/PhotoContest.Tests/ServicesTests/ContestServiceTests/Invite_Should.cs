@@ -49,8 +49,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(4).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
                 var result = await sut.InviteAsync(actContext.Contests.First().Name, userToInvite);
 
                 Assert.IsTrue(result);
@@ -90,8 +89,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(2).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                         sut.InviteAsync(actContext.Contests.First().Name, userToInvite));
@@ -131,8 +129,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(1).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                         sut.InviteAsync(actContext.Contests.First().Name, userToInvite));
@@ -173,8 +170,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(8).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                         sut.InviteAsync(actContext.Contests.Last().Name, userToInvite));
@@ -212,8 +208,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToInvite = actContext.Users.Skip(4).First().UserName;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                                         sut.InviteAsync(actContext.Contests.First().Name, userToInvite));

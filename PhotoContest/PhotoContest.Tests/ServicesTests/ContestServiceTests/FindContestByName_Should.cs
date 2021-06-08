@@ -63,7 +63,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
 
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.FindContestByNameAsync("wrong"));
             }
         }
