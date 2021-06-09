@@ -22,6 +22,7 @@ using Simple.ImageResizer;
 using System.Drawing;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using NToastNotify;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -31,16 +32,19 @@ namespace PhotoContest.Web.Controllers
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IContestService contestService;
         private readonly IReviewService reviewService;
+        private readonly IToastNotification toastNotification;
 
         public PhotosController(IPhotoService photoService,
             IWebHostEnvironment webHostEnvironment,
             IContestService contestService,
-            IReviewService reviewService)
+            IReviewService reviewService,
+            IToastNotification toastNotification)
         {
             this.photoService = photoService;
             this.webHostEnvironment = webHostEnvironment;
             this.contestService = contestService;
             this.reviewService = reviewService;
+            this.toastNotification = toastNotification;
         }
 
         /// <summary>
@@ -109,7 +113,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?contestName=" + model.ContestName;
+                    return Redirect(path); 
                 }
             }
             return View(model);
@@ -130,14 +136,21 @@ namespace PhotoContest.Web.Controllers
         /// </summary>
         /// <param name="contestName">name of the contest</param>
         /// <returns>List of all photos for a contest</returns>
-        [Authorize(Roles = "Admin,Organizer,User")]
+        [Authorize]
         public async Task<IActionResult> GetContestsPhotos(string contestName)
         {
-            var reviews = await this.reviewService.GetAllReviewsAsync();
-            var photos = await this.photoService.GetPhotosForContestAsync(contestName);
-            var contest = await this.contestService.FindContestByNameAsync(contestName);
-            var juries = await this.contestService.GetAllJuriesAsync();
-            return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries, Reviews = reviews }));
+            try
+            {
+                var reviews = await this.reviewService.GetAllReviewsAsync();
+                var photos = await this.photoService.GetPhotosForContestAsync(contestName);
+                var contest = await this.contestService.FindContestByNameAsync(contestName);
+                var juries = await this.contestService.GetAllJuriesAsync();
+                return View(photos.Select(p => new PhotoViewModel(p) { ContestStatus = contest.Status.Name, Juries = juries, Reviews = reviews }));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("PageNotFound", "Home");
+            }
         }
 
         /// <summary>
@@ -147,8 +160,15 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var photo = await this.photoService.GetAsync(id);
-            return View(new EditPhotoViewModel(photo));
+            try
+            {
+                var photo = await this.photoService.GetAsync(id);
+                return View(new EditPhotoViewModel(photo));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("PageNotFound", "Home");
+            }
         }
 
         /// <summary>
@@ -176,7 +196,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString()+model.Id;
+                    return Redirect(path);
                 }
             }
             return View(model);
@@ -189,8 +211,15 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var photo = await this.photoService.GetAsync(id);
-            return View(new PhotoViewModel(photo));
+            try
+            {
+                var photo = await this.photoService.GetAsync(id);
+                return View(new PhotoViewModel(photo));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("PageNotFound", "Home");
+            }
         }
 
         /// <summary>
@@ -212,11 +241,11 @@ namespace PhotoContest.Web.Controllers
                     System.IO.File.Delete(imagePath);
                 }*/
                 await this.photoService.DeleteAsync(id);
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return View(id);
             }
         }
     }

@@ -385,12 +385,12 @@ namespace PhotoContest.Services.Services
                                                 .Include(uc => uc.Contest)
                                                 .Where(uc => uc.UserId == user.Id).ToListAsync();
             var allUserContestsDTO = new List<ContestDTO>();
+            var contests = await this.dbContext.Contests
+                                  .Include(c => c.Category)
+                                  .Include(c => c.Status).ToListAsync();
             foreach (var userContest in allUserContests)
             {
-                var contest = await this.dbContext.Contests
-                                  .Include(c => c.Category)
-                                  .Include(c => c.Status)
-                                  .FirstAsync(c => c.Id == userContest.ContestId && c.IsDeleted == false);
+                var contest = contests.First(c => c.Id == userContest.ContestId && c.IsDeleted == false);
                 allUserContestsDTO.Add(new ContestDTO(contest));
             }
             return allUserContestsDTO;
