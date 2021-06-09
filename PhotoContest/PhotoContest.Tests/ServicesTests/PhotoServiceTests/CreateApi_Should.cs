@@ -59,7 +59,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 var userToGet = await arrContext.Users.Skip(2).FirstAsync();
                // userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
                 //userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
-                contextAccessor.Setup(x => x.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value).Returns(userToGet.UserName);
+                contextAccessor.Setup(x => x.HttpContext.User.Claims.First(i => i.Type == It.IsAny<string>()).Value).Returns(userToGet.UserName);
 
             };
             using (var actContext = new PhotoContestContext(options))
