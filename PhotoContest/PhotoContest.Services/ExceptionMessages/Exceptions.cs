@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PhotoContest.Services.ExceptionMessages
+﻿namespace PhotoContest.Services.ExceptionMessages
 {
     public static class Exceptions
     {

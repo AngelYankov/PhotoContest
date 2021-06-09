@@ -2,10 +2,8 @@
 using PhotoContest.Data;
 using PhotoContest.Data.Models;
 using PhotoContest.Services.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PhotoContest.Services.Services

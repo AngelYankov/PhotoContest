@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PhotoContest.Services.Models.ReviewInfoHelper
+﻿namespace PhotoContest.Services.Models.ReviewInfoHelper
 {
     public class InfoHelper
     {
