@@ -41,7 +41,7 @@ namespace PhotoContest.Api.Controllers
         /// Update a category.
         /// </summary>
         /// <param name="categoryName">Name of the category to update.</param>
-        /// <param name="name">Name of the category to be updated.</param>
+        /// <param name="name">New name of the category.</param>
         /// <returns>Returns the updated category or an appropriate error message.</returns>
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromQuery]string categoryName, string name)
