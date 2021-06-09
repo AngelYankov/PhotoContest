@@ -18,6 +18,7 @@ namespace PhotoContest.Services.Services
         Task<bool> DeleteAsync(string contestName);
         Task<IEnumerable<ContestDTO>> GetByPhaseAsync(string phaseName, string sortBy, string order);
         Task<IEnumerable<ContestDTO>> GetByUserAsync(string filter);
+        Task<IEnumerable<ContestDTO>> GetByUserApiAsync(string filter);
         Task<bool> EnrollAsync(string contestName);
         Task<bool> EnrollApiAsync(string contestName);
         Task<bool> InviteAsync(string contestName, string username);
@@ -27,6 +28,7 @@ namespace PhotoContest.Services.Services
         Task ChangeStatus();
         Task<IEnumerable<ContestDTO>> AllOpenViewAsync();
         Task<IEnumerable<ContestDTO>> GetUserContestsAsync();
+        Task<IEnumerable<ContestDTO>> GetUserContestsApiAsync();
         Task<List<JuryMember>> GetAllJuriesAsync();
     }
 }

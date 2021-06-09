@@ -51,8 +51,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var contestToEnroll = actContext.Contests.Last();
                 var userToEnroll = actContext.Users.Skip(4).First().UserContests;
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
                 var result = await sut.EnrollAsync(contestToEnroll.Name);
 
                 Assert.IsTrue(result);
@@ -95,8 +94,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var contestToEnroll = actContext.Contests.First();
                 var userToEnroll = actContext.Users.Skip(2).First();
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.EnrollAsync(contestToEnroll.Name));
             }
@@ -138,8 +136,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var contestToEnroll = actContext.Contests.Last();
                 var userToEnroll = actContext.Users.Skip(8).First();
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.EnrollAsync(contestToEnroll.Name));
             }

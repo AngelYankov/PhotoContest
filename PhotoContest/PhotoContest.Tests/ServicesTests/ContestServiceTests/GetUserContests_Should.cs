@@ -53,8 +53,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             {
                 var userContests = actContext.UserContests.Include(uc=>uc.Contest).Where(uc => uc.UserId == actContext.Users.Skip(2).First().Id);
                 var contests = userContests.Select(uc => uc.Contest);
-                var contestService = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager.Object, signManager);
+                var sut = new ContestService(actContext, contextAccessor.Object, userService.Object, categoryService, userManager.Object, signManager);
                 var result = await sut.GetUserContestsAsync();
 
                 Assert.AreEqual(result.Count(), userContests.Count());

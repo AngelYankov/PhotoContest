@@ -37,7 +37,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
                 var contest = actContext.Contests.Include(c=>c.Status).First();
                 contest.Phase1 = DateTime.UtcNow;
                 contest.Phase2 = DateTime.UtcNow.AddDays(2);
@@ -69,7 +69,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
                 var contest = actContext.Contests.Include(c => c.Status).First();
                 contest.Phase1 = DateTime.UtcNow.AddDays(-2);
                 contest.Phase2 = DateTime.UtcNow;
@@ -101,7 +101,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var sut = new ContestService(actContext, userService.Object, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService.Object, categoryService, userManager, signManager);
                 var contest = actContext.Contests.Include(c => c.Status).First();
                 contest.Phase1 = DateTime.UtcNow.AddDays(-5);
                 contest.Phase2 = DateTime.UtcNow.AddHours(-5);

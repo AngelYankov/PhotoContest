@@ -41,8 +41,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
                 var result = await sut.GetAllOpenAsync("Phase 1");
 
                 Assert.AreEqual(actContext.Contests
@@ -78,8 +77,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
                 var result = await sut.GetAllOpenAsync("Phase 2");
 
                 Assert.AreEqual(actContext.Contests
@@ -115,8 +113,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
                 var result = await sut.GetAllOpenAsync("Finished");
 
                 Assert.AreEqual(actContext.Contests
@@ -152,8 +149,7 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
             }
             using (var actContext = new PhotoContestContext(options))
             {
-                var contestService = new ContestService(actContext, userService, categoryService, userManager, signManager);
-                var sut = new ContestService(actContext, userService, categoryService, userManager, signManager);
+                var sut = new ContestService(actContext, contextAccessor, userService, categoryService, userManager, signManager);
 
                 await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.GetAllOpenAsync("Wrong"));
             }
