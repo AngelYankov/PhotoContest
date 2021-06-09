@@ -1,5 +1,4 @@
 ﻿using PhotoContest.Data.Audit;
-using PhotoContest.Data.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

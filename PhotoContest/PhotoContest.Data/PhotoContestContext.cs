@@ -361,8 +361,8 @@ namespace PhotoContest.Data
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),//phase1
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,14,9,0,0),
-                    Finished = new DateTime(2021,06,14,19,0,0)
+                    Phase2 = DateTime.ParseExact("14.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("14.06.21 19:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture)
                 },
                 new Contest()
                 {
@@ -372,8 +372,8 @@ namespace PhotoContest.Data
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),//phase1
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,15,9,0,0),
-                    Finished = new DateTime(2021,06,15,19,0,0)
+                    Phase2 = DateTime.ParseExact("15.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("14.06.21 19:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture)
                 },
                 new Contest()
                 {
@@ -383,8 +383,8 @@ namespace PhotoContest.Data
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),//phase1
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,16,9,0,0),
-                    Finished = new DateTime(2021,06,16,19,0,0)
+                    Phase2 = DateTime.ParseExact("16.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("16.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture)
                 },
                 new Contest()
                 {
@@ -394,8 +394,8 @@ namespace PhotoContest.Data
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),//phase1
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,17,9,0,0),
-                    Finished = new DateTime(2021,06,17,19,0,0)
+                    Phase2 = DateTime.ParseExact("17.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("17.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture)
                 },
                 new Contest()
                 {
@@ -405,8 +405,8 @@ namespace PhotoContest.Data
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"), //phase1
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,18,9,0,0),
-                    Finished = new DateTime(2021,06,18,19,0,0)
+                    Phase2 = DateTime.ParseExact("18.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("18.06.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture)
                 },
                 new Contest()
                 {
@@ -415,7 +415,7 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("729b970a-ee54-4852-8ac7-d9b3146e886b"), //animals
                     StatusId = Guid.Parse("27c7d81e-eb1c-469b-8919-a532322273cc"), //phase 2
                     IsOpen = true,
-                    Phase1 = new DateTime(2021,05,10,9,0,0),
+                    Phase1 = DateTime.UtcNow.AddDays(-5),
                     Phase2 = DateTime.UtcNow,
                     Finished = DateTime.UtcNow.AddHours(24)
                 },
@@ -426,9 +426,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("fad09db4-8187-4777-9e68-3ba40218c7d3"), //motorcycles
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"),  //finished
                     IsOpen = true,
-                    Phase1 = new DateTime(2021,05,15,9,0,0),
-                    Phase2 = new DateTime(2021,05,25,12,0,0),
-                    Finished =new DateTime(2021,05,26,9,0,0)
+                    Phase1 = DateTime.ParseExact("15.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = DateTime.ParseExact("25.05.21 12:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("26.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                 },
                 new Contest()
                 {
@@ -437,9 +437,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"), //architecture
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"), //finished
                     IsOpen = true,
-                    Phase1 =  new DateTime(2021,05,10,9,0,0),
-                    Phase2 = new DateTime(2021,05,20,12,0,0),
-                    Finished = new DateTime(2021,05,20,9,0,0)
+                    Phase1 = DateTime.ParseExact("10.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = DateTime.ParseExact("20.05.21 12:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("20.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                 },
                 new Contest()
                 {
@@ -448,9 +448,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"), //architecture
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"), //finished
                     IsOpen = true,
-                    Phase1 =  new DateTime(2021,05,10,9,0,0),
-                    Phase2 = new DateTime(2021,05,20,12,0,0),
-                    Finished = new DateTime(2021,05,20,9,0,0)
+                    Phase1 = DateTime.ParseExact("10.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = DateTime.ParseExact("20.05.21 12:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("20.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                 },
                 new Contest()
                 {
@@ -459,9 +459,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("af4ea8a0-8e69-4746-bbc8-aa4593a11828"), //architecture
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"), //finished
                     IsOpen = true,
-                    Phase1 =  new DateTime(2021,05,10,9,0,0),
-                    Phase2 = new DateTime(2021,05,20,12,0,0),
-                    Finished = new DateTime(2021,05,20,9,0,0)
+                    Phase1 = DateTime.ParseExact("10.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = DateTime.ParseExact("20.05.21 12:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("20.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                 },
                 new Contest()
                 {
@@ -470,9 +470,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("28f87c5a-b02a-4422-8b71-4821306279d5"), //sports
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"), //finished
                     IsOpen = true,
-                    Phase1 =  new DateTime(2021,05,10,9,0,0),
-                    Phase2 = new DateTime(2021,05,20,12,0,0),
-                    Finished = new DateTime(2021,05,20,9,0,0)
+                    Phase1 = DateTime.ParseExact("10.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = DateTime.ParseExact("20.05.21 12:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("20.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                 },
                 new Contest()
                 {
@@ -481,9 +481,9 @@ namespace PhotoContest.Data
                     CategoryId = Guid.Parse("ad729c24-eda2-4209-93c8-f80d1f47172c"), //nature
                     StatusId = Guid.Parse("cf6bf4fb-655e-47cc-8dac-4a39cbff74b6"), //finished
                     IsOpen = true,
-                    Phase1 =  new DateTime(2021,05,10,9,0,0),
-                    Phase2 = new DateTime(2021,05,20,12,0,0),
-                    Finished = new DateTime(2021,05,20,9,0,0)
+                    Phase1 = DateTime.ParseExact("10.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Phase2 = DateTime.ParseExact("20.05.21 12:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
+                    Finished = DateTime.ParseExact("20.05.21 09:00", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture),
                 },
 
             };
@@ -707,7 +707,7 @@ namespace PhotoContest.Data
                     CreatedOn = DateTime.UtcNow
                 },
                 //new
-                new Review()    
+                new Review()
                 {
                     Id = Guid.Parse("18d39ed7-120f-4239-8920-b0b826dd3d0a"),//1
                     Comment = "Mesmerizing shot.",

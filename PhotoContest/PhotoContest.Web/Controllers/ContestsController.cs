@@ -207,16 +207,17 @@ namespace PhotoContest.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string name, EditContestViewModel editViewModel)
         {
-            var updateContestDTO = new UpdateContestDTO();
-            updateContestDTO.CategoryName = editViewModel.Category;
-            updateContestDTO.IsOpen = editViewModel.IsContestOpen;
-            updateContestDTO.Phase1 = editViewModel.Phase1;
-            updateContestDTO.Phase2 = editViewModel.Phase2;
-            updateContestDTO.Finished = editViewModel.Finished;
+           
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var updateContestDTO = new UpdateContestDTO();
+                    updateContestDTO.CategoryName = editViewModel.Category;
+                    updateContestDTO.IsOpen = editViewModel.IsContestOpen;
+                    updateContestDTO.Phase1 = editViewModel.Phase1;
+                    updateContestDTO.Phase2 = editViewModel.Phase2;
+                    updateContestDTO.Finished = editViewModel.Finished;
                     await this.contestService.UpdateAsync(name, updateContestDTO);
                     return RedirectToAction(nameof(Index));
                 }
