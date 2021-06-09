@@ -103,8 +103,7 @@ namespace PhotoContest.Services.Services
             {
                 throw new ArgumentException(Exceptions.ClosedContest);
             }
-            //var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-            var username = GetUsernameFromContextForApi();
+            var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
             var user = await this.userService.GetUserByUsernameAsync(username);
             if (await this.dbContext.Juries.FirstOrDefaultAsync(j => j.UserId == user.Id && j.ContestId == contest.Id) != null)
             {
@@ -132,10 +131,6 @@ namespace PhotoContest.Services.Services
             return new PhotoDTO(photo);
         }
 
-        private string GetUsernameFromContextForApi()
-        {
-            return this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value; 
-        }
         /// <summary>
         /// Delete a photo.
         /// </summary>
