@@ -350,8 +350,8 @@ namespace PhotoContest.Data
                     StatusId = Guid.Parse("9dd48e5a-f5f5-4b90-ad93-e0a5ad62e186"),//phase1
                     IsOpen = true,
                     Phase1 = DateTime.UtcNow,
-                    Phase2 = new DateTime(2021,06,10,9,0,0),
-                    Finished = new DateTime(2021,06,10,19,0,0)
+                    Phase2 = DateTime.UtcNow.AddMinutes(5),
+                    Finished = DateTime.UtcNow.AddMinutes(12)
                 },
                 new Contest()
                 {

@@ -25,7 +25,7 @@ namespace PhotoContest.Services.Services.BackgroundTask
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(20));
+            timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
             return Task.CompletedTask;
         }
 
