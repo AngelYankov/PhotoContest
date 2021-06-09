@@ -48,9 +48,14 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                 // var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
                // context.Setup(c => c.User.Claims.First()).Returns(new Claim(ClaimTypes.NameIdentifier, userToEnroll.UserName));
 
-
-                userManager.Setup(u => u.GetUserName(signManager.Context.User)).Returns(userToEnroll.UserName);
-                userService.Setup(u => u.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToEnroll));
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToEnroll.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
+                userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToEnroll));
             }
             using (var actContext = new PhotoContestContext(options))
             {
@@ -92,8 +97,14 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                 await arrContext.SaveChangesAsync();
 
                 var userToEnroll = arrContext.Users.Skip(2).First();
-                userManager.Setup(u => u.GetUserName(signManager.Context.User)).Returns(userToEnroll.UserName);
-                userService.Setup(u => u.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToEnroll));
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToEnroll.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
+                userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToEnroll));
             }
             using (var actContext = new PhotoContestContext(options))
             {
@@ -134,8 +145,14 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                 await arrContext.SaveChangesAsync();
 
                 var userToEnroll = arrContext.Users.Skip(8).First();
-                userManager.Setup(u => u.GetUserName(signManager.Context.User)).Returns(userToEnroll.UserName);
-                userService.Setup(u => u.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToEnroll));
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToEnroll.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
+                userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToEnroll));
             }
             using (var actContext = new PhotoContestContext(options))
             {

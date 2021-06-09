@@ -10,6 +10,7 @@ using PhotoContest.Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,7 +54,13 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Include(u => u.Rank).Skip(1).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var photo = await actContext.Photos
                                             .Include(p => p.User)
@@ -111,7 +118,13 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Include(u => u.Rank).Skip(1).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var photo = await actContext.Photos
                                             .Include(p => p.User)
@@ -168,7 +181,13 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Include(u => u.Rank).Skip(1).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var photo = await actContext.Photos
                                             .Include(p => p.User)
@@ -220,7 +239,13 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Include(u => u.Rank).Skip(1).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var photo = await actContext.Photos
                                             .Include(p => p.User)
@@ -273,7 +298,13 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Include(u => u.Rank).Skip(2).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var photo = await actContext.Photos
                                             .Include(p => p.User)
@@ -325,7 +356,13 @@ namespace PhotoContest.Tests.ServicesTests.ReviewServiceTests
             using (var actContext = new PhotoContestContext(options))
             {
                 var userToGet = await actContext.Users.Include(u => u.Rank).Skip(1).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
                 var photo = await actContext.Photos
                                             .Include(p => p.User)

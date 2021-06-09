@@ -22,7 +22,7 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
     public class CreateApi_Should
     {
         [TestMethod]
-            
+
         public async Task CreateApiPhoto() //this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
         {
             var options = Utils.GetOptions(nameof(CreateApiPhoto));
@@ -37,7 +37,6 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
             contextAccessor.Setup(x => x.HttpContext).Returns(context.Object);
             var contestService = new Mock<IContestService>();
             var userService = new Mock<IUserService>();
-
             var userContestService = new Mock<IUserContestService>();
 
             var newPhotoDTO = new Mock<NewPhotoDTO>().Object;
@@ -57,10 +56,14 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await arrContext.Users.AddRangeAsync(Utils.SeedUsers());
                 await arrContext.SaveChangesAsync();
                 var userToGet = await arrContext.Users.Skip(2).FirstAsync();
-               // userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
-                //userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
-                contextAccessor.Setup(x => x.HttpContext.User.Claims.First(i => i.Type == It.IsAny<string>()).Value).Returns(userToGet.UserName);
-
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
+                userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
             };
             using (var actContext = new PhotoContestContext(options))
             {
@@ -261,7 +264,13 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await arrContext.Users.AddRangeAsync(Utils.SeedUsers());
                 await arrContext.SaveChangesAsync();
                 var userToGet = await arrContext.Users.FirstOrDefaultAsync(u => u.UserName == "kyle.sins@mail.com");
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
             };
             using (var actContext = new PhotoContestContext(options))
@@ -309,7 +318,13 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await arrContext.Users.AddRangeAsync(Utils.SeedUsers());
                 await arrContext.SaveChangesAsync();
                 var userToGet = await arrContext.Users.Skip(2).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
             };
             using (var actContext = new PhotoContestContext(options))
@@ -359,7 +374,13 @@ namespace PhotoContest.Tests.ServicesTests.PhotoServiceTests
                 await arrContext.Users.AddRangeAsync(Utils.SeedUsers());
                 await arrContext.SaveChangesAsync();
                 var userToGet = await arrContext.Users.Skip(2).FirstAsync();
-                userManager.Setup(x => x.GetUserName(signManager.Context.User)).Returns(userToGet.UserName);
+                var claims = new List<Claim>()
+                {
+                     new Claim(ClaimTypes.NameIdentifier, userToGet.UserName.ToString()),
+                };
+                var identity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+                contextAccessor.Setup(x => x.HttpContext.User).Returns(claimsPrincipal);
                 userService.Setup(x => x.GetUserByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(userToGet));
             };
             using (var actContext = new PhotoContestContext(options))
