@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhotoContest.Data.Configurations;
@@ -7,8 +6,6 @@ using PhotoContest.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 
 namespace PhotoContest.Data
 {
@@ -41,12 +38,6 @@ namespace PhotoContest.Data
             this.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
-
-        /*protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            if (options.IsConfigured)
-                options.UseSqlServer("Server=.\\SQLEXPRESS; Database=PhotoContestDB; Integrated Security=True");
-        }*/
 
         protected virtual void Seed(ModelBuilder modelBuilder)
         {

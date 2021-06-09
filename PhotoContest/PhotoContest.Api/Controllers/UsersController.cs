@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PhotoContest.Data;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models.Create;
-using PhotoContest.Services.Models.SecurityModels;
 using PhotoContest.Services.Models.Update;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PhotoContest.Api.Controllers
 {
@@ -152,25 +147,5 @@ namespace PhotoContest.Api.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-       /* /// <summary>
-        /// Add role to user.
-        /// </summary>
-        /// <param name="model">Details of user and role to be added.</param>
-        /// <returns>Returns appropriate message if created.</returns>
-        [Authorize(Roles = "Admin")]
-        [HttpPost("addrole")]
-        public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
-        {
-            try
-            {
-                var result = await this.userService.AddRoleAsync(model);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }*/
     }
 }

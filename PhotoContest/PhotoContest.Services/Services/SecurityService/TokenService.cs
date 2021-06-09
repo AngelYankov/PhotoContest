@@ -37,8 +37,6 @@ namespace PhotoContest.Services.Services.SecurityService
             {
                 authenticationModel.IsAuthenticated = false;
                 throw new ArgumentException(Exceptions.NotFoundEmail);
-                //authenticationModel.Message = $"No Accounts Registered with {model.Email}.";
-                //return authenticationModel;
             }
             if (await this.userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -53,8 +51,6 @@ namespace PhotoContest.Services.Services.SecurityService
             }
             authenticationModel.IsAuthenticated = false;
             throw new ArgumentException(Exceptions.IncorrectCredentials);
-            //authenticationModel.Message = $"Incorrect Credentials for user {user.Email}.";
-            //return authenticationModel;
         }
         /// <summary>
         /// Create JWT.

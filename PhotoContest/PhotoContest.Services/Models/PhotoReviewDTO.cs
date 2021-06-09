@@ -1,8 +1,6 @@
 ﻿using PhotoContest.Data.Models;
 using PhotoContest.Services.Models.ReviewInfoHelper;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PhotoContest.Services.Models
 {

@@ -43,8 +43,6 @@ namespace PhotoContest.Tests.ServicesTests.ContestServiceTests
                 await arrContext.SaveChangesAsync();
 
                 var userToEnroll = arrContext.Users.Skip(2).First();
-                // var username = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-               // context.Setup(c => c.User.Claims.First()).Returns(new Claim(ClaimTypes.NameIdentifier, userToEnroll.UserName));
 
                 var claims = new List<Claim>()
                 {

@@ -3,7 +3,6 @@ using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PhotoContest.Services.Contracts

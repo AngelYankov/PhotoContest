@@ -37,7 +37,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 var userToChangeRank = actContext.Users.Include(u => u.Rank).Skip(2).First();
                 userToChangeRank.OverallPoints += 60;
                 await sut.ChangeRank();
-                Assert.AreEqual(userToChangeRank.Rank.Name, "Enthusiast"); //DO NOT CHANGE RANK, ONLY RANKID
+                Assert.AreEqual(userToChangeRank.Rank.Name, "Enthusiast"); 
             }
         }
         [TestMethod]
@@ -63,7 +63,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 var userToChangeRank = actContext.Users.Include(u => u.Rank).Skip(2).First();
                 userToChangeRank.OverallPoints += 160;
                 await sut.ChangeRank();
-                Assert.AreEqual(userToChangeRank.Rank.Name, "Master"); //DO NOT CHANGE RANK, ONLY RANKID
+                Assert.AreEqual(userToChangeRank.Rank.Name, "Master"); 
             }
         }
         [TestMethod]
@@ -89,7 +89,7 @@ namespace PhotoContest.Tests.ServicesTests.UserServiceTests
                 var userToChangeRank = actContext.Users.Include(u => u.Rank).Skip(2).First();
                 userToChangeRank.OverallPoints += 1100;
                 await sut.ChangeRank();
-                Assert.AreEqual(userToChangeRank.Rank.Name, "Wise and Benevolent Photo Dictator"); //DO NOT CHANGE RANK, ONLY RANKID
+                Assert.AreEqual(userToChangeRank.Rank.Name, "Wise and Benevolent Photo Dictator"); 
             }
         }
     }
