@@ -12,16 +12,19 @@ using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using PhotoContest.Web.Models.UserViewModels;
+using NToastNotify;
 
 namespace PhotoContest.Web.Controllers
 {
     public class UsersController : Controller
     {
         private readonly IUserService userService;
+        private readonly IToastNotification toastNotification;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService,IToastNotification toastNotification)
         {
             this.userService = userService;
+            this.toastNotification = toastNotification;
         }
 
         /// <summary>
@@ -45,19 +48,6 @@ namespace PhotoContest.Web.Controllers
             var users = await this.userService.GetAllParticipantsAsync();
             return View(users.Select(u => new UserViewModel(u)));
         }
-
-        /// <summary>
-        /// Get details for a user
-        /// </summary>
-        /// <param name="username">Username of the user</param>
-        [Authorize(Roles = "Admin,Organizer")]
-        public async Task<IActionResult> Details(string username)
-        {
-            var user = await this.userService.GetUserByUsernameAsync(username);
-            var userDTO = new UserDTO(user);
-            return View(new UserViewModel(userDTO));
-        }
-
 
         /*public IActionResult Create()
         {
@@ -127,7 +117,8 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    return View();
                 }
             }
             return View();
@@ -140,9 +131,16 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles = "Admin,Organizer")]
         public async Task<IActionResult> Edit(string username)
         {
-            var user = await this.userService.GetUserByUsernameAsync(username);
-            var userDTO = new UserDTO(user);
-            return View(new EditUserViewModel(userDTO));
+            try
+            {
+                var user = await this.userService.GetUserByUsernameAsync(username);
+                var userDTO = new UserDTO(user);
+                return View(new EditUserViewModel(userDTO));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("PageNotFound", "Home");
+            }
         }
 
         /// <summary>
@@ -169,9 +167,11 @@ namespace PhotoContest.Web.Controllers
                     await this.userService.UpdateAsync(updateUserDTO, username);
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return RedirectToAction("Error");
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString() + "?Username=" + model.Username;
+                    return Redirect(path);
                 }
             }
             return View();
@@ -184,9 +184,16 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string username)
         {
-            var user = await this.userService.GetUserByUsernameAsync(username);
-            var userDTO = new UserDTO(user);
-            return View(new UserViewModel(userDTO));
+            try
+            {
+                var user = await this.userService.GetUserByUsernameAsync(username);
+                var userDTO = new UserDTO(user);
+                return View(new UserViewModel(userDTO));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("PageNotFound", "Home");
+            }
         }
 
         /// <summary>
@@ -208,7 +215,7 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Error");
+                    return RedirectToAction("PageNotFound", "Home");
                 }
             }
             return RedirectToAction("Index");
@@ -242,9 +249,9 @@ namespace PhotoContest.Web.Controllers
                     var userViewModel = new UserViewModel(userDTO);
                     return View(userViewModel);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    return BadRequest(e.Message);
+                    return RedirectToAction("PageNotFound", "Home");
                 }
             }
             return View();
@@ -264,12 +271,12 @@ namespace PhotoContest.Web.Controllers
                     var userViewModel = new UserViewModel(userDTO);
                     return View(userViewModel);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    return BadRequest(e.Message);
+                    return RedirectToAction("PageNotFound", "Home");
                 }
             }
-            return RedirectToAction("Home","Home");
+            return View();
         }
     }
 }

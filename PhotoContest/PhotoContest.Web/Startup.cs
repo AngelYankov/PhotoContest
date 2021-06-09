@@ -128,10 +128,12 @@ namespace PhotoContest.Web
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
                     };
                 });*/
-            services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
+            services.AddControllersWithViews().AddNToastNotifyNoty(new NotyOptions
             {
                 ProgressBar = true,
-                Timeout = 10000,
+                Timeout = 5000,
+                Theme = "mint",
+                Text = ToastPositions.TopCenter
             });
         }
 

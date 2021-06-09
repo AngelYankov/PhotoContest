@@ -13,6 +13,7 @@ using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Web.Models;
 using PhotoContest.Web.Models.ReviewViewModels;
+using NToastNotify;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -20,11 +21,13 @@ namespace PhotoContest.Web.Controllers
     {
         private readonly IReviewService reviewService;
         private readonly IPhotoService photoService;
+        private readonly IToastNotification toastNotification;
 
-        public ReviewsController(IReviewService reviewService, IPhotoService photoService)
+        public ReviewsController(IReviewService reviewService, IPhotoService photoService, IToastNotification toastNotification)
         {
             this.reviewService = reviewService;
             this.photoService = photoService;
+            this.toastNotification = toastNotification;
         }
 
         /// <summary>
@@ -34,9 +37,16 @@ namespace PhotoContest.Web.Controllers
         [Authorize(Roles ="Admin,Organizer")]
         public async Task<IActionResult> Create(Guid photoId)
         {
-            var photo = await this.photoService.GetAsync(photoId);
-            var model = new CreateReviewViewModel() { PhotoId = photoId, PhotoUrl = photo.PhotoUrl };
-            return View(model);
+            try
+            {
+                var photo = await this.photoService.GetAsync(photoId);
+                var model = new CreateReviewViewModel() { PhotoId = photoId, PhotoUrl = photo.PhotoUrl };
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("PageNotFound", "Home");
+            }
         }
 
         /// <summary>
@@ -65,7 +75,9 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    toastNotification.AddErrorToastMessage(e.Message, new NotyOptions());
+                    var path = Request.Path.Value.ToString()+ "?photoId=" + model.PhotoId;
+                    return Redirect(path);
                 }
             }
             return View(model);
@@ -76,7 +88,7 @@ namespace PhotoContest.Web.Controllers
         /// </summary>
         /// <param name="id">Id of the photo</param>
         /// <returns>List of all photo reviews or error page if bad request</returns>
-        [Authorize(Roles = "Admin,User")]
+        [Authorize]
         public async Task<IActionResult> GetPhotoReviews(Guid id)
         {
             try
@@ -86,7 +98,7 @@ namespace PhotoContest.Web.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return RedirectToAction("PageNotFound", "Home");
             }
         }
 
@@ -107,7 +119,7 @@ namespace PhotoContest.Web.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return RedirectToAction("PageNotFound", "Home");
             }
         }
 
@@ -130,7 +142,7 @@ namespace PhotoContest.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    return RedirectToAction("PageNotFound", "Home");
                 }
             }
             return View(model);
