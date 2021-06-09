@@ -44,6 +44,7 @@ namespace PhotoContest.Services.Services
             this.signInManager = signInManager;
             this.userContestService = userContestService;
         }
+
         /// <summary>
         /// Create a photo.
         /// </summary>
@@ -87,6 +88,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
         }
+
         /// <summary>
         /// Create a photo for API.
         /// </summary>
@@ -144,6 +146,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return photo.IsDeleted;
         }
+
         /// <summary>
         /// Get all photos.
         /// </summary>
@@ -188,6 +191,7 @@ namespace PhotoContest.Services.Services
             var photo = await FindPhotoAsync(id);
             return new PhotoDTO(photo);
         }
+
         /// <summary>
         /// Update a photo.
         /// </summary>
@@ -204,6 +208,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new PhotoDTO(photo);
         }
+
         /// <summary>
         /// Get all photos for certain contest.
         /// </summary>
@@ -241,6 +246,7 @@ namespace PhotoContest.Services.Services
                                        .Select(p => new PhotoDTO(p))
                                        .ToListAsync();
         }
+
         /// <summary>
         /// Get all photos with detailed info.
         /// </summary>

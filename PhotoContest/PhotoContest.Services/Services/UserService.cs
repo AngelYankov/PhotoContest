@@ -35,6 +35,7 @@ namespace PhotoContest.Services.Services
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
+
         /// <summary>
         /// Create new user.
         /// </summary>
@@ -70,6 +71,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
         }
+
         /// <summary>
         /// Create user with role organizer.
         /// </summary>
@@ -99,6 +101,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
         }
+
         /// <summary>
         /// Delete a user.
         /// </summary>
@@ -112,6 +115,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return user.IsDeleted;
         }
+
         /// <summary>
         /// Get all users.
         /// </summary>
@@ -125,6 +129,7 @@ namespace PhotoContest.Services.Services
                                        .Select(u => new UserDTO(u))
                                        .ToListAsync();
         }
+
         /// <summary>
         /// Get all participants which are not organizers.
         /// </summary>
@@ -157,6 +162,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new UserDTO(user);
         }
+
         /// <summary>
         /// Get user by username.
         /// </summary>
@@ -171,6 +177,7 @@ namespace PhotoContest.Services.Services
                              .FirstOrDefaultAsync(c => c.UserName.ToLower() == username.ToLower())
                              ?? throw new ArgumentException(Exceptions.InvalidUser);
         }
+
         /// <summary>
         /// Show info of the logged user
         /// </summary>
@@ -181,24 +188,6 @@ namespace PhotoContest.Services.Services
             var user = await GetUserByUsernameAsync(username);
             return new UserDTO(user);
         }
-
-      /*  /// <summary>
-        /// Add role to user.
-        /// </summary>
-        /// <param name="model">Email to search for and user role to be added.</param>
-        /// <returns>Returns string </returns>
-        public async Task<string> AddRoleAsync(AddRoleModel model)
-        {
-            var user = await this.userManager.FindByEmailAsync(model.Email)
-                             ?? throw new ArgumentException(Exceptions.NotFoundEmail);
-            if (!await this.dbContext.Roles.AnyAsync(r => r.Name.ToLower() == model.Role.ToLower()))
-            {
-                throw new ArgumentException(Exceptions.NotFoundRole);
-            }
-            await this.userManager.AddToRoleAsync(user, model.Role);
-            //DO WE NEED TO CHANGE THE RANK?
-            return Exceptions.SuccesfullyAddedRole;   //THIS ONLY ADDS ANOTHER ROLE, DO NOT CHANGE IT
-        }*/
 
         /// <summary>
         /// Changing the rank of a user in the background.
@@ -214,7 +203,6 @@ namespace PhotoContest.Services.Services
                     var rankEnthusiast = await this.dbContext.Ranks.FirstOrDefaultAsync(r => r.Id == Guid.Parse("41c8e397-f768-48ed-b8f1-f8a238c739b1"));
                     contestant.RankId = rankEnthusiast.Id; 
                     contestant.Rank = rankEnthusiast;
-                    //CHANGE ONLY RANKID NOT RANK
                 }
                 if (contestant.OverallPoints > 150 && contestant.OverallPoints <= 1000)
                 {
@@ -231,6 +219,5 @@ namespace PhotoContest.Services.Services
             }
             await this.dbContext.SaveChangesAsync();
         }
-
     }
 }

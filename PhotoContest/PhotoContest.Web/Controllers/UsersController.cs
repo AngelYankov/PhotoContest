@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using PhotoContest.Data;
+using NToastNotify;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Services.Models.Update;
 using PhotoContest.Web.Models.UserViewModels;
-using NToastNotify;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PhotoContest.Web.Controllers
 {
@@ -48,38 +44,6 @@ namespace PhotoContest.Web.Controllers
             var users = await this.userService.GetAllParticipantsAsync();
             return View(users.Select(u => new UserViewModel(u)));
         }
-
-        /*public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateUserViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var newUserDTO = new NewUserDTO()
-                    {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Email = model.Email,
-                        EmailConfirmed = model.EmailConfirmed,
-                        Password = model.Password
-                    };
-                    var user = await this.userService.CreateAsync(newUserDTO);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.Message);
-                }
-            }
-            return View();
-        }*/
 
         /// <summary>
         /// Show form to create organizer

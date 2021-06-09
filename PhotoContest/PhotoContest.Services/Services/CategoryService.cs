@@ -42,6 +42,9 @@ namespace PhotoContest.Services.Services
             return await this.dbContext.Categories.Where(c => c.IsDeleted == false).Select(c=>c.Name).ToListAsync();
         }
 
+        /// <summary>
+        /// Get all categories base entity
+        /// </summary>
         public async Task<IEnumerable<Category>> GetAllBaseAsync()
         {
             return await this.dbContext.Categories.Where(c => c.IsDeleted == false).ToListAsync();

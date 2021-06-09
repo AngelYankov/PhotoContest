@@ -54,42 +54,5 @@ namespace PhotoContest.Web.Controllers
 			}
 			return RedirectToAction("Error", "Home");
 		}
-
-		/// <summary>
-		/// Show form to put in details to register
-		/// </summary>
-		/*[HttpGet]
-		public IActionResult Register()
-		{
-			var model = new RegisterViewModel();
-			return View(model);
-		}
-
-		/// <summary>
-		/// Confirm registration
-		/// </summary>
-		/// <param name="model">Details put in form to register</param>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<IActionResult> Register(RegisterViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				var user = new NewUserDTO();
-				user.FirstName = model.FirstName;
-				user.LastName = model.LastName;
-				user.Email = model.Email;
-				user.EmailConfirmed = model.Email;
-				user.Password = model.Password;
-
-				var result = await this.userService.CreateAsync(user);
-                *//*if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }*//*
-            }
-
-			return RedirectToAction("Error", "Home");
-		}*/
 	}
 }

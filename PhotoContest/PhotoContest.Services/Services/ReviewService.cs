@@ -39,6 +39,7 @@ namespace PhotoContest.Services.Services
             this.signInManager = signInManager;
             this.contextAccessor = contextAccessor;
         }
+
         /// <summary>
         /// Create a review.
         /// </summary>
@@ -49,7 +50,7 @@ namespace PhotoContest.Services.Services
             var photo = await this.photoService.FindPhotoAsync(newReviewDTO.PhotoId);
             if (photo.Contest.Status.Name != "Phase 2") throw new ArgumentException(Exceptions.InvalidContestPhase);
             if (newReviewDTO.Comment == null) throw new ArgumentException(Exceptions.InvalidComment);
-            //var userName = this.contextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+
             var username = this.userManager.GetUserName(this.signInManager.Context.User);
             var user = await this.userService.GetUserByUsernameAsync(username);
             if (user.Rank.Name != "Organizer" && user.Rank.Name != "Admin")
@@ -80,6 +81,7 @@ namespace PhotoContest.Services.Services
             await this.dbContext.SaveChangesAsync();
             return new ReviewDTO(review);
         }
+
         /// <summary>
         /// Create a review for API.
         /// </summary>
@@ -149,6 +151,7 @@ namespace PhotoContest.Services.Services
                                        .Where(r => r.PhotoId == photoId && r.IsDeleted == false)
                                        .Select(r => new ReviewDTO(r)).ToListAsync();
         }
+
         /// <summary>
         /// Get all reviews for a user.
         /// </summary>

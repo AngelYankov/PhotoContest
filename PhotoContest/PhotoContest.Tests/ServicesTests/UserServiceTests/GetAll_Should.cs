@@ -5,10 +5,7 @@ using Moq;
 using PhotoContest.Data;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PhotoContest.Tests.ServicesTests.UserServiceTests

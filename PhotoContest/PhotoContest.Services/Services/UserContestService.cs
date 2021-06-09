@@ -20,6 +20,7 @@ namespace PhotoContest.Services.Services
             this.dbContext = dbContext;
             this.contestService = contestService;
         }
+
         /// <summary>
         /// Get all user contests.
         /// </summary>
@@ -28,6 +29,7 @@ namespace PhotoContest.Services.Services
         {
             return await this.dbContext.UserContests.Include(uc=>uc.User).Include(uc=>uc.Contest).ToListAsync();
         }
+
         /// <summary>
         /// Calculate points for each user by their photo points calculated by reviews' points.
         /// </summary>
@@ -92,6 +94,7 @@ namespace PhotoContest.Services.Services
             }
             await this.dbContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Calculate points for a photo.
         /// </summary>

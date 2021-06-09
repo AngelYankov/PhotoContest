@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using PhotoContest.Data;
-using PhotoContest.Data.Models;
+using NToastNotify;
 using PhotoContest.Services.Contracts;
 using PhotoContest.Services.Models;
 using PhotoContest.Services.Models.Create;
 using PhotoContest.Web.Models;
 using PhotoContest.Web.Models.ReviewViewModels;
-using NToastNotify;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PhotoContest.Web.Controllers
 {
